@@ -4,6 +4,7 @@ define(["type"], function (type) {
 
     }
 
+
     compareLowest.feature = null;
     compareLowest.i = -1;
 
@@ -18,6 +19,7 @@ define(["type"], function (type) {
     return type({
 
         constructor: function SOM(options) {
+
             this._width = options.width;
             this._height = options.height;
             this._codeBookSize = options.codeBookSize;
@@ -26,12 +28,42 @@ define(["type"], function (type) {
             for (var i = 0; i < this._neuralWeights.length; i += 1) {
                 this._neuralWeights[i] = Math.random();
             }
+
+//            this._iterationNumber = 800;
+            this._learningRate = 1;
+            this._neighbourRate = 1;
+            this._mapRadius = Math.max(this._width, this._height) / 2;
+//            this._timeConstant = this._iterationNumber / Math.log(this._mapRadius);
+            this._initialiLearningRate = 0.5;
+
         },
 
-        learn: function (feature, i) {
+//        train: function (x, y, feature, fi) {
+//            for (var c = x - this._mapRadius; c < x + this._mapRadius; c += 1) {
+//                for (var r = x - this._mapRadius; r < y + this._mapRadius; r += 1) {
+//
+//                }
+//            }
+//        },
+
+        trainMap: function (sampleData) {
+
+
+            var iterationLimit = this._width * this._height * this._codeBookSize;
+
+            for (var s = 0; s < iterationLimit; s += 1) {//timesteps
+               for (var t = 0; t <sampleData.length; t += this._codeBookSize){
+
+               } 
+            }
         },
 
-        train: function (dataIterator) {
+        learningRate: function (s, iterationLimit) {
+            return this._initialiLearningRate * (iterationLimit - s) / iterationLimit;
+        },
+
+        neighbourhoodDistance: function (s, iterationLimit) {
+            return this._mapRadius *  (iterationLimit - s) / iterationLimit;
         },
 
         reduceCodeBook: function (fold, accumulator) {
@@ -50,7 +82,7 @@ define(["type"], function (type) {
             var minDistance = Infinity;
             var minI, dist;
             for (var i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
-                dist = distance(this._neuralWeights, i, feature, fi,this._codeBookSize);
+                dist = distance(this._neuralWeights, i, feature, fi, this._codeBookSize);
                 if (dist < minDistance) {
                     minDistance = dist;
                     minI = i;
@@ -67,7 +99,7 @@ define(["type"], function (type) {
         write: function () {
         },
 
-        draw: function (context2d) {
+        draw: function (context2d, mapNeuronToPixel) {
 
         },
 

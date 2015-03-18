@@ -21,13 +21,18 @@ define([
                 height: 3,
                 codeBookSize: 3
             });
-            som._neuralWeights = [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            som._neuralWeights = [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
             var out = {};
-            som.bmu([0, 0, 0, 1, 1, 1], 3, out);
-            assert.equal(out.i, 3, "should be at 4th index in data");
+            som.bmu([0, 0, 0, 0.5, 0.2, 1], 3, out);
+            assert.equal(out.i, 3, "should be at 3th index in data");
             assert.equal(out.x, 0, "first row");
             assert.equal(out.y, 1, "second element");
+
+            som.bmu([0, 0, 0, 0.5, 0.2, 1], 0, out);
+            assert.equal(out.i, 0, "should be at 0th index in data");
+            assert.equal(out.x, 0, "first row");
+            assert.equal(out.y, 0, "first element");
         });
     });
 
