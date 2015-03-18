@@ -1,3 +1,3 @@
 define(['./SOMTest'],function(){
-    console.log('test')
+    console.log('tests loaded')
 });
