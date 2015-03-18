@@ -1,0 +1,22 @@
+{
+  "name": "ponder",
+  "version": "0.0.0",
+  "authors": [
+    "trgn <thomas@neirynck.us>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "intern": "~2.2.2",
+    "type": "https://bitbucket.org/trgn/type.git#~0.0.0"
+  }
+}
