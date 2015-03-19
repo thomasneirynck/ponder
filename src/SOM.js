@@ -18,15 +18,38 @@ define(["type"], function (type) {
             this._initialLearningRate = 0.5;
         },
 
+        learn: function (sampleData, fi, ni, learningRate, distance, neighboorhoodDistance) {
+            var influence = 1 - (distance / neighboorhoodDistance);
+            var error;
+            for (var i = 0; i < this._codeBookSize; i += 1) {
+                error = sampleData[fi + i] - this._neuralWeights[ni + i];
+                this._neuralWeights[ni + i] = this._neuralWeights[ni + i] + learningRate * influence * error;
+            }
+        },
+
         train: function (sampleData, fi, learningRate, neighbourhoodDistance, bmu) {
+
             this.bmu(sampleData, fi, bmu);
 
-            
+            var i, dist;
+            var cstart = Math.max(Math.floor(bmu.x - neighbourhoodDistance), 0);
+            var cend = Math.min(Math.ceil(bmu.x + neighbourhoodDistance), this._width);
+            var rstart = Math.max(Math.floor(bmu.y - neighbourhoodDistance), 0);
+            var rend = Math.min(Math.ceil(bmu.y + neighbourhoodDistance), this._height);
+            for (var c = cstart; c < cend; c += 1) {
+                for (var r = rstart; r < rend; r += 1) {
+                    i = this.toIndex(c, r);
+                    dist = Math.sqrt(Math.pow(c - bmu.x, 2) + Math.pow(r - bmu.y, 2));
+                    if (dist <= neighbourhoodDistance) {
+                        this.learn(sampleData, fi, i, learningRate, dist, neighbourhoodDistance);
+                    }
+                }
+            }
 
         },
 
-        trainMap: function (sampleData) {
-            var iterationLimit = 100;
+        trainMap: function (sampleData,onCycle) {
+            var iterationLimit = 10;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
@@ -35,6 +58,7 @@ define(["type"], function (type) {
                 for (t = 0; t < sampleData.length; t += this._codeBookSize) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
+                onCycle();
             }
         },
 

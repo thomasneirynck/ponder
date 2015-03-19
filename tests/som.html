@@ -22,8 +22,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 40;
-                var height = 40;
+                var width = 10;
+                var height = 10;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -32,11 +32,8 @@
 
                 var data = [
                     1, 0, 0,
-                    0, 1, 0,
-                    0, 0, 1];
+                    0, 1, 0];
 
-
-                som.trainMap(data);
 
                 var context2d = document.getElementById("som").getContext("2d");
 
@@ -46,15 +43,18 @@
 
                 var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
-                som.fill2dImageData(bufferImageData, function (weights, wi, pixel, pixeli) {
+                function fillPixel(weights, wi, pixel, pixeli) {
                     pixel[pixeli] = Math.round(weights[wi] * 255);
                     pixel[pixeli + 1] = Math.round(weights[wi + 1] * 255);
                     pixel[pixeli + 2] = Math.round(weights[wi + 2] * 255);
                     pixel[pixeli + 3] = 255;
-                });
+                }
 
-                buffer.putImageData(bufferImageData, 0, 0);
-                context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+                som.trainMap(data, function () {
+                    som.fill2dImageData(bufferImageData, fillPixel);
+                    buffer.putImageData(bufferImageData, 0, 0);
+                    context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+                });
 
 
             });
