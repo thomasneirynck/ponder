@@ -22,8 +22,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 10;
-                var height = 10;
+                var width = 100;
+                var height = 100;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -32,7 +32,12 @@
 
                 var data = [
                     1, 0, 0,
-                    0, 1, 0];
+                    0, 1, 0,
+                    0, 1, 1,
+                    1, 1, 0,
+                    0, 0, 1,
+                    1, 1, 0
+                ];
 
 
                 var context2d = document.getElementById("som").getContext("2d");
@@ -50,7 +55,7 @@
                     pixel[pixeli + 3] = 255;
                 }
 
-                som.trainMap(data, function () {
+                som.trainMapInterval(data, function () {
                     som.fill2dImageData(bufferImageData, fillPixel);
                     buffer.putImageData(bufferImageData, 0, 0);
                     context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);

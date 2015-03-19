@@ -16,6 +16,7 @@ define(["type"], function (type) {
 
             this._mapRadius = Math.max(this._width, this._height) / 2;
             this._initialLearningRate = 0.5;
+            this._iterationLimit = 100000;
         },
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighboorhoodDistance) {
@@ -48,8 +49,33 @@ define(["type"], function (type) {
 
         },
 
-        trainMap: function (sampleData,onCycle) {
-            var iterationLimit = 10;
+        trainMapInterval: function (sampleData, onCycle) {
+            var iterationLimit = this._iterationLimit;
+            var bmu = {i: 0, x: 0, y: 0};
+            var learningRate, neighbourhoodDistance, s, t;
+            s = 0;
+            var handle = setInterval(function () {
+
+                if (s >= iterationLimit) {
+                    clearInterval(handle);
+                    return;
+                }
+
+                learningRate = this.learningRate(s, iterationLimit);
+                neighbourhoodDistance = this.neighbourhoodDistance(s, iterationLimit);
+                for (t = 0; t < sampleData.length; t += this._codeBookSize) {
+                    this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
+                }
+                onCycle();
+
+                s += 1;
+
+            }.bind(this), 0);
+
+        },
+
+        trainMap: function (sampleData, onCycle) {
+            var iterationLimit = this._iterationLimit;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
@@ -58,7 +84,6 @@ define(["type"], function (type) {
                 for (t = 0; t < sampleData.length; t += this._codeBookSize) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
-                onCycle();
             }
         },
 
