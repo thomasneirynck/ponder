@@ -1,6 +1,5 @@
 define(["type"], function (type) {
 
-
     return type({
 
         constructor: function SOM(options) {
@@ -16,7 +15,7 @@ define(["type"], function (type) {
 
             this._mapRadius = Math.max(this._width, this._height) / 2;
             this._initialLearningRate = 0.5;
-            this._iterationLimit = 100000;
+            this._iterationLimit = 100;
         },
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighboorhoodDistance) {
@@ -58,6 +57,7 @@ define(["type"], function (type) {
 
                 if (s >= iterationLimit) {
                     clearInterval(handle);
+                    console.log("done!");
                     return;
                 }
 
@@ -92,7 +92,8 @@ define(["type"], function (type) {
             for (var i = 0; i < this._codeBookSize; i += 1) {
                 sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)
             }
-            return Math.sqrt(sum);
+//            return Math.sqrt(sum);
+            return sum;
         },
 
         learningRate: function (s, iterationLimit) {
