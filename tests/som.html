@@ -30,8 +30,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 32;
-                var height = 32;
+                var width = 16;
+                var height = 16;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -76,7 +76,7 @@
                     for (var i = 0; i < data.length; i += 3) {
                         som.bmu(data, i, out);
 
-                        context2d.fillStyle = "rgb(" + data[i] * 255 + "," + data[i + 1] * 255 + "," + data[i + 2] * 255 + ")";
+                        context2d.fillStyle = "rgb(" +Math.round(data[i] * 255) + "," + Math.round(data[i + 1] * 255) + "," + Math.round(data[i + 2] * 255) + ")";
 
                         context2d.fillRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
 

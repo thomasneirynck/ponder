@@ -21,8 +21,8 @@ define(['Promise',
         },
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
-//            var influence = 1 - (distance / neighboorhoodDistance);
-            var influence = Math.exp(- Math.pow(distance,2)/ (Math.pow(neighbourhoodDistance,2)));
+            var influence = 1 - (distance / neighbourhoodDistance);
+//            var influence = Math.exp(- Math.pow(distance,2)/ (Math.pow(neighbourhoodDistance,2)));
             var error;
             for (var i = 0; i < this._codeBookSize; i += 1) {
                 error = sampleData[fi + i] - this._neuralWeights[ni + i];
