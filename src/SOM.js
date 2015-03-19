@@ -20,8 +20,9 @@ define(['Promise',
             this._iterationLimit = 10000;
         },
 
-        learn: function (sampleData, fi, ni, learningRate, distance, neighboorhoodDistance) {
-            var influence = 1 - (distance / neighboorhoodDistance);
+        learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
+//            var influence = 1 - (distance / neighboorhoodDistance);
+            var influence = Math.exp(- Math.pow(distance,2)/ (Math.pow(neighbourhoodDistance,2)));
             var error;
             for (var i = 0; i < this._codeBookSize; i += 1) {
                 error = sampleData[fi + i] - this._neuralWeights[ni + i];
@@ -99,16 +100,18 @@ define(['Promise',
             for (var i = 0; i < this._codeBookSize; i += 1) {
                 sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)
             }
-//            return Math.sqrt(sum);
             return sum;
         },
 
         learningRate: function (s, iterationLimit) {
             return this._initialLearningRate * (iterationLimit - s) / iterationLimit;
+
+//            return this._initialLearningRate * Math.exp(- Math.pow(s,2)/ (Math.pow(iterationLimit,2)));
         },
 
         neighbourhoodDistance: function (s, iterationLimit) {
             return this._mapRadius * (iterationLimit - s) / iterationLimit;
+//            return this._mapRadius * Math.exp(- Math.pow(s,2)/ (Math.pow(iterationLimit,2)));
         },
 
         toIndex: function (x, y) {

@@ -30,8 +30,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 10;
-                var height = 10;
+                var width = 32;
+                var height = 32;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -46,7 +46,10 @@
                     1, 0, 1,
                     1, 1, 0,
                     1, 1, 1,
-                    0, 0, 0
+                    0, 0.2, 0.7,
+                    0.2, 0.7, 0.1,
+                    0, 0.8, 0,
+                    0.9, 0.3, 0
                 ];
 
 
