@@ -15,7 +15,7 @@
 <body>
 
 
-<canvas width="1000" height="1000" id="som" style=" width: 100%; height: 100%"></canvas>
+<canvas id="som" style="width: 100%; height: 100%; overflow: hidden"></canvas>
 
 
 <script>
@@ -24,7 +24,8 @@
                 baseUrl: "..",
                 paths: {
                     'ponder': 'src',
-                    'type': "bower_components/type/type"
+                    'type': "bower_components/type/type",
+                    'Promise': "bower_components/Promise/Promise"
                 }
             },
             ["ponder/SOM"], function (SOM) {
@@ -40,113 +41,12 @@
                 var data = [
                     1, 0, 0,
                     0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
                     0, 0, 1,
+                    0, 1, 1,
+                    1, 0, 1,
                     1, 1, 0,
                     1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-                    1, 0, 0,
-                    0, 1, 0,
-                    0, 1, 1,
-                    1, 1, 0,
-                    0, 0, 1,
-                    1, 1, 0,
-                    1, 1, 1,
-                    0, 0, 0,
-                    1, 0.5, 0.5,
-
+                    0, 0, 0
                 ];
 
 
@@ -167,15 +67,30 @@
                     pixel[pixeli + 3] = 255;
                 }
 
-                som.trainMapInterval(data, function () {
+                som.trainMapInterval(data).then(function done() {
+
+                    var out = {};
+                    for (var i = 0; i < data.length; i += 3) {
+                        som.bmu(data, i, out);
+
+                        context2d.fillStyle = "rgb(" + data[i] * 255 + "," + data[i + 1] * 255 + "," + data[i + 2] * 255 + ")";
+
+                        context2d.fillRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
+
+                        context2d.strokeStyle = "rgb(0,0,0)";
+                        context2d.lineWidth = 3;
+                        context2d.strokeRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
+                        context2d.strokeStyle = "rgb(255,255,255)";
+                        context2d.lineWidth = 2;
+                        context2d.strokeRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
+                    }
+
+                }, function error() {
+                }, function progress() {
                     som.fill2dImageData(bufferImageData, fillPixel);
                     buffer.putImageData(bufferImageData, 0, 0);
                     context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
 
-                    var bmu = 0;
-                    for (var i = 0; i < data.length; i += 3) {
-
-                    }
                 });
 
 

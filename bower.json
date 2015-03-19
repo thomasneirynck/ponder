@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "intern": "~2.2.2",
-    "type": "https://bitbucket.org/trgn/type.git#~0.0.0"
+    "type": "https://bitbucket.org/trgn/type.git#~0.0.0",
+    "Promise": "https://bitbucket.org/trgn/promise.git#~0.0.0"
   }
 }

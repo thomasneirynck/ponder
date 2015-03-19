@@ -1,4 +1,6 @@
-define(["type"], function (type) {
+define(['Promise',
+    "type"
+], function (Promise, type) {
 
     return type({
 
@@ -15,7 +17,7 @@ define(["type"], function (type) {
 
             this._mapRadius = Math.max(this._width, this._height) / 2;
             this._initialLearningRate = 0.5;
-            this._iterationLimit = 100;
+            this._iterationLimit = 10000;
         },
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighboorhoodDistance) {
@@ -49,28 +51,33 @@ define(["type"], function (type) {
         },
 
         trainMapInterval: function (sampleData, onCycle) {
-            var iterationLimit = this._iterationLimit;
+
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             s = 0;
+
+            var done = new Promise();
             var handle = setInterval(function () {
 
-                if (s >= iterationLimit) {
+                if (s >= this._iterationLimit) {
                     clearInterval(handle);
-                    console.log("done!");
+                    done.resolve(this);
                     return;
                 }
 
-                learningRate = this.learningRate(s, iterationLimit);
-                neighbourhoodDistance = this.neighbourhoodDistance(s, iterationLimit);
+                learningRate = this.learningRate(s, this._iterationLimit);
+                neighbourhoodDistance = this.neighbourhoodDistance(s, this._iterationLimit);
                 for (t = 0; t < sampleData.length; t += this._codeBookSize) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
-                onCycle();
+
+                done.progress();
 
                 s += 1;
 
             }.bind(this), 0);
+
+            return done;
 
         },
 
@@ -109,8 +116,8 @@ define(["type"], function (type) {
         },
 
         toXY: function (index, out) {
-            out.x = Math.floor(index / this._codeBookSize / this._width);
-            out.y = (index / this._codeBookSize) % this._width;
+            out.y = Math.floor(index / this._codeBookSize / this._width);
+            out.x = (index / this._codeBookSize) % this._width;
         },
 
         bmu: function (feature, fi, out) {
