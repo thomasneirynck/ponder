@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../bower_components/requirejs/require.js"></script>
+</head>
+<body>
+
+
+<canvas width="1000" height="1000" id="som" style="border: 1px solid black"></canvas>
+
+
+<script>
+
+    require({
+                baseUrl: "..",
+                paths: {
+                    'ponder': 'src',
+                    'type': "bower_components/type/type"
+                }
+            },
+            ["ponder/SOM"], function (SOM) {
+
+                var width = 40;
+                var height = 40;
+                var som = new SOM({
+                    width: width,
+                    height: height,
+                    codeBookSize: 3
+                });
+
+                var data = [
+                    1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1];
+
+
+                som.trainMap(data);
+
+                var context2d = document.getElementById("som").getContext("2d");
+
+                var buffer = document.createElement("canvas").getContext("2d");
+                buffer.canvas.width = width;
+                buffer.canvas.height = height;
+
+                var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
+
+                som.fill2dImageData(bufferImageData, function (weights, wi, pixel, pixeli) {
+                    pixel[pixeli] = Math.round(weights[wi] * 255);
+                    pixel[pixeli + 1] = Math.round(weights[wi + 1] * 255);
+                    pixel[pixeli + 2] = Math.round(weights[wi + 2] * 255);
+                    pixel[pixeli + 3] = 255;
+                });
+
+                buffer.putImageData(bufferImageData, 0, 0);
+                context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
+
+            });
+
+
+</script>
+
+
+</body>
+</html>

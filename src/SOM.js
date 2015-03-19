@@ -1,20 +1,5 @@
 define(["type"], function (type) {
 
-    function compareLowest() {
-
-    }
-
-
-    compareLowest.feature = null;
-    compareLowest.i = -1;
-
-    function distance(vector1, i1, vector2, i2, codebookSize) {
-        var sum = 0;
-        for (var i = 0; i < codebookSize; i += 1) {
-            sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)
-        }
-        return Math.sqrt(sum);
-    }
 
     return type({
 
@@ -29,78 +14,73 @@ define(["type"], function (type) {
                 this._neuralWeights[i] = Math.random();
             }
 
-//            this._iterationNumber = 800;
-            this._learningRate = 1;
-            this._neighbourRate = 1;
             this._mapRadius = Math.max(this._width, this._height) / 2;
-//            this._timeConstant = this._iterationNumber / Math.log(this._mapRadius);
-            this._initialiLearningRate = 0.5;
+            this._initialLearningRate = 0.5;
+        },
+
+        train: function (sampleData, fi, learningRate, neighbourhoodDistance, bmu) {
+            this.bmu(sampleData, fi, bmu);
+
+            
 
         },
 
-//        train: function (x, y, feature, fi) {
-//            for (var c = x - this._mapRadius; c < x + this._mapRadius; c += 1) {
-//                for (var r = x - this._mapRadius; r < y + this._mapRadius; r += 1) {
-//
-//                }
-//            }
-//        },
-
         trainMap: function (sampleData) {
-
-
-            var iterationLimit = this._width * this._height * this._codeBookSize;
-
-            for (var s = 0; s < iterationLimit; s += 1) {//timesteps
-               for (var t = 0; t <sampleData.length; t += this._codeBookSize){
-
-               } 
+            var iterationLimit = 100;
+            var bmu = {i: 0, x: 0, y: 0};
+            var learningRate, neighbourhoodDistance, s, t;
+            for (s = 0; s < iterationLimit; s += 1) {//timesteps
+                learningRate = this.learningRate(s, iterationLimit);
+                neighbourhoodDistance = this.neighbourhoodDistance(s, iterationLimit);
+                for (t = 0; t < sampleData.length; t += this._codeBookSize) {
+                    this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
+                }
             }
+        },
+
+        distance: function (vector1, i1, vector2, i2) {
+            var sum = 0;
+            for (var i = 0; i < this._codeBookSize; i += 1) {
+                sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)
+            }
+            return Math.sqrt(sum);
         },
 
         learningRate: function (s, iterationLimit) {
-            return this._initialiLearningRate * (iterationLimit - s) / iterationLimit;
+            return this._initialLearningRate * (iterationLimit - s) / iterationLimit;
         },
 
         neighbourhoodDistance: function (s, iterationLimit) {
-            return this._mapRadius *  (iterationLimit - s) / iterationLimit;
-        },
-
-        reduceCodeBook: function (fold, accumulator) {
-            var x, y;
-            for (var i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
-                accumulator = fold(accumulator, this._neuralWeights, x, y, this._codeBookSize);
-            }
-            return accumulator;
+            return this._mapRadius * (iterationLimit - s) / iterationLimit;
         },
 
         toIndex: function (x, y) {
             return ((this._width * x) + y) * this._codeBookSize;
         },
 
+        toXY: function (index, out) {
+            out.x = Math.floor(index / this._codeBookSize / this._width);
+            out.y = (index / this._codeBookSize) % this._width;
+        },
+
         bmu: function (feature, fi, out) {
             var minDistance = Infinity;
             var minI, dist;
             for (var i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
-                dist = distance(this._neuralWeights, i, feature, fi, this._codeBookSize);
+                dist = this.distance(this._neuralWeights, i, feature, fi, this._codeBookSize);
                 if (dist < minDistance) {
                     minDistance = dist;
                     minI = i;
                 }
             }
             out.i = minI;
-            out.x = Math.floor(minI / this._codeBookSize / this._width);
-            out.y = (minI / this._codeBookSize) % this._width;
+            this.toXY(minI, out);
         },
 
-        distance: function (codebook, i) {
-        },
-
-        write: function () {
-        },
-
-        draw: function (context2d, mapNeuronToPixel) {
-
+        fill2dImageData: function (imgData, mapNeuronToPixel) {
+            for (var i = 0, pixeli = 0; i < this._neuralWeights.length; i += this._codeBookSize, pixeli += 4) {
+                mapNeuronToPixel(this._neuralWeights, i, imgData.data, pixeli);
+            }
         },
 
         findXY: function (codebook, i) {
