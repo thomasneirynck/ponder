@@ -395,11 +395,17 @@ require({
 
                     jiggered = {};
                     som.jiggerBMU(data, i, out.x, out.y, jiggered);
+                    context2d.fillRect(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2, 4, 4);
 
-                    context2d.fillRect(jiggered.x * sx  + sx/2, jiggered.y * sy+ sy/2, 4,4);
+                    context2d.beginPath();
+                    context2d.moveTo(out.x * sx + sx / 2, out.y * sy + sy / 2);
+                    context2d.lineTo(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2);
+                    context2d.strokeStyle = color;
+                    context2d.stroke();
 
-//                    context2d.fillStyle = "rgb(0,0,0)";
-//                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
+
+                    context2d.fillStyle = "rgb(0,0,0)";
+                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
 
                 }
             }
