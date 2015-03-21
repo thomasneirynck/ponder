@@ -2,6 +2,10 @@ define(['Promise',
     "type"
 ], function (Promise, type) {
 
+    function between(x, s, e) {
+        return x >= s && x <= e;
+    }
+
     return type({
 
         constructor: function SOM(options) {
@@ -17,7 +21,6 @@ define(['Promise',
 
             this._mapRadius = Math.max(this._width, this._height) / 2;
             this._initialLearningRate = 0.5;
-            this._iterationLimit = 10000;
         },
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
@@ -51,8 +54,10 @@ define(['Promise',
 
         },
 
-        trainMapInterval: function (sampleData, onCycle) {
+        trainMapInterval: function (sampleData) {
 
+            var iterationLimit = this._width * this._height;
+//            var iterationLimit = 100;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             s = 0;
@@ -60,14 +65,14 @@ define(['Promise',
             var done = new Promise();
             var handle = setInterval(function () {
 
-                if (s >= this._iterationLimit) {
+                if (s >= iterationLimit) {
                     clearInterval(handle);
                     done.resolve(this);
                     return;
                 }
 
-                learningRate = this.learningRate(s, this._iterationLimit);
-                neighbourhoodDistance = this.neighbourhoodDistance(s, this._iterationLimit);
+                learningRate = this.learningRate(s, iterationLimit);
+                neighbourhoodDistance = this.neighbourhoodDistance(s, iterationLimit);
                 for (t = 0; t < sampleData.length; t += this._codeBookSize) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
@@ -82,8 +87,9 @@ define(['Promise',
 
         },
 
-        trainMap: function (sampleData, onCycle) {
-            var iterationLimit = this._iterationLimit;
+        trainMap: function (sampleData) {
+//            var iterationLimit = this._width * this._height;
+            var iterationLimit = 100;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
@@ -121,6 +127,64 @@ define(['Promise',
         toXY: function (index, out) {
             out.y = Math.floor(index / this._codeBookSize / this._width);
             out.x = (index / this._codeBookSize) % this._width;
+        },
+
+
+        jiggerBMU: function (feature, fi, x, y, out) {
+
+            var dx = 0;
+            var dy = 0;
+            var i;
+
+            //up down top left
+            if (between(x - 1, 0, this._width)) {
+                i = this.toIndex(x - 1, y);
+                dx -= 1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize;
+            }
+            if (between(x + 1, 0, this._width)) {
+                i = this.toIndex(x + 1, y);
+                dx += 1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize;
+            }
+
+            if (between(y - 1, 0, this._height)) {
+                i = this.toIndex(x, y - 1);
+                dy -= 1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize;
+            }
+
+            if (between(y + 1, 0, this._height)) {
+                i = this.toIndex(x, y + 1);
+                dy += 1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize;
+            }
+
+            //diagonal
+            var d;
+            if (between(x - 1, 0, this._width) && between(y - 1, 0, this._height)) {
+                i = this.toIndex(x - 1, y - 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951;
+                dx -= d;
+                dy -= d;
+            }
+            if (between(x - 1, 0, this._width) && between(y + 1, 0, this._height)) {
+                i = this.toIndex(x - 1, y + 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951;
+                dx -= d;
+                dy += d;
+            }
+            if (between(x + 1, 0, this._width) && between(y - 1, 0, this._height)) {
+                i = this.toIndex(x + 1, y - 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951;
+                dx += d;
+                dy -= d;
+            }
+            if (between(x + 1, 0, this._width) && between(y + 1, 0, this._height)) {
+                i = this.toIndex(x + 1, y + 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951;
+                dx += d;
+                dy += d;
+            }
+            out.x = x + dx ;
+            out.y = y + dy ;
+
         },
 
         bmu: function (feature, fi, out) {

@@ -30,8 +30,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 16;
-                var height = 16;
+                var width = 32;
+                var height = 32;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -70,7 +70,7 @@
                     pixel[pixeli + 3] = 255;
                 }
 
-                som.trainMapInterval(data).then(function done() {
+                function done() {
 
                     var out = {};
                     for (var i = 0; i < data.length; i += 3) {
@@ -88,13 +88,18 @@
                         context2d.strokeRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
                     }
 
-                }, function error() {
-                }, function progress() {
+                }
+
+                function progress() {
                     som.fill2dImageData(bufferImageData, fillPixel);
                     buffer.putImageData(bufferImageData, 0, 0);
                     context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+                }
 
-                });
+//                som.trainMapInterval(data).then(done,Function.prototype,progress );
+                som.trainMap(data);
+                progress();
+                done();
 
 
             });
