@@ -3,18 +3,22 @@ define(['Promise',
 ], function (Promise, type) {
 
     function between(x, s, e) {
-        return x >= s && x <= e;
+        return x >= s && x < e;
+    }
+
+    function sign(n) {
+        return n >= 0 ? 1 : -1;
     }
 
     function testDistention(t, b, c, d) {
-        var ts=(t/=d)*t;
-        var tc=ts*t;
-        return b+c*(tc*ts + -5*ts*ts + 10*tc + -10*ts + 5*t);
+        var ts = (t /= d) * t;
+        var tc = ts * t;
+        return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
     }
 
     function ease(t) {
-        return t;
-//        return 1+(--t)*t*t*t*t ;
+//        return t;
+        return 1 + (--t) * t * t * t * t;
     }
 
     return type({
@@ -118,59 +122,64 @@ define(['Promise',
             //up down top left
             if (between(x - 1, 0, this._width)) {
                 i = this.toIndex(x - 1, y);
-                dx -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize);
+                dx -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
             if (between(x + 1, 0, this._width)) {
                 i = this.toIndex(x + 1, y);
-                dx += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize);
+                dx += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
 
             if (between(y - 1, 0, this._height)) {
                 i = this.toIndex(x, y - 1);
-                dy -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize);
+                dy -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
 
             if (between(y + 1, 0, this._height)) {
                 i = this.toIndex(x, y + 1);
-                dy += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize);
+                dy += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
-//
-//            //diagonal
-//            var d;
-//            if (between(x - 1, 0, this._width) && between(y - 1, 0, this._height)) {
-//                i = this.toIndex(x - 1, y - 1);
-//                d = ease(1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951);
-//                dx -= d;
-//                dy -= d;
-//                total += 1;
-//            }
-//            if (between(x - 1, 0, this._width) && between(y + 1, 0, this._height)) {
-//                i = this.toIndex(x - 1, y + 1);
-//                d = ease(1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951);
-//                dx -= d;
-//                dy += d;
-//                total += 1;
-//            }
-//            if (between(x + 1, 0, this._width) && between(y - 1, 0, this._height)) {
-//                i = this.toIndex(x + 1, y - 1);
-//                d = ease(1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951);
-//                dx += d;
-//                dy -= d;
-//                total += 1;
-//            }
-//            if (between(x + 1, 0, this._width) && between(y + 1, 0, this._height)) {
-//                i = this.toIndex(x + 1, y + 1);
-//                d = ease(1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 1.4142135623730951);
-//                dx += d;
-//                dy += d;
-//                total += 1;
-//            }
-            out.jx = x + ease(dx /total);
-            out.jy = y + ease(dy /total);
+
+
+            //diagonal
+            var d;
+            if (between(x - 1, 0, this._width) && between(y - 1, 0, this._height)) {
+                i = this.toIndex(x - 1, y - 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
+                dx -= d/2;
+                dy -= d/2;
+                total += 1;
+            }
+            if (between(x - 1, 0, this._width) && between(y + 1, 0, this._height)) {
+                i = this.toIndex(x - 1, y + 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
+                dx -= d/2;
+                dy += d/2;
+                total += 1;
+            }
+            if (between(x + 1, 0, this._width) && between(y - 1, 0, this._height)) {
+                i = this.toIndex(x + 1, y - 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
+                dx += d/2;
+                dy -= d/2;
+                total += 1;
+            }
+            if (between(x + 1, 0, this._width) && between(y + 1, 0, this._height)) {
+                i = this.toIndex(x + 1, y + 1);
+                d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
+                dx += d / 2;
+                dy += d/2;
+                total += 1;
+            }
+
+            console.log("dx: ", dx, ease(dx / total));
+
+            out.jx = x + sign(dx) * ease(Math.abs(dx * 2) / total) / 2;
+            out.jy = y + sign (dy) * ease(Math.abs(dy * 2) / total) /2;
+
 
         },
 

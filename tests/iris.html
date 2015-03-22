@@ -30,8 +30,8 @@ require({
         },
         ["ponder/SOM"], function (SOM) {
 
-            var width = 5;
-            var height = 5;
+            var width = 18;
+            var height = 18;
             var som = new SOM({
                 width: width,
                 height: height,
@@ -374,9 +374,20 @@ require({
             }
 
             function done() {
+
+                var sx = context2d.canvas.width / width;
+                var sy = context2d.canvas.height / height;
+                for (var c = 0; c < width; c += 1) {
+                    for (var r = 0; r < height; r += 1) {
+                        context2d.strokeStyle = "rgba(0,0,0,0.1)";
+                        context2d.strokeRect(c * sx, r * sy, sx, sy);
+                    }
+                }
+
                 var out = {};
                 for (var i = 0; i < data.length; i += 4) {
                     som.bmu(data, i, out);
+                    console.log(out.x, out.y);
 
 
                     var color;
@@ -387,15 +398,17 @@ require({
                     } else if (labels[i / 4] === "Iris-virginica") {
                         color = "rgb(0,0,255)";
                     }
-                    var sx = context2d.canvas.width / width;
-                    var sy = context2d.canvas.height / height;
+
                     context2d.fillStyle = color;
 //                    context2d.fillRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, context2d.canvas.width / width, context2d.canvas.height);
 
 
-                    jiggered = {};
+                    jiggered = out;
                     som.jiggerBMU(data, i, out.x, out.y, jiggered);
                     context2d.fillRect(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2, 4, 4);
+
+
+                    console.log(out.jx,out.jy);
 
                     context2d.beginPath();
                     context2d.moveTo(out.x * sx + sx / 2, out.y * sy + sy / 2);
@@ -404,8 +417,8 @@ require({
                     context2d.stroke();
 
 
-                    context2d.fillStyle = "rgb(0,0,0)";
-                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
+                    context2d.fillStyle = "rgba(0,0,0,0.1)";
+//                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
 
                 }
             }
