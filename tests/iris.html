@@ -30,8 +30,8 @@ require({
         },
         ["ponder/SOM"], function (SOM) {
 
-            var width = 18;
-            var height = 18;
+            var width = 10;
+            var height = 10;
             var som = new SOM({
                 width: width,
                 height: height,
@@ -380,14 +380,14 @@ require({
                 for (var c = 0; c < width; c += 1) {
                     for (var r = 0; r < height; r += 1) {
                         context2d.strokeStyle = "rgba(0,0,0,0.1)";
-                        context2d.strokeRect(c * sx, r * sy, sx, sy);
+//                        context2d.strokeRect(c * sx, r * sy, sx, sy);
                     }
                 }
 
                 var out = {};
                 for (var i = 0; i < data.length; i += 4) {
                     som.bmu(data, i, out);
-                    console.log(out.x, out.y);
+
 
 
                     var color;
@@ -406,21 +406,25 @@ require({
                     jiggered = out;
                     som.jiggerBMU(data, i, out.x, out.y, jiggered);
                     context2d.fillRect(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2, 4, 4);
+//                    context2d.fillRect(jiggered.x * sx + sx / 2, jiggered.y * sy + sy / 2, 4, 4);
 
 
-                    console.log(out.jx,out.jy);
 
-                    context2d.beginPath();
-                    context2d.moveTo(out.x * sx + sx / 2, out.y * sy + sy / 2);
-                    context2d.lineTo(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2);
-                    context2d.strokeStyle = color;
-                    context2d.stroke();
+
+//                    context2d.beginPath();
+//                    context2d.moveTo(out.x * sx + sx / 2, out.y * sy + sy / 2);
+//                    context2d.lineTo(jiggered.jx * sx + sx / 2, jiggered.jy * sy + sy / 2);
+//                    context2d.strokeStyle = color;
+//                    context2d.stroke();
 
 
                     context2d.fillStyle = "rgba(0,0,0,0.1)";
 //                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
 
                 }
+
+
+//                som.drawU(context2d, sx, sy);
             }
 
             function progress() {

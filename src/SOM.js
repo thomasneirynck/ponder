@@ -66,7 +66,6 @@ define(['Promise',
                     }
                 }
             }
-
         },
 
         trainMap: function (sampleData) {
@@ -81,6 +80,71 @@ define(['Promise',
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
             }
+        },
+
+        drawU: function (context2d, sx, sy) {
+
+            var umatrixcols = [];
+            var umatrixrows = [];
+            var min = Infinity;
+            var max = -Infinity;
+            var i, ri;
+            var d;
+            for (var c = 0; c < this._width - 1; c += 1) {
+                for (var r = 0; r < this._height; r += 1) {
+                    console.log("cols", c, r);
+                    i = this.toIndex(c, r);
+                    ri = this.toIndex(c + 1, r);
+                    d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
+                    umatrixcols.push(i);
+                    umatrixcols.push(d);
+                    min = Math.min(min, d);
+                    max = Math.max(max, d);
+                }
+            }
+
+            for (var c = 0; c < this._width; c += 1) {
+                for (var r = 0; r < this._height - 1; r += 1) {
+                    console.log("rows", c, r);
+                    i = this.toIndex(c, r);
+                    ri = this.toIndex(c, r + 1);
+                    d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
+                    umatrixrows.push(i);
+                    umatrixrows.push(d);
+                    min = Math.min(min, d);
+                    max = Math.max(max, d);
+                }
+            }
+
+            for (var i = 0; i < umatrixcols.length; i += 2) {
+                umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
+            }
+
+//            for (var i = 0; i < umatrixrows.length; i += 2) {
+//                umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
+//            }
+
+            var xy = {};
+            for (var i = 0; i < umatrixcols.length; i += 2) {
+                this.toXY(umatrixcols[i], xy);
+                context2d.beginPath();
+                context2d.moveTo((xy.y ) * sx + sx, (xy.x ) * sy);
+                context2d.lineTo((xy.y ) * sx + sx, (xy.x + 1) * sy);
+//                context2d.strokeStyle = "rgba(0,0,0," + umatrix[i + 1 + ")";
+                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
+                context2d.stroke();
+            }
+
+//            for (var i = 0; i < umatrixrows.length; i += 2) {
+//                this.toXY(umatrixrows[i], xy);
+//                context2d.beginPath();
+//                context2d.moveTo((xy.x ) * sx + sx, (xy.y ) * sy);
+//                context2d.lineTo((xy.x + 1) * sx + sx, (xy.y ) * sy);
+////                context2d.strokeStyle = "rgba(0,0,0," + umatrix[i + 1 + ")";
+//                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
+//                context2d.stroke();
+//            }
+
         },
 
         distance: function (vector1, i1, vector2, i2) {
@@ -103,12 +167,12 @@ define(['Promise',
         },
 
         toIndex: function (x, y) {
-            return ((this._width * x) + y) * this._codeBookSize;
+            return ((this._height * x) + y) * this._codeBookSize;
         },
 
         toXY: function (index, out) {
-            out.y = Math.floor(index / this._codeBookSize / this._width);
-            out.x = (index / this._codeBookSize) % this._width;
+            out.x = Math.floor(index / this._codeBookSize / this._height);
+            out.y = (index / this._codeBookSize) % this._width;
         },
 
 
@@ -149,36 +213,35 @@ define(['Promise',
             if (between(x - 1, 0, this._width) && between(y - 1, 0, this._height)) {
                 i = this.toIndex(x - 1, y - 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
-                dx -= d/2;
-                dy -= d/2;
+                dx -= d / 2;
+                dy -= d / 2;
                 total += 1;
             }
             if (between(x - 1, 0, this._width) && between(y + 1, 0, this._height)) {
                 i = this.toIndex(x - 1, y + 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
-                dx -= d/2;
-                dy += d/2;
+                dx -= d / 2;
+                dy += d / 2;
                 total += 1;
             }
             if (between(x + 1, 0, this._width) && between(y - 1, 0, this._height)) {
                 i = this.toIndex(x + 1, y - 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
-                dx += d/2;
-                dy -= d/2;
+                dx += d / 2;
+                dy -= d / 2;
                 total += 1;
             }
             if (between(x + 1, 0, this._width) && between(y + 1, 0, this._height)) {
                 i = this.toIndex(x + 1, y + 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
                 dx += d / 2;
-                dy += d/2;
+                dy += d / 2;
                 total += 1;
             }
 
-            console.log("dx: ", dx, ease(dx / total));
 
             out.jx = x + sign(dx) * ease(Math.abs(dx * 2) / total) / 2;
-            out.jy = y + sign (dy) * ease(Math.abs(dy * 2) / total) /2;
+            out.jy = y + sign(dy) * ease(Math.abs(dy * 2) / total) / 2;
 
 
         },
