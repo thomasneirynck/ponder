@@ -9,6 +9,7 @@
             margin: 0 auto;
             width: 100%;
             height: 100%;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -28,7 +29,7 @@ require({
                 'Promise': "bower_components/Promise/Promise"
             }
         },
-        ["ponder/SOM"], function (SOM) {
+        ["ponder/SOM","ponder/colorRamp"], function (SOM, colorRamp) {
 
             var width = 400;
             var height = 400;
@@ -385,6 +386,29 @@ require({
                 }
 
                 var out = {};
+
+
+
+                som.averageD(bufferImageData, function (weight, pixel, pixeli) {
+
+                    var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length),colorRamp.length-1),0)];
+                    if (!color){
+                        debugger;
+                    }
+                    colors = color.split(",");
+                    pixel[pixeli] = colors[0];
+                    pixel[pixeli + 1] = colors[1];
+                    pixel[pixeli + 2] = colors[2];
+//                        pixel[pixeli] = 255 - Math.round(weight * 255);
+//                        pixel[pixeli + 1] = 255 - Math.round(weight * 255);
+//                        pixel[pixeli + 2] = 255 - Math.round(weight * 255);
+                    pixel[pixeli + 3] = 255;
+                });
+                buffer.putImageData(bufferImageData, 0, 0);
+                context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
+//                som.drawU(context2d, sx, sy);
+
                 for (var i = 0; i < data.length; i += 4) {
                     som.bmu(data, i, out);
 
@@ -396,10 +420,11 @@ require({
                     } else if (labels[i / 4] === "Iris-setosa") {
                         color = "rgb(0,255,0)";
                     } else if (labels[i / 4] === "Iris-virginica") {
-                        color = "rgb(0,0,255)";
+                        color = "rgb(0,255,255)";
                     }
 
                     context2d.fillStyle = color;
+//                    context2d.fillStyle = "rgb(0,0,0)";
 //                    context2d.fillRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, context2d.canvas.width / width, context2d.canvas.height);
 
 
@@ -422,20 +447,12 @@ require({
 //                    context2d.fillText(labels[i / 4], out.x * sx + sx / 2, out.y * sy + sy / 2);
 
                 }
-
-
-                som.drawU(context2d, sx, sy);
             }
 
-            function progress() {
-//                    som.fill2dImageData(bufferImageData, fillPixel);
-//                    buffer.putImageData(bufferImageData, 0, 0);
-//                    context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-            }
+
 
 
             som.trainMap(data);
-            progress();
             done();
 
 
