@@ -105,7 +105,7 @@
 
                     som.averageD(bufferImageData, function (weight, pixel, pixeli) {
 
-                        var color = colorRamp[Math.min(Math.round(weight * colorRamp.length),colorRamp.length-1)];
+                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length),colorRamp.length-1),0)];
                         if (!color){
                             debugger;
                         }

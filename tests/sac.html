@@ -30,8 +30,8 @@
             },
             ["ponder/SOM", "ponder/colorRamp","./sacramento.js"], function (SOM, colorRamp,dataOrig) {
 
-                var width = 32;
-                var height = 32;
+                var width = 256;
+                var height = 256;
                 var codebookSize = 6;
                 var som = new SOM({
                     width: width,
@@ -77,14 +77,14 @@
                     var out = {};
                     var sx = context2d.canvas.width / width;
                     var sy = context2d.canvas.height / height;
-                    for (var i = 0; i < data.length; i += 3) {
+                    for (var i = 0; i < data.length; i += codebookSize) {
                         som.bmu(data, i, out);
 
                         context2d.fillStyle ="rgb(255,255,255)";
 
 
                         som.jiggerBMU(data, i, out.x, out.y, out);
-                        context2d.fillRect(out.jx * context2d.canvas.width / width, out.jy * context2d.canvas.height / height, 10, 10);
+                        context2d.fillRect(out.jx * context2d.canvas.width / width, out.jy * context2d.canvas.height / height, 2, 2);
 
 
                     }
@@ -98,7 +98,7 @@
 
                     som.averageD(bufferImageData, function (weight, pixel, pixeli) {
 
-                        var color = colorRamp[Math.min(Math.round(weight * colorRamp.length),colorRamp.length-1)];
+                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length),colorRamp.length-1),0)];
                         if (!color){
                             debugger;
                         }
