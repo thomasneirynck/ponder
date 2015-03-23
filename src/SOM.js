@@ -92,7 +92,6 @@ define(['Promise',
             var d;
             for (var c = 0; c < this._width - 1; c += 1) {
                 for (var r = 0; r < this._height; r += 1) {
-                    console.log("cols", c, r);
                     i = this.toIndex(c, r);
                     ri = this.toIndex(c + 1, r);
                     d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
@@ -105,7 +104,6 @@ define(['Promise',
 
             for (var c = 0; c < this._width; c += 1) {
                 for (var r = 0; r < this._height - 1; r += 1) {
-                    console.log("rows", c, r);
                     i = this.toIndex(c, r);
                     ri = this.toIndex(c, r + 1);
                     d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
@@ -120,30 +118,30 @@ define(['Promise',
                 umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
             }
 
-//            for (var i = 0; i < umatrixrows.length; i += 2) {
-//                umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
-//            }
+            for (var i = 0; i < umatrixrows.length; i += 2) {
+                umatrixrows[i + 1] = ease((umatrixrows[i + 1] - min) / (max - min));
+            }
 
             var xy = {};
             for (var i = 0; i < umatrixcols.length; i += 2) {
                 this.toXY(umatrixcols[i], xy);
                 context2d.beginPath();
-                context2d.moveTo((xy.y ) * sx + sx, (xy.x ) * sy);
-                context2d.lineTo((xy.y ) * sx + sx, (xy.x + 1) * sy);
-//                context2d.strokeStyle = "rgba(0,0,0," + umatrix[i + 1 + ")";
-                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
+                context2d.moveTo((xy.x + 1) * sx, (xy.y ) * sy);
+                context2d.lineTo((xy.x + 1) * sx, (xy.y + 1) * sy);
+                context2d.strokeStyle = "rgba(0,0,0," + umatrixcols[i + 1] + ")";
+//                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
                 context2d.stroke();
             }
 
-//            for (var i = 0; i < umatrixrows.length; i += 2) {
-//                this.toXY(umatrixrows[i], xy);
-//                context2d.beginPath();
-//                context2d.moveTo((xy.x ) * sx + sx, (xy.y ) * sy);
-//                context2d.lineTo((xy.x + 1) * sx + sx, (xy.y ) * sy);
-////                context2d.strokeStyle = "rgba(0,0,0," + umatrix[i + 1 + ")";
+            for (var i = 0; i < umatrixrows.length; i += 2) {
+                this.toXY(umatrixrows[i], xy);
+                context2d.beginPath();
+                context2d.moveTo((xy.x ) * sx, (xy.y + 1) * sy);
+                context2d.lineTo((xy.x + 1) * sx, (xy.y + 1 ) * sy);
+                context2d.strokeStyle = "rgba(0,0,0," + umatrixrows[i + 1] + ")";
 //                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
-//                context2d.stroke();
-//            }
+                context2d.stroke();
+            }
 
         },
 
@@ -264,9 +262,6 @@ define(['Promise',
             for (var i = 0, pixeli = 0; i < this._neuralWeights.length; i += this._codeBookSize, pixeli += 4) {
                 mapNeuronToPixel(this._neuralWeights, i, imgData.data, pixeli);
             }
-        },
-
-        findXY: function (codebook, i) {
         }
 
     });

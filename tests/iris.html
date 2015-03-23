@@ -30,8 +30,8 @@ require({
         },
         ["ponder/SOM"], function (SOM) {
 
-            var width = 10;
-            var height = 10;
+            var width = 16;
+            var height = 16;
             var som = new SOM({
                 width: width,
                 height: height,
@@ -424,7 +424,7 @@ require({
                 }
 
 
-//                som.drawU(context2d, sx, sy);
+                som.drawU(context2d, sx, sy);
             }
 
             function progress() {
