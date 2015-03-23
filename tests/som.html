@@ -28,10 +28,10 @@
                     'Promise': "bower_components/Promise/Promise"
                 }
             },
-            ["ponder/SOM"], function (SOM) {
+            ["ponder/SOM", "ponder/colorRamp"], function (SOM, colorRamp) {
 
-                var width = 10;
-                var height = 10;
+                var width = 128;
+                var height = 128;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -94,7 +94,8 @@
 
                     som.drawU(context2d, sx, sy);
 
-[]                }
+                    []
+                }
 
                 function progress() {
 
@@ -103,9 +104,18 @@
 //                    context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
 
                     som.averageD(bufferImageData, function (weight, pixel, pixeli) {
-                        pixel[pixeli] = 255 - Math.round(weight * 255);
-                        pixel[pixeli + 1] = 255 - Math.round(weight * 255);
-                        pixel[pixeli + 2] = 255 - Math.round(weight * 255);
+
+                        var color = colorRamp[Math.min(Math.round(weight * colorRamp.length),colorRamp.length-1)];
+                        if (!color){
+                            debugger;
+                        }
+                        colors = color.split(",");
+                        pixel[pixeli] = colors[0];
+                        pixel[pixeli + 1] = colors[1];
+                        pixel[pixeli + 2] = colors[2];
+//                        pixel[pixeli] = 255 - Math.round(weight * 255);
+//                        pixel[pixeli + 1] = 255 - Math.round(weight * 255);
+//                        pixel[pixeli + 2] = 255 - Math.round(weight * 255);
                         pixel[pixeli + 3] = 255;
                     });
                     buffer.putImageData(bufferImageData, 0, 0);
