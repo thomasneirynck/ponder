@@ -70,7 +70,7 @@ define(['Promise',
 
         trainMap: function (sampleData) {
 //            var iterationLimit = this._width * this._height;
-            var iterationLimit = 10;
+            var iterationLimit = 32;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
@@ -165,12 +165,14 @@ define(['Promise',
         },
 
         toIndex: function (x, y) {
-            return ((this._height * x) + y) * this._codeBookSize;
+//            return ((this._height * x) + y) * this._codeBookSize;
+            return ((this._width * y) + x) * this._codeBookSize;
         },
 
+
         toXY: function (index, out) {
-            out.x = Math.floor(index / this._codeBookSize / this._height);
-            out.y = (index / this._codeBookSize) % this._width;
+            out.y = Math.floor(index / this._codeBookSize / this._width);
+            out.x = (index / this._codeBookSize) % this._width;
         },
 
 
@@ -262,6 +264,55 @@ define(['Promise',
             for (var i = 0, pixeli = 0; i < this._neuralWeights.length; i += this._codeBookSize, pixeli += 4) {
                 mapNeuronToPixel(this._neuralWeights, i, imgData.data, pixeli);
             }
+        },
+
+        averageD: function (imgData, mapWeigthToPixel) {
+            var xy = {};
+            var distance , total, x, y, ni;
+            var min = Infinity;
+            var max = -Infinity;
+            var outArray = [];
+            for (var i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
+
+                distance = 0;
+                total = 0;
+                this.toXY(i, xy);
+                x = xy.x;
+                y = xy.y;
+
+                if (between(x - 1, 0, this._width)) {
+                    ni = this.toIndex(x - 1, y);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+                if (between(x + 1, 0, this._width)) {
+                    ni = this.toIndex(x + 1, y);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+
+                if (between(y - 1, 0, this._height)) {
+                    ni = this.toIndex(x, y - 1);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+
+                if (between(y + 1, 0, this._height)) {
+                    ni = this.toIndex(x, y + 1);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+
+
+                outArray[i/this._codeBookSize] = distance / total;
+                min = Math.min(min, outArray[i/this._codeBookSize]);
+                max = Math.max(max, outArray[i/this._codeBookSize]);
+            }
+
+            for (var i = 0, pixeli = 0; i < this._neuralWeights.length / this._codeBookSize; i += 1, pixeli += 4) {
+                mapWeigthToPixel((outArray[i] - min) / (max - min), imgData.data, pixeli);
+            }
+
         }
 
     });

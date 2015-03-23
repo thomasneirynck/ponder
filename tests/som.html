@@ -30,8 +30,8 @@
             },
             ["ponder/SOM"], function (SOM) {
 
-                var width = 32;
-                var height = 32;
+                var width = 10;
+                var height = 10;
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -40,7 +40,9 @@
 
                 var data = [
                     1, 0, 0,
+                    1, 0.12, 0.12,
                     0, 1, 0,
+                    0, 0.9, 1,
                     0, 0, 1,
                     0, 1, 1,
                     1, 0, 1,
@@ -73,10 +75,12 @@
                 function done() {
 
                     var out = {};
+                    var sx = context2d.canvas.width / width;
+                    var sy = context2d.canvas.height / height;
                     for (var i = 0; i < data.length; i += 3) {
                         som.bmu(data, i, out);
 
-                        context2d.fillStyle = "rgb(" +Math.round(data[i] * 255) + "," + Math.round(data[i + 1] * 255) + "," + Math.round(data[i + 2] * 255) + ")";
+                        context2d.fillStyle = "rgb(" + Math.round(data[i] * 255) + "," + Math.round(data[i + 1] * 255) + "," + Math.round(data[i + 2] * 255) + ")";
 
                         context2d.fillRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
 
@@ -88,12 +92,25 @@
                         context2d.strokeRect(out.x * context2d.canvas.width / width, out.y * context2d.canvas.height / height, 10, 10);
                     }
 
-                }
+                    som.drawU(context2d, sx, sy);
+
+[]                }
 
                 function progress() {
-                    som.fill2dImageData(bufferImageData, fillPixel);
+
+//                    som.fill2dImageData(bufferImageData, fillPixel);
+//                    buffer.putImageData(bufferImageData, 0, 0);
+//                    context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
+                    som.averageD(bufferImageData, function (weight, pixel, pixeli) {
+                        pixel[pixeli] = 255 - Math.round(weight * 255);
+                        pixel[pixeli + 1] = 255 - Math.round(weight * 255);
+                        pixel[pixeli + 2] = 255 - Math.round(weight * 255);
+                        pixel[pixeli + 3] = 255;
+                    });
                     buffer.putImageData(bufferImageData, 0, 0);
                     context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
                 }
 
                 som.trainMap(data);
