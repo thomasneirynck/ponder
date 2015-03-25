@@ -28,16 +28,18 @@
                     'Promise': "bower_components/Promise/Promise"
                 }
             },
-            ["ponder/SOM", "ponder/colorRamp","./sacramento.js"], function (SOM, colorRamp,dataOrig) {
+            ["ponder/SOM", "ponder/colorRamp", "./gdp.js"], function (SOM, colorRamp, gdp) {
 
+                var dataOrig = gdp.data;
+                var codebookSize = 12;
                 var width = 100;
                 var height = 100;
-                var codebookSize = 6;
                 var som = new SOM({
                     width: width,
                     height: height,
                     codeBookSize: codebookSize
                 });
+
 
                 var data = new Array(dataOrig.length);
                 var min, max;
@@ -52,7 +54,6 @@
                         data[j * codebookSize + i] = (dataOrig[j * codebookSize + i] - min) / (max - min);
                     }
                 }
-
 
 
                 var context2d = document.getElementById("som").getContext("2d");
@@ -80,12 +81,13 @@
                     for (var i = 0; i < data.length; i += codebookSize) {
                         som.bmu(data, i, out);
 
-                        context2d.fillStyle ="rgb(255,255,255)";
+                        context2d.fillStyle = "rgb(255,255,255)";
 
 
                         som.jiggerBMU(data, i, out.x, out.y, out);
-                        context2d.fillRect(out.jx * context2d.canvas.width / width, out.jy * context2d.canvas.height / height, 2, 2);
+                        context2d.fillRect(out.jx *sx, out.jy * sy, 2, 2);
 
+                        context2d.fillText(gdp.labels[i / codebookSize], out.jx * sx, out.jy * sy);
 
                     }
 
@@ -98,8 +100,8 @@
 
                     som.averageD(bufferImageData, function (weight, pixel, pixeli) {
 
-                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length),colorRamp.length-1),0)];
-                        if (!color){
+                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
+                        if (!color) {
                             debugger;
                         }
                         colors = color.split(",");

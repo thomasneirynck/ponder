@@ -28,11 +28,13 @@
                     'Promise': "bower_components/Promise/Promise"
                 }
             },
-            ["ponder/SOM", "ponder/colorRamp","./sacramento.js"], function (SOM, colorRamp,dataOrig) {
+            ["ponder/SOM", "ponder/colorRamp", "./county.js"], function (SOM, colorRamp, dataOrig) {
 
-                var width = 100;
-                var height = 100;
-                var codebookSize = 6;
+                var width = 54;
+                var height = 54;
+                var codebookSize = 53;
+                console.log("records", dataOrig.length / codebookSize);
+
                 var som = new SOM({
                     width: width,
                     height: height,
@@ -52,7 +54,6 @@
                         data[j * codebookSize + i] = (dataOrig[j * codebookSize + i] - min) / (max - min);
                     }
                 }
-
 
 
                 var context2d = document.getElementById("som").getContext("2d");
@@ -80,7 +81,7 @@
                     for (var i = 0; i < data.length; i += codebookSize) {
                         som.bmu(data, i, out);
 
-                        context2d.fillStyle ="rgb(255,255,255)";
+                        context2d.fillStyle = "rgb(255,255,255)";
 
 
                         som.jiggerBMU(data, i, out.x, out.y, out);
@@ -98,8 +99,8 @@
 
                     som.averageD(bufferImageData, function (weight, pixel, pixeli) {
 
-                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length),colorRamp.length-1),0)];
-                        if (!color){
+                        var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
+                        if (!color) {
                             debugger;
                         }
                         colors = color.split(",");
