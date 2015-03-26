@@ -10,15 +10,9 @@ define(['Promise',
         return n >= 0 ? 1 : -1;
     }
 
-    function testDistention(t, b, c, d) {
-        var ts = (t /= d) * t;
-        var tc = ts * t;
-        return b + c * (tc * ts + -5 * ts * ts + 10 * tc + -10 * ts + 5 * t);
-    }
-
     function ease(t) {
-//        return t;
-        return 1 + (--t) * t * t * t * t;
+        return t;
+//        return 1 + (--t) * t * t * t * t;
     }
 
     return type({
@@ -40,7 +34,6 @@ define(['Promise',
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
             var influence = 1 - (distance / neighbourhoodDistance);
-//            var influence = Math.exp(- Math.pow(distance,2)/ (Math.pow(neighbourhoodDistance,2)));
             var error;
             for (var i = 0; i < this._codeBookSize; i += 1) {
                 error = sampleData[fi + i] - this._neuralWeights[ni + i];
@@ -69,8 +62,7 @@ define(['Promise',
         },
 
         trainMap: function (sampleData) {
-//            var iterationLimit = this._width * this._height;
-            var iterationLimit = 16;
+            var iterationLimit = 32;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
@@ -88,10 +80,10 @@ define(['Promise',
             var umatrixrows = [];
             var min = Infinity;
             var max = -Infinity;
-            var i, ri;
+            var i, ri, c, r;
             var d;
-            for (var c = 0; c < this._width - 1; c += 1) {
-                for (var r = 0; r < this._height; r += 1) {
+            for (c = 0; c < this._width - 1; c += 1) {
+                for (r = 0; r < this._height; r += 1) {
                     i = this.toIndex(c, r);
                     ri = this.toIndex(c + 1, r);
                     d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
@@ -102,8 +94,8 @@ define(['Promise',
                 }
             }
 
-            for (var c = 0; c < this._width; c += 1) {
-                for (var r = 0; r < this._height - 1; r += 1) {
+            for (c = 0; c < this._width; c += 1) {
+                for (r = 0; r < this._height - 1; r += 1) {
                     i = this.toIndex(c, r);
                     ri = this.toIndex(c, r + 1);
                     d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
@@ -114,16 +106,16 @@ define(['Promise',
                 }
             }
 
-            for (var i = 0; i < umatrixcols.length; i += 2) {
+            for (i = 0; i < umatrixcols.length; i += 2) {
                 umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
             }
 
-            for (var i = 0; i < umatrixrows.length; i += 2) {
+            for (i = 0; i < umatrixrows.length; i += 2) {
                 umatrixrows[i + 1] = ease((umatrixrows[i + 1] - min) / (max - min));
             }
 
             var xy = {};
-            for (var i = 0; i < umatrixcols.length; i += 2) {
+            for (i = 0; i < umatrixcols.length; i += 2) {
                 this.toXY(umatrixcols[i], xy);
                 context2d.beginPath();
                 context2d.moveTo((xy.x + 1) * sx, (xy.y ) * sy);
@@ -133,13 +125,12 @@ define(['Promise',
                 context2d.stroke();
             }
 
-            for (var i = 0; i < umatrixrows.length; i += 2) {
+            for (i = 0; i < umatrixrows.length; i += 2) {
                 this.toXY(umatrixrows[i], xy);
                 context2d.beginPath();
                 context2d.moveTo((xy.x ) * sx, (xy.y + 1) * sy);
                 context2d.lineTo((xy.x + 1) * sx, (xy.y + 1 ) * sy);
                 context2d.strokeStyle = "rgba(0,0,0," + umatrixrows[i + 1] + ")";
-//                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
                 context2d.stroke();
             }
 
