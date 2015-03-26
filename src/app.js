@@ -20,10 +20,7 @@ require.config({
     }
 });
 
-require(["Papa", "$"], function (Papa, $) {
-
-
-    console.log("args", arguments);
+require(["Papa", "ponder/SOMFactory","ponder/colorRamp","$"], function (Papa, SOMFactory, colorRamp,$) {
 
     document
         .getElementById("fileSelect")
@@ -35,16 +32,25 @@ require(["Papa", "$"], function (Papa, $) {
 
             Papa.parse(file, {
                 worker: true,
-                header: true,
-                complete: function (parsedObject) {
-                    console.log("parsed!", parsedObject);
-                },
+                complete: createSom,
                 error: function () {
                     alert("cant parse file");
                 }
             });
 
         }, false);
+
+
+    function createSom(parsedResult){
+
+        var context2d = document.getElementById("som").getContext("2d");
+        context2d.canvas.width = $(context2d.canvas).parent().width();
+        context2d.canvas.height = $(context2d.canvas).parent().height();
+
+        var som = SOMFactory.makeSOM(parsedResult.data, context2d);
+
+
+    }
 
 
 });

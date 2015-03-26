@@ -1,6 +1,7 @@
 define(['Promise',
-    "type"
-], function (Promise, type) {
+    "type",
+    "./colorRamp"
+], function (Promise, type, colorRamp) {
 
     function between(x, s, e) {
         return x >= s && x < e;
@@ -31,6 +32,43 @@ define(['Promise',
             this._mapRadius = Math.max(this._width, this._height) / 2;
             this._initialLearningRate = 0.5;
         },
+
+        draw: function(context2d, data){
+
+
+            var buffer = document.createElement("canvas").getContext("2d");
+            buffer.canvas.width = this._width;
+            buffer.canvas.height = this._height;
+
+            var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
+
+            this.averageD(bufferImageData, function (weight, pixel, pixeli) {
+                var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
+                var rgb = color.split(",");
+                pixel[pixeli] = rgb[0];
+                pixel[pixeli + 1] = rgb[1];
+                pixel[pixeli + 2] = rgb[2];
+                pixel[pixeli + 3] = 255;
+            });
+
+            buffer.putImageData(bufferImageData, 0, 0);
+            context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
+            var out = {};
+            var sx = context2d.canvas.width / this._width;
+            var sy = context2d.canvas.height / this._height;
+
+            for (var i = 0; i < data.length; i += this._codeBookSize) {
+                this.bmu(data, i, out);
+                context2d.fillStyle = "rgb(255,255,255)";
+                this.jiggerBMU(data, i, out.x, out.y, out);
+                context2d.fillRect(out.jx *sx, out.jy * sy, 2, 2);
+            }
+
+
+        },
+
+
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
             var influence = 1 - (distance / neighbourhoodDistance);
