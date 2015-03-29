@@ -100,7 +100,7 @@ define(['Promise',
         },
 
         trainMap: function (sampleData) {
-            var iterationLimit = 32;
+            var iterationLimit = 16;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
