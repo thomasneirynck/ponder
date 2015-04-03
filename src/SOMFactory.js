@@ -1,4 +1,4 @@
-define(["Promise", "./SOM", "type"], function (Promise, SOM, type) {
+define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, SOMHandle, require) {
 
     function normalize(trainingData) {
         var mins = new Array(trainingData[0].length);
@@ -27,17 +27,6 @@ define(["Promise", "./SOM", "type"], function (Promise, SOM, type) {
         return dataArray;
     }
 
-    var SOMHandle = type({
-        constructor: function SOMHandle(somWorker) {
-            this._somWorker = somWorker;
-            this._somWorker.addEventListener("message", function (event) {
-
-            });
-        }
-
-
-    });
-
 
     return {
 
@@ -60,25 +49,47 @@ define(["Promise", "./SOM", "type"], function (Promise, SOM, type) {
 
         makeSOMAsync: function (trainingData) {
 
-            var somWorker = new Worker("./SOMWorker");
-            var somHandle = new SOMHandle(somWorker);
-            var dataArray = normalize(trainingData);
+            var somWorker = new Worker(require.toUrl("ponder") + "/SOMWorker.js");
 
-            somWorker.postMessage({
-                type: "init",
-                data: {
-                    input: dataArray,
-                    width: 100,
-                    height: 100,
+            var dataArray = normalize(trainingData);
+            var width = 100;
+            var height = 100;
+
+
+            somWorker.addEventListener("message", workerLoaded);
+
+            function workerLoaded(event) {
+
+
+                console.log("done loading worker!", event.data);
+
+                somWorker.removeEventListener("message", workerLoaded);
+
+                var somHandle = new SOMHandle(somWorker, dataArray);
+                somHandle.width = width;
+                somHandle.height = height;
+
+
+                somWorker.addEventListener("message", function init(event) {
+                    console.log("som initialized", event);
+                    somWorker.removeEventListener("message", init);
+                    ret.resolve(somHandle);
+                });
+
+
+                somWorker.postMessage({
+                    type: "init",
+                    trainingData: dataArray,
+                    width: width,
+                    height: height,
                     codeBookSize: trainingData[0].length
-                }
-            });
+                });
+
+            }
+
 
             var ret = new Promise();
-            var handle = somWorker.addEventListener("message", function () {
-                somWorker.removeEventListener(handle);
-                ret.resolve(somHandle);
-            });
+
 
             return ret.thenable();
         }

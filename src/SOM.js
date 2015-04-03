@@ -33,7 +33,19 @@ define(['Promise',
             this._initialLearningRate = 0.5;
         },
 
-        draw: function(context2d, data){
+        uMatrix: function (bufferImageData, colorRamp) {
+
+            this.averageD(bufferImageData, function (weight, pixel, pixeli) {
+                var rgb = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
+                pixel[pixeli] = rgb[0];
+                pixel[pixeli + 1] = rgb[1];
+                pixel[pixeli + 2] = rgb[2];
+                pixel[pixeli + 3] = 255;
+            });
+
+        },
+
+        draw: function (context2d, data) {
 
 
             var buffer = document.createElement("canvas").getContext("2d");
@@ -62,12 +74,11 @@ define(['Promise',
                 this.bmu(data, i, out);
                 context2d.fillStyle = "rgb(255,255,255)";
                 this.jiggerBMU(data, i, out.x, out.y, out);
-                context2d.fillRect(out.jx *sx, out.jy * sy, 2, 2);
+                context2d.fillRect(out.jx * sx, out.jy * sy, 2, 2);
             }
 
 
         },
-
 
 
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
@@ -333,9 +344,9 @@ define(['Promise',
                 }
 
 
-                outArray[i/this._codeBookSize] = distance / total;
-                min = Math.min(min, outArray[i/this._codeBookSize]);
-                max = Math.max(max, outArray[i/this._codeBookSize]);
+                outArray[i / this._codeBookSize] = distance / total;
+                min = Math.min(min, outArray[i / this._codeBookSize]);
+                max = Math.max(max, outArray[i / this._codeBookSize]);
             }
 
             for (var i = 0, pixeli = 0; i < this._neuralWeights.length / this._codeBookSize; i += 1, pixeli += 4) {

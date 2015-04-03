@@ -1,19 +1,46 @@
-importScripts("../../bower_components/requirejs/require.js");
+importScripts("../bower_components/requirejs/require.js");
 
-require(["ponder/SOM"], function (SOM) {
+require.config({
+    baseUrl: "..",
+    paths: {
+        'ponder': 'src',
+        'type': "bower_components/type/type",
+        'Promise': "bower_components/Promise/Promise"
+    }
+});
 
-    var som;
+require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
 
-    onmessage(function (event) {
+    var som = null;
 
-        if (event.data.type === "init"){
-           som = new SOM();
-
-        } else if (event.data.type === "umatrix"){
-
+    addEventListener("message", function (event) {
+        switch (event.data.type) {
+            case "init":
+                som = new SOM({
+                    width: event.data.width,
+                    height: event.data.height,
+                    codeBookSize: event.data.codeBookSize
+                });
+                postMessage({
+                    type: "initSuccess"
+                });
+                break;
+            case "trainMap":
+                som.trainMap(event.data.data);
+                postMessage({
+                    type: "trainMapSucces"
+                });
+                break;
+            case "uMatrix":
+                som.uMatrix(event.data.pixelBuffer, blueToWhite);
+                postMessage({
+                    type: "uMatrixSuccess",
+                    pixelBuffer: event.data.pixelBuffer
+                });
         }
+    }, false);
 
-    });
+    postMessage("worker-loaded");
 
 
 });
