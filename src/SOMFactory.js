@@ -60,9 +60,6 @@ define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, S
 
             function workerLoaded(event) {
 
-
-                console.log("done loading worker!", event.data);
-
                 somWorker.removeEventListener("message", workerLoaded);
 
                 var somHandle = new SOMHandle(somWorker, dataArray);
@@ -71,7 +68,6 @@ define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, S
 
 
                 somWorker.addEventListener("message", function init(event) {
-                    console.log("som initialized", event);
                     somWorker.removeEventListener("message", init);
                     ret.resolve(somHandle);
                 });

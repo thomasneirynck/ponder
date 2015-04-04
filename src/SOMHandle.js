@@ -11,7 +11,6 @@ define(["type", "Promise"], function (type, Promise) {
         _process: function () {
 
             if (this._busy) {
-                console.log("busy, waiting");
                 return;
             }
 
@@ -23,7 +22,6 @@ define(["type", "Promise"], function (type, Promise) {
             var self = this;
 
             function handle(event) {
-                console.log(event.data.type);
                 command.promise.resolve(event.data);
                 self._somWorker.removeEventListener("message", handle);
                 self._busy = false;

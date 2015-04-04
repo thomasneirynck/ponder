@@ -4,6 +4,13 @@ html, body {
     height: 100%;
 }
 
+#map {
+    width:95%;
+    height: 95%;
+    position: relative;
+    border: 1px solid red;
+}
+
 #wrapper {
     position: relative;
     width: 100%;
@@ -13,10 +20,10 @@ html, body {
 #som {
     position: relative;
     overflow: hidden;
+    border: 1px solid blue;
 }
 
 #fileSelect {
-    position: absolute;
     left: 10px;
     top: 10px;
 }
