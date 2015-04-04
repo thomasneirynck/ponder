@@ -300,6 +300,17 @@ define(['Promise',
             this.toXY(minI, out);
         },
 
+        bmus: function (data) {
+            var out = {};
+            var results = [];
+            for (var i = 0; i < data.length; i += this._codeBookSize) {
+                this.bmu(data, i, out);
+                this.jiggerBMU(data, i, out.x, out.y, out);
+                results.push({x: out.jx, y: out.jy});
+            }
+            return results;
+        },
+
         fill2dImageData: function (imgData, mapNeuronToPixel) {
             for (var i = 0, pixeli = 0; i < this._neuralWeights.length; i += this._codeBookSize, pixeli += 4) {
                 mapNeuronToPixel(this._neuralWeights, i, imgData.data, pixeli);

@@ -37,6 +37,14 @@ require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
                     type: "uMatrixSuccess",
                     pixelBuffer: event.data.pixelBuffer
                 });
+                break;
+            case "bmus":
+                var locations = som.bmus(event.data.data);
+                postMessage({
+                    type: "bmusSuccess",
+                    locations: locations
+                });
+                break;
         }
     }, false);
 

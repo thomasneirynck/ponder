@@ -61,6 +61,18 @@ define(["type", "Promise"], function (type, Promise) {
             });
             this._schedule();
             return p;
+        },
+        bmus: function () {
+            var p = new Promise();
+            this._queue.unshift({
+                message: {
+                    type: "bmus",
+                    data: this._dataArray
+                },
+                promise: p
+            });
+            this._schedule();
+            return p;
         }
 
 
