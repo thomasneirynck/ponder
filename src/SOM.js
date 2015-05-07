@@ -1,7 +1,7 @@
-define(['Promise',
+define([
     "type",
     "./colorRamp"
-], function (Promise, type, colorRamp) {
+], function (type, colorRamp) {
 
     function between(x, s, e) {
         return x >= s && x < e;

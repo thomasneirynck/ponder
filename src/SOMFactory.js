@@ -1,4 +1,4 @@
-define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, SOMHandle, require) {
+define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, require) {
 
     function normalize(trainingData) {
         var mins = new Array(trainingData[0].length);
@@ -29,50 +29,25 @@ define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, S
 
 
     return {
-
-        makeSOM: function (trainingData, context2d) {
-
-            var dataArray = normalize(trainingData);
-
-            var som = new SOM({
-                width: 100,
-                height: 100,
-                codeBookSize: trainingData[0].length
-            });
-            som.trainMap(dataArray);
-            som.draw(context2d, dataArray);
-
-
-            return som;
-
-        },
-
         makeSOMAsync: function (trainingData) {
 
             var somWorker = new Worker(require.toUrl("ponder") + "/SOMWorker.js");
+            var somReady = new Promise();
 
-            var dataArray = normalize(trainingData);
-            var width = 100;
-            var height = 100;
-
-
-            somWorker.addEventListener("message", workerLoaded);
-
-            function workerLoaded(event) {
-
+            somWorker.addEventListener("message", function workerLoaded(event) {
                 somWorker.removeEventListener("message", workerLoaded);
 
+                var dataArray = normalize(trainingData);
+                var width = 64;
+                var height = 64;
                 var somHandle = new SOMHandle(somWorker, dataArray);
                 somHandle.width = width;
                 somHandle.height = height;
 
-
                 somWorker.addEventListener("message", function init(event) {
                     somWorker.removeEventListener("message", init);
-                    ret.resolve(somHandle);
+                    somReady.resolve(somHandle);
                 });
-
-
                 somWorker.postMessage({
                     type: "init",
                     trainingData: dataArray,
@@ -81,13 +56,10 @@ define(["Promise", "./SOM", "./SOMHandle", "require"], function (Promise, SOM, S
                     codeBookSize: trainingData[0].length
                 });
 
-            }
+            });
 
 
-            var ret = new Promise();
-
-
-            return ret.thenable();
+            return somReady.thenable();
         }
 
     };

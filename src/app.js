@@ -10,7 +10,7 @@ require.config({
     shim: {
         Papa: {
             exports: "Papa",
-            init: function () {
+            initinit: function () {
                 Papa.SCRIPT_PATH = "vendor/papaparse.js";
             }
         },
@@ -21,7 +21,7 @@ require.config({
 });
 
 require(["ponder/SOMFactory",
-    "Promise", "Papa", "$"], function (SOMFactory, Promise, Papa, $) {
+    "Papa", "$"], function (SOMFactory, Papa, $) {
 
     document
         .getElementById("fileSelect")
@@ -43,21 +43,23 @@ require(["ponder/SOMFactory",
             });
         }, false);
 
+
+    function throwError(error) {
+        throw error;
+    }
+
     function createSom(parsedResult) {
-
-        var context2d = document.getElementById("som").getContext("2d");
-        context2d.canvas.width = $(context2d.canvas).parent().width();
-        context2d.canvas.height = $(context2d.canvas).parent().height();
-
 
         SOMFactory
             .makeSOMAsync(parsedResult.data)
             .then(function (somHandle) {
-                somHandle.trainMap();
-                return {
-                    somHandle: somHandle
-                };
-            })
+                return somHandle.trainMap()
+                    .then(function () {
+                        return {
+                            somHandle: somHandle
+                        };
+                    }, throwError);
+            }, throwError)
             .then(function (state) {
 
                 var buffer = document.createElement("canvas").getContext("2d");
@@ -66,33 +68,40 @@ require(["ponder/SOMFactory",
 
                 var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
-                return Promise
-                    .when(state.somHandle.uMatrix(bufferImageData))
+                return state.somHandle
+                    .uMatrix(bufferImageData)
                     .then(function (data) {
                         state.pixelBuffer = data.pixelBuffer;
                         state.buffer = buffer;
                         return state;
-                    });
+                    }, throwError);
 
-            })
+            }, throwError)
             .then(function (state) {
+
+                state.context2d = document.getElementById("som").getContext("2d");
+                state.context2d.canvas.width = $(state.context2d.canvas).parent().width();
+                state.context2d.canvas.height = $(state.context2d.canvas).parent().height();
+
                 state.buffer.putImageData(state.pixelBuffer, 0, 0);
-                context2d.drawImage(state.buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-                return Promise.when(state.somHandle.bmus())
+                state.context2d.drawImage(state.buffer.canvas, 0, 0, state.context2d.canvas.width, state.context2d.canvas.height);
+
+                return state.somHandle.bmus()
                     .then(function (data) {
                         state.locations = data.locations;
                         return state;
-                    });
-            })
+                    }, throwError);
+            }, throwError)
             .then(function (state) {
-                var sx = context2d.canvas.width / state.somHandle.width;
-                var sy = context2d.canvas.height / state.somHandle.height;
+
+                var sx = state.context2d.canvas.width / state.somHandle.width;
+                var sy = state.context2d.canvas.height / state.somHandle.height;
                 var size = 2;
-                context2d.fillStyle = "rgb(255,255,255)";
+                state.context2d.fillStyle = "rgb(255,255,255)";
                 for (var i = 0; i < state.locations.length; i += 1) {
-                    context2d.fillRect(state.locations[i].x * sx - size / 2, state.locations[i].y * sy - size / 2, size, size);
+                    state.context2d.fillRect(state.locations[i].x * sx - size / 2, state.locations[i].y * sy - size / 2, size, size);
                 }
-            });
+            }, throwError);
 
     }
 

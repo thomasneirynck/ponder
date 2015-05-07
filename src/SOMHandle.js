@@ -37,40 +37,31 @@ define(["type", "Promise"], function (type, Promise) {
             setTimeout(this._process.bind(this), 0);
         },
         trainMap: function () {
-            var p = new Promise();
-            this._queue.unshift({
-                message: {
+            return this._doCommand({
                     type: "trainMap",
                     data: this._dataArray
-                },
-                promise: p
-            });
-            this._schedule();
-            return p;
+                }
+            );
         },
         uMatrix: function (bufferData) {
-            var p = new Promise();
-            this._queue.unshift({
-                message: {
-                    type: "uMatrix",
-                    pixelBuffer: bufferData
-                },
-                promise: p
+            return this._doCommand({
+                type: "uMatrix",
+                pixelBuffer: bufferData
             });
-            this._schedule();
-            return p;
         },
         bmus: function () {
-            var p = new Promise();
+            return this._doCommand({
+                type: "bmus",
+                data: this._dataArray
+            });
+        },
+        _doCommand: function (message) {
             this._queue.unshift({
-                message: {
-                    type: "bmus",
-                    data: this._dataArray
-                },
-                promise: p
+                message: message,
+                promise: new Promise()
             });
             this._schedule();
-            return p;
+            return this._queue[0].promise;
         }
 
 
