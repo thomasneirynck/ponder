@@ -10,26 +10,21 @@ define(["type", "Promise"], function (type, Promise) {
         },
         _process: function () {
 
-            if (this._busy) {
-                return;
-            }
-
-            var command = this._queue.pop();
-            if (!command) {
+            if (this._busy || !this._queue.length) {
                 return;
             }
 
             var self = this;
 
-            function handle(event) {
-                command.promise.resolve(event.data);
-                self._somWorker.removeEventListener("message", handle);
-                self._busy = false;
-                self._schedule();
-            }
+            var command = this._queue.pop();
 
             this._busy = true;
-            this._somWorker.addEventListener("message", handle);
+            this._somWorker.addEventListener("message", function handleMessage(event) {
+                command.promise.resolve(event.data);
+                self._somWorker.removeEventListener("message", handleMessage);
+                self._busy = false;
+                self._schedule();
+            });
             this._somWorker.postMessage(command.message);
         },
 
