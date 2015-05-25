@@ -10,7 +10,7 @@ require.config({
     shim: {
         Papa: {
             exports: "Papa",
-            initinit: function () {
+            init: function () {
                 Papa.SCRIPT_PATH = "vendor/papaparse.js";
             }
         },

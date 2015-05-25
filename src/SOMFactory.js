@@ -16,8 +16,6 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
         }
 
         var dataArray = new Array(trainingData.length * trainingData[0].length);
-
-
         for (i = 0, r = 0; r < trainingData.length; r += 1) {
             for (c = 0; c < trainingData[r].length; c += 1) {
                 dataArray[i++] = (trainingData[r][c] - mins[c]) / (maxs[c] - mins[c]);
