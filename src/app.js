@@ -48,47 +48,56 @@ require(["ponder/SOMFactory",
         throw error;
     }
 
-    var APP_STATE = {};
+   
+    var somHandle;
+    var buffer;
+    var context2d;
 
     function createSom(parsedResult) {
 
         SOMFactory
             .makeSOMAsync(parsedResult.data)
-            .then(function (somHandle) {
-                APP_STATE.somHandle = somHandle;
+            .then(function (aSomHandle) {
+                somHandle = aSomHandle;
+                console.log("train map");
                 return somHandle.trainMap();
             }, throwError)
             .then(function () {
 
-                APP_STATE.buffer = document.createElement("canvas").getContext("2d");
-                APP_STATE.buffer.canvas.width = APP_STATE.somHandle.width;
-                APP_STATE.buffer.canvas.height = APP_STATE.somHandle.height;
+                buffer = document.createElement("canvas").getContext("2d");
+                buffer.canvas.width = somHandle.width;
+                buffer.canvas.height = somHandle.height;
 
-                var bufferImageData = APP_STATE.buffer.getImageData(0, 0, APP_STATE.buffer.canvas.width, APP_STATE.buffer.canvas.height);
+                var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
-                return APP_STATE.somHandle.uMatrix(bufferImageData)
-
-            }, throwError)
-            .then(function (data) {
-
-                APP_STATE.context2d = document.getElementById("som").getContext("2d");
-                APP_STATE.context2d.canvas.width = $(APP_STATE.context2d.canvas).parent().width();
-                APP_STATE.context2d.canvas.height = $(APP_STATE.context2d.canvas).parent().height();
-
-                APP_STATE.buffer.putImageData(data.pixelBuffer, 0, 0);
-                APP_STATE.context2d.drawImage(APP_STATE.buffer.canvas, 0, 0, APP_STATE.context2d.canvas.width, APP_STATE.context2d.canvas.height);
-
-                return APP_STATE.somHandle.bmus();
+                console.log("do umatrix");
+                return somHandle.uMatrix(bufferImageData)
 
             }, throwError)
             .then(function (data) {
-                var sx = APP_STATE.context2d.canvas.width / APP_STATE.somHandle.width;
-                var sy = APP_STATE.context2d.canvas.height / APP_STATE.somHandle.height;
+
+                context2d = document.getElementById("som").getContext("2d");
+                context2d.canvas.width = $(context2d.canvas).parent().width();
+                context2d.canvas.height = $(context2d.canvas).parent().height();
+
+                buffer.putImageData(data.pixelBuffer, 0, 0);
+                context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
+                console.log("do bmus");
+                return somHandle.bmus();
+
+            }, throwError)
+            .then(function (data) {
+                var sx = context2d.canvas.width / somHandle.width;
+                var sy = context2d.canvas.height / somHandle.height;
                 var size = 2;
-                APP_STATE.context2d.fillStyle = "rgb(255,255,255)";
+                context2d.fillStyle = "rgb(255,255,255)";
+                console.log("draw bmus", data.locations);
                 for (var i = 0; i < data.locations.length; i += 1) {
-                    APP_STATE.context2d.fillRect(data.locations[i].x * sx - size / 2, data.locations[i].y * sy - size / 2, size, size);
+                    context2d.fillRect(data.locations[i].x * sx - size / 2, data.locations[i].y * sy - size / 2, size, size);
+
                 }
+                console.log("done with the bmus");
             }, throwError);
 
     }

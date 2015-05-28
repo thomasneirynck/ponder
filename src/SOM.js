@@ -33,6 +33,53 @@ define([
             this._initialLearningRate = 0.5;
         },
 
+        uMatrixNormalized: function () {
+
+            var xy = {x: 0, y: 0};
+            var distance , total, ni, i;
+            var min = Infinity;
+            var max = -Infinity;
+            var uMatrix = new Array(this._width * this._height);
+            for (i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
+
+                distance = 0;
+                total = 0;
+                this.toXY(i, xy);
+
+                if (between(xy.x - 1, 0, this._width)) {
+                    ni = this.toIndex(xy.x - 1, xy.y);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+                if (between(xy.x + 1, 0, this._width)) {
+                    ni = this.toIndex(xy.x + 1, xy.y);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+                if (between(xy.y - 1, 0, this._height)) {
+                    ni = this.toIndex(xy.x, xy.y - 1);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+                if (between(xy.y + 1, 0, this._height)) {
+                    ni = this.toIndex(xy.x, xy.y + 1);
+                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
+                    total += 1;
+                }
+
+                uMatrix[i / this._codeBookSize] = distance / total;
+                min = Math.min(min, uMatrix[i / this._codeBookSize]);
+                max = Math.max(max, uMatrix[i / this._codeBookSize]);
+            }
+
+            for (i = 0; i < uMatrix.length; i += 1) {
+                uMatrix[i] = (uMatrix[i] - min) / (max - min);
+            }
+
+            return uMatrix;
+
+        },
+
         uMatrix: function (bufferImageData, colorRamp) {
 
             this.averageD(bufferImageData, function (weight, pixel, pixeli) {
