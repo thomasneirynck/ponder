@@ -13,7 +13,30 @@ define([
 
     function ease(t) {
         return t;
-//        return 1 + (--t) * t * t * t * t;
+    }
+
+    function calculateBilinearInterpolant(x1, x, x2, y1, y, y2, Q11, Q21, Q12, Q22) {
+
+        //taken from https://www.khanacademy.org/computer-programming/bilinear-interpolation-calculator/5137979113734144
+        /**
+         * (x1, y1) - coordinates of corner 1 - [Q11]
+         * (x2, y1) - coordinates of corner 2 - [Q21]
+         * (x1, y2) - coordinates of corner 3 - [Q12]
+         * (x2, y2) - coordinates of corner 4 - [Q22]
+         *
+         * (x, y)   - coordinates of interpolation
+         *
+         * Q11      - corner 1
+         * Q21      - corner 2
+         * Q12      - corner 3
+         * Q22      - corner 4
+         */
+
+        var ans1 = (((x2 - x) * (y2 - y)) / ((x2 - x1) * (y2 - y1))) * Q11;
+        var ans2 = (((x - x1) * (y2 - y)) / ((x2 - x1) * (y2 - y1))) * Q21;
+        var ans3 = (((x2 - x) * (y - y1)) / ((x2 - x1) * (y2 - y1))) * Q12;
+        var ans4 = (((x - x1) * (y - y1)) / ((x2 - x1) * (y2 - y1))) * Q22;
+        return (ans1 + ans2 + ans3 + ans4);
     }
 
     return type({
@@ -92,42 +115,6 @@ define([
 
         },
 
-        draw: function (context2d, data) {
-
-
-            var buffer = document.createElement("canvas").getContext("2d");
-            buffer.canvas.width = this._width;
-            buffer.canvas.height = this._height;
-
-            var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
-
-            this.averageD(bufferImageData, function (weight, pixel, pixeli) {
-                var color = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
-                var rgb = color.split(",");
-                pixel[pixeli] = rgb[0];
-                pixel[pixeli + 1] = rgb[1];
-                pixel[pixeli + 2] = rgb[2];
-                pixel[pixeli + 3] = 255;
-            });
-
-            buffer.putImageData(bufferImageData, 0, 0);
-            context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-
-            var out = {};
-            var sx = context2d.canvas.width / this._width;
-            var sy = context2d.canvas.height / this._height;
-
-            for (var i = 0; i < data.length; i += this._codeBookSize) {
-                this.bmu(data, i, out);
-                context2d.fillStyle = "rgb(255,255,255)";
-                this.jiggerBMU(data, i, out.x, out.y, out);
-                context2d.fillRect(out.jx * sx, out.jy * sy, 2, 2);
-            }
-
-
-        },
-
-
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
             var influence = 1 - (distance / neighbourhoodDistance);
             var error;
@@ -136,6 +123,7 @@ define([
                 this._neuralWeights[ni + i] = this._neuralWeights[ni + i] + learningRate * influence * error;
             }
         },
+
 
         train: function (sampleData, fi, learningRate, neighbourhoodDistance, bmu) {
 
@@ -157,6 +145,44 @@ define([
             }
         },
 
+        /**
+         * interpolate values (e.g. u matrix values), with th
+         * @param values array of values. must be same shape as SOM
+         * @param targetWidth
+         * @param targetHeight
+         * @returns {Array}
+         */
+        interpolate: function (values, targetWidth, targetHeight) {
+
+
+            var interpolated = new Array(targetWidth * targetHeight);
+            var x1, x, x2, y1, y, y2, Q11, Q21, Q12, Q22;
+
+            //do row by row, so we fill in the data sequentially (iso. jump around in the array)
+            for (var r = 0; r < targetHeight; r += 1) {
+                for (var c = 0; c < targetWidth; c += 1) {
+
+                    x = c * (this._width - 1) / (targetWidth - 1);
+                    y = r * (this._height - 1) / (targetHeight - 1);
+
+                    x1 = Math.min(Math.floor(x), this._width - 2);
+                    x2 = x1 + 1;
+                    y1 = Math.min(Math.floor(y), this._height - 2);
+                    y2 = y1 + 1;
+
+                    Q11 = values[this.toIndex(x1, y1)];
+                    Q12 = values[this.toIndex(x1, y2)];
+                    Q21 = values[this.toIndex(x2, y1)];
+                    Q22 = values[this.toIndex(x2, y2)];
+
+                    interpolated[(targetWidth * r) + c] = calculateBilinearInterpolant(x1, x, x2, y1, y, y2, Q11, Q12, Q21, Q22);
+                }
+            }
+
+            return interpolated;
+
+        },
+
         trainMap: function (sampleData) {
             var iterationLimit = 16;
             var bmu = {i: 0, x: 0, y: 0};
@@ -170,68 +196,6 @@ define([
             }
         },
 
-        drawU: function (context2d, sx, sy) {
-
-            var umatrixcols = [];
-            var umatrixrows = [];
-            var min = Infinity;
-            var max = -Infinity;
-            var i, ri, c, r;
-            var d;
-            for (c = 0; c < this._width - 1; c += 1) {
-                for (r = 0; r < this._height; r += 1) {
-                    i = this.toIndex(c, r);
-                    ri = this.toIndex(c + 1, r);
-                    d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
-                    umatrixcols.push(i);
-                    umatrixcols.push(d);
-                    min = Math.min(min, d);
-                    max = Math.max(max, d);
-                }
-            }
-
-            for (c = 0; c < this._width; c += 1) {
-                for (r = 0; r < this._height - 1; r += 1) {
-                    i = this.toIndex(c, r);
-                    ri = this.toIndex(c, r + 1);
-                    d = this.distance(this._neuralWeights, i, this._neuralWeights, ri);
-                    umatrixrows.push(i);
-                    umatrixrows.push(d);
-                    min = Math.min(min, d);
-                    max = Math.max(max, d);
-                }
-            }
-
-            for (i = 0; i < umatrixcols.length; i += 2) {
-                umatrixcols[i + 1] = ease((umatrixcols[i + 1] - min) / (max - min));
-            }
-
-            for (i = 0; i < umatrixrows.length; i += 2) {
-                umatrixrows[i + 1] = ease((umatrixrows[i + 1] - min) / (max - min));
-            }
-
-            var xy = {};
-            for (i = 0; i < umatrixcols.length; i += 2) {
-                this.toXY(umatrixcols[i], xy);
-                context2d.beginPath();
-                context2d.moveTo((xy.x + 1) * sx, (xy.y ) * sy);
-                context2d.lineTo((xy.x + 1) * sx, (xy.y + 1) * sy);
-                context2d.strokeStyle = "rgba(0,0,0," + umatrixcols[i + 1] + ")";
-//                context2d.strokeStyle = "rgba(0,0,0," + 1 + ")";
-                context2d.stroke();
-            }
-
-            for (i = 0; i < umatrixrows.length; i += 2) {
-                this.toXY(umatrixrows[i], xy);
-                context2d.beginPath();
-                context2d.moveTo((xy.x ) * sx, (xy.y + 1) * sy);
-                context2d.lineTo((xy.x + 1) * sx, (xy.y + 1 ) * sy);
-                context2d.strokeStyle = "rgba(0,0,0," + umatrixrows[i + 1] + ")";
-                context2d.stroke();
-            }
-
-        },
-
         distance: function (vector1, i1, vector2, i2) {
             var sum = 0;
             for (var i = 0; i < this._codeBookSize; i += 1) {
@@ -242,24 +206,20 @@ define([
 
         learningRate: function (s, iterationLimit) {
             return this._initialLearningRate * (iterationLimit - s) / iterationLimit;
-
-//            return this._initialLearningRate * Math.exp(- Math.pow(s,2)/ (Math.pow(iterationLimit,2)));
         },
 
         neighbourhoodDistance: function (s, iterationLimit) {
             return this._mapRadius * (iterationLimit - s) / iterationLimit;
-//            return this._mapRadius * Math.exp(- Math.pow(s,2)/ (Math.pow(iterationLimit,2)));
         },
 
         toIndex: function (x, y) {
-//            return ((this._height * x) + y) * this._codeBookSize;
             return ((this._width * y) + x) * this._codeBookSize;
         },
 
 
         toXY: function (index, out) {
-            out.y = Math.floor(index / this._codeBookSize / this._width);
             out.x = (index / this._codeBookSize) % this._width;
+            out.y = Math.floor(index / this._codeBookSize / this._width);
         },
 
 
@@ -358,11 +318,6 @@ define([
             return results;
         },
 
-        fill2dImageData: function (imgData, mapNeuronToPixel) {
-            for (var i = 0, pixeli = 0; i < this._neuralWeights.length; i += this._codeBookSize, pixeli += 4) {
-                mapNeuronToPixel(this._neuralWeights, i, imgData.data, pixeli);
-            }
-        },
 
         averageD: function (imgData, mapWeigthToPixel) {
             var xy = {};
