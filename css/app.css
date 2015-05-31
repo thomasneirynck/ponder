@@ -4,12 +4,6 @@ html, body {
     height: 100%;
 }
 
-#map {
-    width:95%;
-    height: 95%;
-    position: relative;
-    border: 1px solid red;
-}
 
 #wrapper {
     position: relative;
@@ -19,8 +13,9 @@ html, body {
 
 #som {
     position: relative;
-    overflow: hidden;
-    border: 1px solid blue;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
 #fileSelect {
@@ -28,3 +23,12 @@ html, body {
     top: 10px;
 }
 
+#ease {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(211,211,211,0.6);
+    z-index: 2;
+}
