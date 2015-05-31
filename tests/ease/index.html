@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../bower_components/requirejs/require.js"></script>
+</head>
+<body>
+
+<div id="ease" style="border: 1px solid red">
+
+</div>
+
+<script>
+    require.config({
+        baseUrl: "../..",
+        paths: {
+            'ponder': 'src',
+            'type': "bower_components/type/type",
+            'Promise': "bower_components/Promise/Promise",
+            'Evented': "bower_components/Evented/Evented",
+            'Papa': "vendor/papaparse",
+            '$': "bower_components/jquery/dist/jquery"
+        },
+        shim: {
+            Papa: {
+                exports: "Papa",
+                init: function () {
+                    Papa.SCRIPT_PATH = "vendor/papaparse.js";
+                }
+            },
+            $: {
+                exports: "$"
+            }
+        }
+    });
+
+    require(
+            ["ponder/ease/EasingInput"], function (EasingInput) {
+
+                easingInput = new EasingInput("ease");
+
+            });
+</script>
+</body>
+</html>
