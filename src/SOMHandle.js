@@ -44,6 +44,19 @@ define(["type", "Promise"], function (type, Promise) {
                 pixelBuffer: bufferData
             });
         },
+        uMatrixNormalized: function () {
+            return this._doCommand({
+                type: "uMatrixNormalized"
+            });
+        },
+        interpolate: function(values,width,height){
+            return this._doCommand({
+                type: "interpolate",
+                values: values,
+                targetWidth: width,
+                targetHeight: height
+            });
+        },
         bmus: function () {
             return this._doCommand({
                 type: "bmus",

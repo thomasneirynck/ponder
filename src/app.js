@@ -21,7 +21,7 @@ require.config({
 });
 
 require(["ponder/SOMFactory",
-    "Papa", "$"], function (SOMFactory, Papa, $) {
+    "Papa", "$", "ponder/ColorMapper"], function (SOMFactory, Papa, $, ColorMapper) {
 
     document
         .getElementById("fileSelect")
@@ -31,7 +31,7 @@ require(["ponder/SOMFactory",
                 return;
             }
 
-            document.getElementById("fileSelect").remove("change", listen);
+            document.getElementById("fileSelect").removeEventListener("change", listen);
             $("#fileSelect").hide();
 
             Papa.parse(file, {
@@ -48,10 +48,14 @@ require(["ponder/SOMFactory",
         throw error;
     }
 
-   
+
     var somHandle;
     var buffer;
     var context2d;
+    var uMatrixData;
+    var bufferImageData;
+
+    var colorMapper = new ColorMapper();
 
     function createSom(parsedResult) {
 
@@ -63,43 +67,40 @@ require(["ponder/SOMFactory",
                 return somHandle.trainMap();
             }, throwError)
             .then(function () {
-
-                buffer = document.createElement("canvas").getContext("2d");
-                buffer.canvas.width = somHandle.width;
-                buffer.canvas.height = somHandle.height;
-
-                var bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
-
-                console.log("do umatrix");
-                return somHandle.uMatrix(bufferImageData)
-
-            }, throwError)
-            .then(function (data) {
+                return somHandle.uMatrixNormalized();
+            })
+            .then(function (successData) {
 
                 context2d = document.getElementById("som").getContext("2d");
                 context2d.canvas.width = $(context2d.canvas).parent().width();
                 context2d.canvas.height = $(context2d.canvas).parent().height();
 
-                buffer.putImageData(data.pixelBuffer, 0, 0);
-                context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+                buffer = document.createElement("canvas").getContext("2d");
+                buffer.canvas.width = somHandle.width;
+                buffer.canvas.height = somHandle.height;
 
-                console.log("do bmus");
-                return somHandle.bmus();
+                bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
-            }, throwError)
-            .then(function (data) {
-                var sx = context2d.canvas.width / somHandle.width;
-                var sy = context2d.canvas.height / somHandle.height;
-                var size = 2;
-                context2d.fillStyle = "rgb(255,255,255)";
-                console.log("draw bmus", data.locations);
-                for (var i = 0; i < data.locations.length; i += 1) {
-                    context2d.fillRect(data.locations[i].x * sx - size / 2, data.locations[i].y * sy - size / 2, size, size);
+                uMatrixData = successData.uMatrix;
 
-                }
-                console.log("done with the bmus");
-            }, throwError);
 
+                drawUmatrix();
+
+            });
+
+    }
+
+    function drawUmatrix(){
+
+        if (!uMatrixData){
+            return;
+        }
+
+
+        
+        colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
+        buffer.putImageData(bufferImageData, 0, 0);
+        context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
     }
 
 });

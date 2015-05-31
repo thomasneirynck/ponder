@@ -38,6 +38,18 @@ require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
                     pixelBuffer: event.data.pixelBuffer
                 });
                 break;
+            case "uMatrixNormalized":
+                postMessage({
+                    type: "uMatrixNormalizedSuccess",
+                    uMatrix: som.uMatrixNormalized()
+                });
+                break;
+            case "interpolate":
+                postMessage({
+                    type: "interpolateSuccess",
+                    values: som.interpolate(event.data.values, event.data.targetWidth, event.data.targetHeight)
+                });
+                break;
             case "bmus":
                 var locations = som.bmus(event.data.data);
                 postMessage({

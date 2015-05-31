@@ -15,6 +15,10 @@ define([
         return t;
     }
 
+    function toIndex(x, y, width, size) {
+        return ((width * y) + x) * size;
+    }
+
     function calculateBilinearInterpolant(x1, x, x2, y1, y, y2, Q11, Q21, Q12, Q22) {
 
         //taken from https://www.khanacademy.org/computer-programming/bilinear-interpolation-calculator/5137979113734144
@@ -170,10 +174,10 @@ define([
                     y1 = Math.min(Math.floor(y), this._height - 2);
                     y2 = y1 + 1;
 
-                    Q11 = values[this.toIndex(x1, y1)];
-                    Q12 = values[this.toIndex(x1, y2)];
-                    Q21 = values[this.toIndex(x2, y1)];
-                    Q22 = values[this.toIndex(x2, y2)];
+                    Q11 = values[toIndex(x1, y1, this._width, 1)];
+                    Q12 = values[toIndex(x1, y2, this._width, 1)];
+                    Q21 = values[toIndex(x2, y1, this._width, 1)];
+                    Q22 = values[toIndex(x2, y2, this._width, 1)];
 
                     interpolated[(targetWidth * r) + c] = calculateBilinearInterpolant(x1, x, x2, y1, y, y2, Q11, Q12, Q21, Q22);
                 }
