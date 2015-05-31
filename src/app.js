@@ -22,7 +22,19 @@ require.config({
 });
 
 require(["ponder/SOMFactory",
-    "Papa", "$", "ponder/ColorMapper","ponder/ease/EasingInput"], function (SOMFactory, Papa, $, ColorMapper, EasingInput) {
+    "Papa", "$", "ponder/ColorMapper", "ponder/ease/EasingInput"], function (SOMFactory, Papa, $, ColorMapper, EasingInput) {
+
+
+    var somHandle;
+    var buffer;
+    var context2d;
+    var uMatrixData;
+    var bufferImageData;
+
+    var colorMapper = new ColorMapper();
+
+    var easingInput = new EasingInput("ease");
+    easingInput.on("input", drawUmatrix);
 
     document
         .getElementById("fileSelect")
@@ -32,8 +44,8 @@ require(["ponder/SOMFactory",
                 return;
             }
 
-            document.getElementById("fileSelect").removeEventListener("change", listen);
-            $("#fileSelect").hide();
+//            document.getElementById("fileSelect").removeEventListener("change", listen);
+//            $("#fileSelect").hide();
 
             Papa.parse(file, {
                 worker: true,
@@ -50,18 +62,12 @@ require(["ponder/SOMFactory",
     }
 
 
-    var somHandle;
-    var buffer;
-    var context2d;
-    var uMatrixData;
-    var bufferImageData;
-
-    var colorMapper = new ColorMapper();
-
-    var easingInput = new EasingInput("ease");
-    easingInput.on("input",drawUmatrix);
-
     function createSom(parsedResult) {
+
+        if (somHandle) {
+            somHandle.kill();
+            somHandle = null;
+        }
 
         SOMFactory
             .makeSOMAsync(parsedResult.data)

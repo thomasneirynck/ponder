@@ -8,6 +8,11 @@ define(["type", "Promise"], function (type, Promise) {
             this._queue = [];
             this._busy = false;
         },
+
+        kill: function(){
+          this._somWorker.terminate();
+        },
+
         _process: function () {
 
             if (this._busy || !this._queue.length) {

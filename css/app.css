@@ -19,8 +19,10 @@ html, body {
 }
 
 #fileSelect {
-    left: 10px;
+    position: absolute;
+    left: 150px;
     top: 10px;
+    z-index: 2;
 }
 
 #ease {
