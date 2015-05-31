@@ -1,4 +1,4 @@
-define(["type", "./blueToWhite"], function (type,blueToWhite2) {
+define(["type", "./blueToWhite"], function (type, blueToWhite2) {
 
 
     return type({
@@ -14,6 +14,10 @@ define(["type", "./blueToWhite"], function (type,blueToWhite2) {
         },
 
 
+        setEasingParameters: function (a, b) {
+            this._a = a;
+            this._b = b;
+        },
 
         /**
          *

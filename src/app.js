@@ -56,6 +56,10 @@ require(["ponder/SOMFactory",
     var bufferImageData;
 
     var colorMapper = new ColorMapper();
+    var xslide = document.getElementById("xslide");
+    var yslide = document.getElementById("yslide");
+    xslide.addEventListener("input", drawUmatrix);
+    yslide.addEventListener("input", drawUmatrix);
 
     function createSom(parsedResult) {
 
@@ -90,14 +94,13 @@ require(["ponder/SOMFactory",
 
     }
 
-    function drawUmatrix(){
+    function drawUmatrix() {
 
-        if (!uMatrixData){
+        if (!uMatrixData) {
             return;
         }
 
-
-        
+        colorMapper.setEasingParameters(xslide.value, yslide.value);
         colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
         buffer.putImageData(bufferImageData, 0, 0);
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
