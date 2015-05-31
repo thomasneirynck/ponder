@@ -4,6 +4,7 @@ require.config({
         'ponder': 'src',
         'type': "bower_components/type/type",
         'Promise': "bower_components/Promise/Promise",
+        'Evented': "bower_components/Evented/Evented",
         'Papa': "vendor/papaparse",
         '$': "bower_components/jquery/dist/jquery"
     },
@@ -21,7 +22,7 @@ require.config({
 });
 
 require(["ponder/SOMFactory",
-    "Papa", "$", "ponder/ColorMapper"], function (SOMFactory, Papa, $, ColorMapper) {
+    "Papa", "$", "ponder/ColorMapper","ponder/ease/EasingInput"], function (SOMFactory, Papa, $, ColorMapper, EasingInput) {
 
     document
         .getElementById("fileSelect")
@@ -56,10 +57,9 @@ require(["ponder/SOMFactory",
     var bufferImageData;
 
     var colorMapper = new ColorMapper();
-    var xslide = document.getElementById("xslide");
-    var yslide = document.getElementById("yslide");
-    xslide.addEventListener("input", drawUmatrix);
-    yslide.addEventListener("input", drawUmatrix);
+
+    var easingInput = new EasingInput("ease");
+    easingInput.on("input",drawUmatrix);
 
     function createSom(parsedResult) {
 
@@ -84,9 +84,7 @@ require(["ponder/SOMFactory",
                 buffer.canvas.height = somHandle.height;
 
                 bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
-
                 uMatrixData = successData.uMatrix;
-
 
                 drawUmatrix();
 
@@ -100,10 +98,11 @@ require(["ponder/SOMFactory",
             return;
         }
 
-        colorMapper.setEasingParameters(xslide.value, yslide.value);
+        colorMapper.setEasingParameters(easingInput.getA(), easingInput.getB());
         colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
         buffer.putImageData(bufferImageData, 0, 0);
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+
     }
 
 });

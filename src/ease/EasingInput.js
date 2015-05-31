@@ -1,6 +1,6 @@
 define(["type", "Evented", "$"], function (type, Evented, $) {
 
-    function valid(v){
+    function valid(v) {
         return (v > 0 && v < 1);
     }
 
@@ -57,13 +57,21 @@ define(["type", "Evented", "$"], function (type, Evented, $) {
                     if (!down) {
                         return;
                     }
-                    if (valid(event.offsetX / self._context2d.canvas.width)){
+
+                    var changed = false;
+                    if (valid(event.offsetX / self._context2d.canvas.width)) {
+                        changed = true;
                         self._a = event.offsetX / self._context2d.canvas.width;
                     }
-                    if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)){
+                    if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)) {
+                        changed = true;
                         self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height
                     }
-                    self.paint();
+
+                    if (changed) {
+                        self.paint();
+                        self.emit("input", self);
+                    }
 
                 })
                 .mouseup(function (event) {
@@ -73,11 +81,17 @@ define(["type", "Evented", "$"], function (type, Evented, $) {
                     down = false;
                 });
 
-            window.addEventListener("resize", this.paint.bind(this));
+            window.addEventListener("resize", this.resize.bind(this));
             this.paint();
 
         },
 
+        getA: function () {
+            return this._a;
+        },
+        getB: function () {
+            return this._b;
+        },
         resize: function () {
             this._context2d.canvas.width = $(this._container).width();
             this._context2d.canvas.height = $(this._container).height();
