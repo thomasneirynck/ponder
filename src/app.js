@@ -44,9 +44,6 @@ require(["ponder/SOMFactory",
                 return;
             }
 
-//            document.getElementById("fileSelect").removeEventListener("change", listen);
-//            $("#fileSelect").hide();
-
             Papa.parse(file, {
                 worker: true,
                 complete: createSom,
@@ -73,7 +70,6 @@ require(["ponder/SOMFactory",
             .makeSOMAsync(parsedResult.data)
             .then(function (aSomHandle) {
                 somHandle = aSomHandle;
-                console.log("train map");
                 return somHandle.trainMap();
             }, throwError)
             .then(function () {
@@ -81,21 +77,27 @@ require(["ponder/SOMFactory",
             })
             .then(function (successData) {
 
+                buffer = document.createElement("canvas").getContext("2d");
+                buffer.canvas.width = somHandle.width;
+                buffer.canvas.height = somHandle.height;
+                bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
+
                 context2d = document.getElementById("som").getContext("2d");
                 context2d.canvas.width = $(context2d.canvas).parent().width();
                 context2d.canvas.height = $(context2d.canvas).parent().height();
 
-                buffer = document.createElement("canvas").getContext("2d");
-                buffer.canvas.width = somHandle.width;
-                buffer.canvas.height = somHandle.height;
-
-                bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
                 uMatrixData = successData.uMatrix;
 
                 drawUmatrix();
 
-            });
+                return somHandle.bmus();
 
+            })
+            .then(function (bmuResult) {
+
+                console.log("bmu", bmuResult);
+
+            });
     }
 
     function drawUmatrix() {
