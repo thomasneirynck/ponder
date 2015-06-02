@@ -29,7 +29,7 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
     return {
         makeSOMAsync: function (trainingData) {
 
-            var somWorker = new Worker(require.toUrl("ponder") + "/SOMWorker.js");
+            var somWorker = new Worker(require.toUrl("ponder") + "/worker/SOMWorker.js");
             var somReady = new Promise();
 
             somWorker.addEventListener("message", function workerLoaded(event) {

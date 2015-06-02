@@ -40,14 +40,13 @@ define(["type", "Evented", "$"], function (type, Evented, $) {
 
             $(this._container)
                 .mousedown(function (event) {
-
                     var x = self._projectX(self._a);
                     var y = self._projectY(self._b);
                     if (
                         x + self._handleWidth / 2 > event.offsetX &&
                         x - self._handleWidth / 2 < event.offsetX &&
-                        y + self._handleWidth / 2 > event.offsetY &&
-                        y - self._handleWidth / 2 < event.offsetY
+                        y + self._handleHeight / 2 > event.offsetY &&
+                        y - self._handleHeight / 2 < event.offsetY
                         ) {
                         down = true;
                     }
@@ -56,22 +55,18 @@ define(["type", "Evented", "$"], function (type, Evented, $) {
 
                     if (!down) {
                         return;
+
                     }
 
-                    var changed = false;
                     if (valid(event.offsetX / self._context2d.canvas.width)) {
-                        changed = true;
                         self._a = event.offsetX / self._context2d.canvas.width;
                     }
                     if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)) {
-                        changed = true;
                         self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height
                     }
 
-                    if (changed) {
-                        self.paint();
-                        self.emit("input", self);
-                    }
+                    self.paint();
+                    self.emit("input", self);
 
                 })
                 .mouseup(function (event) {
@@ -96,10 +91,6 @@ define(["type", "Evented", "$"], function (type, Evented, $) {
             this._context2d.canvas.width = $(this._container).width();
             this._context2d.canvas.height = $(this._container).height();
             this.paint();
-        },
-
-        getEasingFunction: function () {
-            return this._ease;
         },
 
         _drawLine: function (line, stroke, width) {

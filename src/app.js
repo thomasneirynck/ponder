@@ -30,11 +30,12 @@ require(["ponder/SOMFactory",
     var context2d;
     var uMatrixData;
     var bufferImageData;
+    var bmus;
 
     var colorMapper = new ColorMapper();
 
     var easingInput = new EasingInput("ease");
-    easingInput.on("input", drawUmatrix);
+    easingInput.on("input", refreshUMatrix);
 
     document
         .getElementById("fileSelect")
@@ -64,6 +65,8 @@ require(["ponder/SOMFactory",
         if (somHandle) {
             somHandle.kill();
             somHandle = null;
+            uMatrixData = null;
+            bmus = null;
         }
 
         SOMFactory
@@ -88,19 +91,19 @@ require(["ponder/SOMFactory",
 
                 uMatrixData = successData.uMatrix;
 
-                drawUmatrix();
+                refreshUMatrix();
 
                 return somHandle.bmus();
 
             })
             .then(function (bmuResult) {
-
                 console.log("bmu", bmuResult);
-
+                bmus = bmuResult.locations;
+                drawMap();
             });
     }
 
-    function drawUmatrix() {
+    function refreshUMatrix() {
 
         if (!uMatrixData) {
             return;
@@ -109,9 +112,23 @@ require(["ponder/SOMFactory",
         colorMapper.setEasingParameters(easingInput.getA(), easingInput.getB());
         colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
         buffer.putImageData(bufferImageData, 0, 0);
+
+        drawMap();
+    }
+
+
+    function drawMap() {
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
 
+        if (!bmus) {
+            return;
+        }
+        context2d.fillStyle = "rgb(255,255,255)";
+        for (var i = 0; i < bmus.length; i += 1) {
+            context2d.fillRect(bmus[i].x * context2d.canvas.width / somHandle.width, bmus[i].y * context2d.canvas.height / somHandle.height, 10, 10);
+        }
     }
+
 
 });
 
