@@ -142,6 +142,18 @@ require([
     }
 
 
+    requestAnimationFrame(function draw(){
+        requestAnimationFrame(draw);
+        if (!context2d){
+            return;
+        }
+        context2d.clearRect(0,0,context2d.canvas.width, context2d.canvas.height);
+        drawMap();
+        areaSelect.paint(context2d);
+
+
+    })
+
 });
 
 
