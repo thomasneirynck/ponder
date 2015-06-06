@@ -27,7 +27,7 @@ require([
     "$",
     "ponder/ColorMapper",
     "ponder/ease/EasingInput",
-    "ponder/ease/AreaSelect"
+    "ponder/select/AreaSelect"
 ], function (SOMFactory, Papa, $, ColorMapper, EasingInput, AreaSelect) {
 
 
@@ -41,7 +41,10 @@ require([
 
 
     var colorMapper = new ColorMapper();
-    var areaSelect = new AreaSelect();
+    var areaSelect = new AreaSelect("som");
+    areaSelect.on("change", function(){
+       console.log("made selection");
+    });
 
     var easingInput = new EasingInput("ease");
     easingInput.on("input", refreshUMatrix);

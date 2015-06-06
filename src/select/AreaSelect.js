@@ -38,8 +38,9 @@ define(["type", "$", "Evented"], function (type, $, Evented) {
                     self.emit("change", self);
                     down = false;
                 })
-                .mouseup(function (event) {
+                .mouseout(function (event) {
                     down = false;
+                    self.emit("change", self);
                 });
         },
 
