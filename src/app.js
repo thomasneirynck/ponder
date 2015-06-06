@@ -21,8 +21,14 @@ require.config({
     }
 });
 
-require(["ponder/SOMFactory",
-    "Papa", "$", "ponder/ColorMapper", "ponder/ease/EasingInput"], function (SOMFactory, Papa, $, ColorMapper, EasingInput) {
+require([
+    "ponder/SOMFactory",
+    "Papa",
+    "$",
+    "ponder/ColorMapper",
+    "ponder/ease/EasingInput",
+    "ponder/ease/AreaSelect"
+], function (SOMFactory, Papa, $, ColorMapper, EasingInput, AreaSelect) {
 
 
     var somHandle;
@@ -32,7 +38,10 @@ require(["ponder/SOMFactory",
     var bufferImageData;
     var bmus;
 
+
+
     var colorMapper = new ColorMapper();
+    var areaSelect = new AreaSelect();
 
     var easingInput = new EasingInput("ease");
     easingInput.on("input", refreshUMatrix);

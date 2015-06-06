@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>AreaSelect</title>
+    <script src="../../bower_components/requirejs/require.js"></script>
+</head>
+<body>
+
+
+<div id="node" style="">
+    <canvas width="400" height="200" id="view"></canvas>
+</div>
+
+<script type="text/javascript">
+    require.config({
+        baseUrl: "../..",
+        paths: {
+            'ponder': 'src',
+            'type': "bower_components/type/type",
+            'Promise': "bower_components/Promise/Promise",
+            'Evented': "bower_components/Evented/Evented",
+            'Papa': "vendor/papaparse",
+            '$': "bower_components/jquery/dist/jquery"
+        },
+        shim: {
+            Papa: {
+                exports: "Papa",
+                init: function () {
+                    Papa.SCRIPT_PATH = "vendor/papaparse.js";
+                }
+            },
+            $: {
+                exports: "$"
+            }
+        }
+    });
+
+    require([
+        "$",
+        "ponder/select/AreaSelect"
+    ], function ($, AreaSelect) {
+
+        var areaSelect = new AreaSelect("node");
+        areaSelect.on("input", function () {
+            console.log(areaSelect.isInsideSelectedArea(context2d.canvas.width/2,context2d.canvas.height/2));
+        });
+
+        var context2d = document.getElementById("view").getContext("2d");
+        context2d.canvas.width = $(context2d.canvas).parent().width();
+        context2d.canvas.height = $(context2d.canvas).parent().height();
+        requestAnimationFrame(function draw() {
+            requestAnimationFrame(draw);
+            context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
+            areaSelect.paint(context2d);
+        });
+
+
+    });
+</script>
+
+</body>
+</html>
