@@ -31,13 +31,6 @@ require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
                     type: "trainMapSucces"
                 });
                 break;
-            case "uMatrix":
-                som.uMatrix(event.data.pixelBuffer, blueToWhite);
-                postMessage({
-                    type: "uMatrixSuccess",
-                    pixelBuffer: event.data.pixelBuffer
-                });
-                break;
             case "uMatrixNormalized":
                 postMessage({
                     type: "uMatrixNormalizedSuccess",

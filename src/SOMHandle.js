@@ -43,12 +43,6 @@ define(["type", "Promise"], function (type, Promise) {
                 }
             );
         },
-        uMatrix: function (bufferData) {
-            return this._doCommand({
-                type: "uMatrix",
-                pixelBuffer: bufferData
-            });
-        },
         uMatrixNormalized: function () {
             return this._doCommand({
                 type: "uMatrixNormalized"
