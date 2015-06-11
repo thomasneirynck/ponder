@@ -50,6 +50,12 @@ require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
                     locations: locations
                 });
                 break;
+            case "statistics":
+                var statistics = som.statistics(event.data.data, event.data.indices);
+                postMessage({
+                    type: "statisticsSuccess",
+                    statistics: statistics
+                });
         }
     }, false);
 

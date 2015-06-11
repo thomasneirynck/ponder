@@ -42,20 +42,23 @@ require([
     var colorMapper = new ColorMapper();
     var areaSelect = new AreaSelect("som");
     areaSelect.on("change", function () {
-        console.log("made selection");
+
         if (!bmus) {
             return;
         }
 
-        var selected = [];
+        var selectedIndices = [];
         for (var i = 0; i < bmus.length; i += 1) {
             if (areaSelect.isInsideSelectedArea(toViewX(bmus[i].x), toViewY(bmus[i].y))) {
-                bmus[i].index = i;
-                selected.push(bmus[i]);
+                selectedIndices.push(i);
             }
         }
-        console.log("sel", selected);
 
+        var stats = somHandle
+            .statistics(selectedIndices)
+            .then(function () {
+                console.log("got it", arguments);
+            });
     });
 
     var easingInput = new EasingInput("ease");

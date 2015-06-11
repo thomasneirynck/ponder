@@ -1,4 +1,4 @@
-define(["type", "Promise"], function (type, Promise) {
+define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics) {
 
     return type({
 
@@ -9,8 +9,8 @@ define(["type", "Promise"], function (type, Promise) {
             this._busy = false;
         },
 
-        kill: function(){
-          this._somWorker.terminate();
+        kill: function () {
+            this._somWorker.terminate();
         },
 
         _process: function () {
@@ -48,7 +48,7 @@ define(["type", "Promise"], function (type, Promise) {
                 type: "uMatrixNormalized"
             });
         },
-        interpolate: function(values,width,height){
+        interpolate: function (values, width, height) {
             return this._doCommand({
                 type: "interpolate",
                 values: values,
@@ -62,6 +62,17 @@ define(["type", "Promise"], function (type, Promise) {
                 data: this._dataArray
             });
         },
+
+        statistics: function (indices) {
+            return this._doCommand({
+                type: "statistics",
+                data: this._dataArray,
+                indices: indices
+            }).then(function (result) {
+                return new Statistics(result.statistics, this._dataArray, indices);
+            });
+        },
+
         _doCommand: function (message) {
             this._queue.unshift({
                 message: message,

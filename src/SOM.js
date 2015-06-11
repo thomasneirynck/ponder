@@ -299,13 +299,32 @@ define([
             this.toXY(minI, out);
         },
 
+        statistics: function (data, indices) {
+            var statistics = {
+                count: indices.length,
+                mins: new Array(this._codeBookSize),
+                maxs: new Array(this._codeBookSize)
+            };
+            for (var s = 0; s < this._codeBookSize; s += 1) {
+                statistics.mins[s] = 1;
+                statistics.maxs[s] = 0;
+            }
+            for (var i = 0; i < indices.length; i += 1) {
+                for (var c = 0; c < this._codeBookSize; c += 1) {
+                    statistics.mins[c] = Math.min(data[this._codeBookSize * i + c], statistics.mins[c]);
+                    statistics.maxs[c] = Math.max(data[this._codeBookSize * i + c], statistics.maxs[c]);
+                }
+            }
+            return statistics;
+        },
+
         bmus: function (data) {
             var out = {};
             var results = [];
             for (var i = 0; i < data.length; i += this._codeBookSize) {
                 this.bmu(data, i, out);
                 this.jiggerBMU(data, i, out.x, out.y, out);
-                results.push({x: out.jx, y: out.jy});
+                results.push({x: out.jx, y: out.jy, index: i});
             }
             return results;
         }
