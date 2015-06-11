@@ -39,11 +39,23 @@ require([
     var bmus;
 
 
-
     var colorMapper = new ColorMapper();
     var areaSelect = new AreaSelect("som");
-    areaSelect.on("change", function(){
-       console.log("made selection");
+    areaSelect.on("change", function () {
+        console.log("made selection");
+        if (!bmus) {
+            return;
+        }
+
+        var selected = [];
+        for (var i = 0; i < bmus.length; i += 1) {
+            if (areaSelect.isInsideSelectedArea(toViewX(bmus[i].x), toViewY(bmus[i].y))) {
+                bmus[i].index = i;
+                selected.push(bmus[i]);
+            }
+        }
+        console.log("sel", selected);
+
     });
 
     var easingInput = new EasingInput("ease");
@@ -128,6 +140,22 @@ require([
         drawMap();
     }
 
+    function toViewX(x) {
+        return x * context2d.canvas.width / somHandle.width;
+    }
+
+    function toViewY(y) {
+        return y * context2d.canvas.height / somHandle.height;
+    }
+
+    function toSomX(x) {
+        return x * somHandle.width / context2d.canvas.width;
+    }
+
+    function toSomY(y) {
+        return y * somHandle.height / context2d.canvas.height;
+    }
+
 
     function drawMap() {
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
@@ -137,17 +165,17 @@ require([
         }
         context2d.fillStyle = "rgb(255,255,255)";
         for (var i = 0; i < bmus.length; i += 1) {
-            context2d.fillRect(bmus[i].x * context2d.canvas.width / somHandle.width, bmus[i].y * context2d.canvas.height / somHandle.height, 10, 10);
+            context2d.fillRect(toViewX(bmus[i].x), toViewY(bmus[i].y), 10, 10);
         }
     }
 
 
-    requestAnimationFrame(function draw(){
+    requestAnimationFrame(function draw() {
         requestAnimationFrame(draw);
-        if (!context2d){
+        if (!context2d) {
             return;
         }
-        context2d.clearRect(0,0,context2d.canvas.width, context2d.canvas.height);
+        context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
         drawMap();
         areaSelect.paint(context2d);
 
