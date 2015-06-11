@@ -107,18 +107,6 @@ define([
 
         },
 
-        uMatrix: function (bufferImageData, colorRamp) {
-
-            this.averageD(bufferImageData, function (weight, pixel, pixeli) {
-                var rgb = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
-                pixel[pixeli] = rgb[0];
-                pixel[pixeli + 1] = rgb[1];
-                pixel[pixeli + 2] = rgb[2];
-                pixel[pixeli + 3] = 255;
-            });
-
-        },
-
         learn: function (sampleData, fi, ni, learningRate, distance, neighbourhoodDistance) {
             var influence = 1 - (distance / neighbourhoodDistance);
             var error;
@@ -320,57 +308,8 @@ define([
                 results.push({x: out.jx, y: out.jy});
             }
             return results;
-        },
-
-
-        averageD: function (imgData, mapWeigthToPixel) {
-            var xy = {};
-            var distance , total, x, y, ni;
-            var min = Infinity;
-            var max = -Infinity;
-            var outArray = [];
-            for (var i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
-
-                distance = 0;
-                total = 0;
-                this.toXY(i, xy);
-                x = xy.x;
-                y = xy.y;
-
-                if (between(x - 1, 0, this._width)) {
-                    ni = this.toIndex(x - 1, y);
-                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
-                    total += 1;
-                }
-                if (between(x + 1, 0, this._width)) {
-                    ni = this.toIndex(x + 1, y);
-                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
-                    total += 1;
-                }
-
-                if (between(y - 1, 0, this._height)) {
-                    ni = this.toIndex(x, y - 1);
-                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
-                    total += 1;
-                }
-
-                if (between(y + 1, 0, this._height)) {
-                    ni = this.toIndex(x, y + 1);
-                    distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
-                    total += 1;
-                }
-
-
-                outArray[i / this._codeBookSize] = distance / total;
-                min = Math.min(min, outArray[i / this._codeBookSize]);
-                max = Math.max(max, outArray[i / this._codeBookSize]);
-            }
-
-            for (var i = 0, pixeli = 0; i < this._neuralWeights.length / this._codeBookSize; i += 1, pixeli += 4) {
-                mapWeigthToPixel(ease(outArray[i] - min) / (max - min), imgData.data, pixeli);
-            }
-
         }
+
 
     });
 
