@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ponder</title>
+    <script src="../bower_components/requirejs/require.js"></script>
+
+    <link rel="stylesheet" href="../bower_components/datatables/media/css/jquery.dataTables.css" type="text/css"/>
+</head>
+<body>
+
+<div id="selector"></div>
+
+<script>
+
+
+    require.config({
+        baseUrl: "..",
+        paths: {
+            'ponder': 'src',
+            'type': "bower_components/type/type",
+            'Promise': "bower_components/Promise/Promise",
+            'Evented': "bower_components/Evented/Evented",
+            'Papa': "vendor/papaparse",
+            'jquery': "bower_components/jquery/dist/jquery",
+            datatables: 'bower_components/datatables/media/js/jquery.dataTables',
+            datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis'
+        },
+        shim: {
+            Papa: {
+                exports: "Papa",
+                init: function () {
+                    Papa.SCRIPT_PATH = require.toUrl("Papa") + ".js";
+                }
+            },
+            jquery: {
+                exports: "jquery"
+            }
+        }
+    });
+
+    require([
+        "Papa",
+        "jquery",
+        "datatables",
+        "ponder/DataSelector"
+    ], function (Papa, jquery, datatables, DataSelector) {
+
+        console.log("args", arguments);
+
+
+        var sel = new DataSelector("selector");
+
+
+    });
+
+
+</script>
+
+
+</body>
+</html>
