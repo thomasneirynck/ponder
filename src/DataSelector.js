@@ -19,18 +19,14 @@ define([
             fileSelector.type = "file";
             fileSelector.name = "files[]";
 
-
             this._wrapperNode.appendChild(fileSelector);
 
-
             function listen(event) {
-                var file = event.target.files[0];
-                if (!file) {
+                self._file = event.target.files[0];
+                if (!self._file) {
                     return;
                 }
-
-
-                Papa.parse(file, {
+                Papa.parse(self._file, {
                     worker: true,
                     complete: showPreview,
                     skipEmptyLines: true,
@@ -40,8 +36,7 @@ define([
                 });
             }
 
-            fileSelector
-                .addEventListener("change", listen);
+            fileSelector.addEventListener("change", listen);
 
             var self = this;
 
@@ -49,6 +44,7 @@ define([
 
                 fileSelector.removeEventListener("change", listen);
                 self._wrapperNode.removeChild(fileSelector);
+                self._data = event.data;
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
@@ -93,7 +89,6 @@ define([
                         this.classList.remove("selectedColumn");
                         self._clickedon.push(this.innerHTML);
                     }
-                    self.emit("input");
                 });
 
                 jquery("#" + table.id + " thead th").hover(function (event) {
@@ -103,15 +98,16 @@ define([
                 });
 
                 jquery(doneButton).on("click", function () {
-                    self.emit("change");
+                    self.emit("change",{
+                        file: self._file,
+                        data: self._data,
+                        selectedColumns: self._selectedColumns
+                    });
                 })
 
 
             }
 
-        },
-        getSelectedColumns: function () {
-            return this._selectedColumns.slice();
         },
 
         destroy: function () {

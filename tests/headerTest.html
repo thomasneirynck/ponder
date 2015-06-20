@@ -59,8 +59,8 @@
 
         var sel = new DataSelector("selector");
 
-        sel.on("change", function () {
-            console.log("input", sel.getSelectedColumns());
+        sel.on("change", function (event) {
+            console.log(event);
             sel.destroy();
         });
 
