@@ -2,14 +2,17 @@ define([
     "Papa",
     "type",
     "Evented",
-    "jquery",
-    "datatables_colvis"
-], function (Papa, type, Evented, jquery, datatables_colvis) {
+    "jquery"
+], function (Papa, type, Evented, jquery) {
 
 
-    return type(Object.prototype, Evented, {
+    return type(Object.prototype, Evented.prototype, {
 
         constructor: function DataSelector(node) {
+
+            Evented.call(this);
+
+            this._selectedColumns = null;
 
             var fileSelector = document.createElement("input");
             fileSelector.type = "file";
@@ -35,14 +38,29 @@ define([
                     }
                 });
             }
+
             fileSelector
                 .addEventListener("change", listen);
+
+            var self = this;
 
             function showPreview(event) {
 
                 fileSelector.removeEventListener("change", listen);
                 wrapperNode.removeChild(fileSelector);
 
+                var headerWrapper = document.createElement("div");
+                var header = document.createElement("div");
+                header.innerHTML = "Select the columns with independent variables";
+                headerWrapper.appendChild(header);
+
+                var doneButton = document.createElement("input");
+                doneButton.type = "button";
+                doneButton.value = "Continue";
+                headerWrapper.appendChild(doneButton);
+
+
+                wrapperNode.appendChild(headerWrapper);
 
                 var table = document.createElement("table");
                 table.cellpadding = 0;
@@ -56,6 +74,7 @@ define([
                     ordering: false,
                     paging: true,
                     "data": event.data.slice(1),
+                    "pageLength": 10,
                     "columns": event.data[0].map(function (e) {
                         return {
                             title: e
@@ -63,18 +82,36 @@ define([
                     })
                 });
 
-                jquery("#" + table.id + " thead").on( 'click', 'th', function () {
+                self._selectedColumns = [];
+                jquery("#" + table.id + " thead").on('click', 'th', function (event) {
+                    if (self._selectedColumns.indexOf(this.innerHTML) === -1) {
+                        self._selectedColumns.push(this.innerHTML);
+                        this.classList.add("selectedColumn");
+                        console.log(this.classList, self._selectedColumns);
+                    } else {
+                        self._selectedColumns.splice(self._selectedColumns.indexOf(this.innerHTML), 1);
+                        this.classList.remove("selectedColumn");
+                        console.log(this.classList, self._selectedColumns);
+                    }
+                    self.emit("input");
+                });
 
-                    api = jquery(table).DataTable();
+                jquery("#" + table.id + " thead th").hover(function (event) {
+                    jquery(event.target).css('cursor', 'pointer');
+                }, function () {
+                    jquery(event.target).css('cursor', 'auto');
+                });
 
-                    var title = api.column( this ).header();
-
-                    alert( 'Column title clicked on: '+$(title).html() );
-                } );
+                jquery(doneButton).on("click", function () {
+                    self.emit("change");
+                })
 
 
             }
 
+        },
+        getSelectedColumns: function () {
+            return this._selectedColumns.slice();
         }
 
 

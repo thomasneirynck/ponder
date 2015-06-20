@@ -6,6 +6,14 @@
     <script src="../bower_components/requirejs/require.js"></script>
 
     <link rel="stylesheet" href="../bower_components/datatables/media/css/jquery.dataTables.css" type="text/css"/>
+
+    <style type="text/css">
+
+        .selectedColumn {
+            background-color: lightblue;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -50,6 +58,10 @@
 
 
         var sel = new DataSelector("selector");
+
+        sel.on("input", function(){
+           console.log("input",sel.getSelectedColumns());
+        });
 
 
     });
