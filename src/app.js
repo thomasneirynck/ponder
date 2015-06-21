@@ -41,6 +41,8 @@ require([
     var uMatrixData;
     var bufferImageData;
     var bmus;
+    var dataTable;
+    var selectElement;
 
 
     var colorMapper = new ColorMapper();
@@ -73,11 +75,19 @@ require([
 
         dataSelector.destroy();
 
-        var dataTable = new DataTable(event.data, event.columns, event.selectedColumns);
+        dataTable = new DataTable(event.data, event.columns, event.selectedColumns);
         var dataArray = dataTable.createDataArray();
 
         createSom(dataArray, event.selectedColumns.length);
 
+        var selectTag = $("<select />");
+        for (var index in event.columns) {
+            $("<option />", {value: index, text: event.columns[index]}).appendTo(selectTag);
+        }
+
+        selectTag.appendTo("#label");
+        selectTag.on("change", drawMap);
+        selectElement = selectTag[0];
 
     });
 
@@ -130,6 +140,7 @@ require([
             });
     }
 
+
     function refreshUMatrix() {
 
         if (!uMatrixData) {
@@ -161,14 +172,18 @@ require([
 
 
     function drawMap() {
+
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
 
         if (!bmus) {
             return;
         }
         context2d.fillStyle = "rgb(255,255,255)";
+
+
         for (var i = 0; i < bmus.length; i += 1) {
             context2d.fillRect(toViewX(bmus[i].x), toViewY(bmus[i].y), 10, 10);
+            context2d.fillText(dataTable.getValueByRowAndColumnIndex(i, selectElement.value), toViewX(bmus[i].x), toViewY(bmus[i].y));
         }
     }
 
