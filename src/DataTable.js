@@ -23,15 +23,25 @@ define(["type"], function (type) {
             }
             for (r = 0; r < this._data.length; r += 1) {
                 for (c = 0; c < this._selectedColumnsIndices.length; c += 1) {
+                    if (isNaN(parseFloat(this._data[r][this._selectedColumnsIndices[c]]))) {
+                        console.warn("ignoring missing value" + " row: " + r + ", col: " + c);
+                        continue;
+                    }
                     mins[c] = Math.min(mins[c], parseFloat(this._data[r][this._selectedColumnsIndices[c]]));
                     maxs[c] = Math.max(maxs[c], parseFloat(this._data[r][this._selectedColumnsIndices[c]]));
                 }
             }
 
             var dataArray = new Array(this._data.length * this._selectedColumnsIndices.length);
+            var value;
             for (i = 0, r = 0; r < this._data.length; r += 1) {
                 for (c = 0; c < this._selectedColumnsIndices.length; c += 1, i += 1) {
-                    dataArray[i] = (parseFloat(this._data[r][this._selectedColumnsIndices[c]]) - mins[c]) / (maxs[c] - mins[c]);
+                    value = parseFloat(this._data[r][this._selectedColumnsIndices[c]]);
+                    if (isNaN(value)) {
+                        console.warn("Missing value for: " + " row: " + r + ", col: " + c);
+                        value = (maxs[c] + mins[c]) / 2;
+                    }
+                    dataArray[i] = (value - mins[c]) / (maxs[c] - mins[c]);
                 }
             }
 

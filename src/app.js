@@ -186,9 +186,12 @@ require([
         if (!bmus) {
             return;
         }
+
+        drawLabels();
+    }
+
+    function drawLabels() {
         context2d.fillStyle = "rgb(255,255,255)";
-
-
         for (var i = 0; i < bmus.length; i += 1) {
             context2d.fillRect(toViewX(bmus[i].x), toViewY(bmus[i].y), 10, 10);
             context2d.fillText(dataTable.getValueByRowAndColumnIndex(i, selectElement.value), toViewX(bmus[i].x), toViewY(bmus[i].y));
