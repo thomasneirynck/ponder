@@ -82,7 +82,7 @@ define([
                 });
 
                 self._selectedColumns = [];
-                jquery("#" + table.id + " thead").on('click', 'th', function (event) {
+                jquery("#" + table.id + " thead").on('mousedown', 'th', function (event) {
                     if (self._selectedColumns.indexOf(this.innerHTML) === -1) {
                         self._selectedColumns.push(this.innerHTML);
                         this.classList.add("selectedColumn");
@@ -91,6 +91,13 @@ define([
                         this.classList.remove("selectedColumn");
                     }
                 });
+                jquery("#" + table.id + " thead").on('mouseenter', 'th', function (event) {
+                    if (event.which === 1 && self._selectedColumns.indexOf(this.innerHTML) === -1) {
+                        self._selectedColumns.push(this.innerHTML);
+                        this.classList.add("selectedColumn");
+                    }
+                });
+
 
                 jquery("#" + table.id + " thead th").hover(function (event) {
                     jquery(event.target).css('cursor', 'pointer');

@@ -123,8 +123,7 @@ require([
                 bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
                 context2d = document.getElementById("som").getContext("2d");
-                context2d.canvas.width = jquery(context2d.canvas).parent().width();
-                context2d.canvas.height = jquery(context2d.canvas).parent().height();
+                resize();
 
                 uMatrixData = successData.uMatrix;
 
@@ -140,6 +139,15 @@ require([
             });
     }
 
+    window.addEventListener("resize", resize);
+
+    function resize() {
+        if (!context2d) {
+            return;
+        }
+        context2d.canvas.width = jquery(context2d.canvas).parent().width();
+        context2d.canvas.height = jquery(context2d.canvas).parent().height();
+    }
 
     function refreshUMatrix() {
 
