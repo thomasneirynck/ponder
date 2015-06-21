@@ -1,4 +1,4 @@
-define(["type", "Evented", "$"], function (type, Evented, $) {
+define(["type", "Evented", "jquery"], function (type, Evented, $) {
 
     function valid(v) {
         return (v > 0 && v < 1);

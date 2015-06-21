@@ -5,7 +5,14 @@
     <title>Ponder</title>
     <script data-main="src/app.js" src="bower_components/requirejs/require.js"></script>
 
-   <link rel="stylesheet" type="text/css" href="css/app.css" />
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/datatables/media/css/jquery.dataTables.css"/>
+
+    <style type="text/css">
+        .selectedColumn {
+            background-color: lightblue;
+        }
+    </style>
 </head>
 <body>
 
@@ -13,7 +20,7 @@
 
     <div id="ease"></div>
     <canvas id="som"></canvas>
-    <input type="file" id="fileSelect" name="files[]" multiple/>
+    <div id="selector"></div>
 
 </div>
 

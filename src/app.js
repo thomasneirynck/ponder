@@ -6,7 +6,9 @@ require.config({
         'Promise': "bower_components/Promise/Promise",
         'Evented': "bower_components/Evented/Evented",
         'Papa': "vendor/papaparse",
-        '$': "bower_components/jquery/dist/jquery"
+        'jquery': "bower_components/jquery/dist/jquery",
+        datatables: 'bower_components/datatables/media/js/jquery.dataTables',
+        datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis'
     },
     shim: {
         Papa: {
@@ -15,8 +17,8 @@ require.config({
                 Papa.SCRIPT_PATH = "vendor/papaparse.js";
             }
         },
-        $: {
-            exports: "$"
+        jquery: {
+            exports: "jquery"
         }
     }
 });
@@ -24,11 +26,13 @@ require.config({
 require([
     "ponder/SOMFactory",
     "Papa",
-    "$",
+    "jquery",
     "ponder/ColorMapper",
     "ponder/ease/EasingInput",
-    "ponder/select/AreaSelect"
-], function (SOMFactory, Papa, $, ColorMapper, EasingInput, AreaSelect) {
+    "ponder/select/AreaSelect",
+    "ponder/DataSelector",
+    "ponder/DataTable"
+], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable) {
 
 
     var somHandle;
@@ -64,22 +68,18 @@ require([
     var easingInput = new EasingInput("ease");
     easingInput.on("input", refreshUMatrix);
 
-    document
-        .getElementById("fileSelect")
-        .addEventListener("change", function listen(event) {
-            var file = event.target.files[0];
-            if (!file) {
-                return;
-            }
+    var dataSelector = new DataSelector("selector");
+    dataSelector.on("change", function (event) {
 
-            Papa.parse(file, {
-                worker: true,
-                complete: createSom,
-                error: function () {
-                    alert("cant parse file");
-                }
-            });
-        }, false);
+        dataSelector.destroy();
+
+        var dataTable = new DataTable(event.data, event.columns, event.selectedColumns);
+        var dataArray = dataTable.createDataArray();
+
+        createSom(dataArray, event.selectedColumns.length);
+
+
+    });
 
 
     function throwError(error) {
@@ -87,7 +87,7 @@ require([
     }
 
 
-    function createSom(parsedResult) {
+    function createSom(dataArray, codebookLength) {
 
         if (somHandle) {
             somHandle.kill();
@@ -97,7 +97,7 @@ require([
         }
 
         SOMFactory
-            .makeSOMAsync(parsedResult.data)
+            .makeSOMAsync(dataArray, codebookLength)
             .then(function (aSomHandle) {
                 somHandle = aSomHandle;
                 return somHandle.trainMap();
@@ -113,8 +113,8 @@ require([
                 bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
 
                 context2d = document.getElementById("som").getContext("2d");
-                context2d.canvas.width = $(context2d.canvas).parent().width();
-                context2d.canvas.height = $(context2d.canvas).parent().height();
+                context2d.canvas.width = jquery(context2d.canvas).parent().width();
+                context2d.canvas.height = jquery(context2d.canvas).parent().height();
 
                 uMatrixData = successData.uMatrix;
 

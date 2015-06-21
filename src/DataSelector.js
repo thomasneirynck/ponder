@@ -2,7 +2,8 @@ define([
     "Papa",
     "type",
     "Evented",
-    "jquery"
+    "jquery",
+    "datatables"
 ], function (Papa, type, Evented, jquery) {
 
 
@@ -70,6 +71,7 @@ define([
                     searching: false,
                     ordering: false,
                     paging: true,
+                    preview: 10,
                     "data": event.data.slice(1),
                     "pageLength": 10,
                     "columns": event.data[0].map(function (e) {
@@ -87,7 +89,6 @@ define([
                     } else {
                         self._selectedColumns.splice(self._selectedColumns.indexOf(this.innerHTML), 1);
                         this.classList.remove("selectedColumn");
-                        self._clickedon.push(this.innerHTML);
                     }
                 });
 
@@ -98,13 +99,13 @@ define([
                 });
 
                 jquery(doneButton).on("click", function () {
-                    self.emit("change",{
+                    self.emit("change", {
                         file: self._file,
-                        data: self._data,
+                        data: self._data.slice(1),
+                        columns: self._data[0],
                         selectedColumns: self._selectedColumns
                     });
-                })
-
+                });
 
             }
 
