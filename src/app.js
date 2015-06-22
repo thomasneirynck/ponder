@@ -96,7 +96,6 @@ require([
 
 
                 document.getElementById("summary").innerHTML = "";
-                console.log("blarf!", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
                 var summary = new SummaryChart("summary", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
 
 

@@ -311,8 +311,8 @@ define([
             }
             for (var i = 0; i < indices.length; i += 1) {
                 for (var c = 0; c < this._codeBookSize; c += 1) {
-                    statistics.mins[c] = Math.min(this._trainingData[this._codeBookSize * i + c], statistics.mins[c]);
-                    statistics.maxs[c] = Math.max(this._trainingData[this._codeBookSize * i + c], statistics.maxs[c]);
+                    statistics.mins[c] = Math.min(this._trainingData[this._codeBookSize * indices[i] + c], statistics.mins[c]);
+                    statistics.maxs[c] = Math.max(this._trainingData[this._codeBookSize * indices[i] + c], statistics.maxs[c]);
                 }
             }
             return statistics;
