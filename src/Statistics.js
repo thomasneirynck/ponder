@@ -10,6 +10,14 @@ define(["type"], function (type) {
 
         getIndices: function () {
             return this._indices;
+        },
+
+        getMins: function () {
+            return this._stats.mins;
+        },
+
+        getMaxs: function () {
+            return this._stats.maxs;
         }
 
     });

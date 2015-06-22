@@ -32,8 +32,9 @@ require([
     "ponder/select/AreaSelect",
     "ponder/DataSelector",
     "ponder/DataTable",
+    "ponder/SummaryChart",
     "datatables"
-], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, datatables) {
+], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, SummaryChart, datatables) {
 
 
     var somHandle;
@@ -66,12 +67,11 @@ require([
             .statistics(selectedIndices)
             .then(function (stats) {
 
-                console.log(arguments);
 
                 var data = stats.getIndices().map(function (index) {
                     return dataTable.getFeatureData(index);
                 });
-                console.log(data);
+
 
                 document.getElementById("table").innerHTML = "";
 
@@ -82,7 +82,6 @@ require([
                 table.class = "display";
                 document.getElementById("table").appendChild(table);
 
-                console.log("table...", arguments);
                 jquery(table).dataTable({
                     searching: true,
                     ordering: true,
@@ -94,6 +93,11 @@ require([
                         };
                     })
                 });
+
+
+                document.getElementById("summary").innerHTML = "";
+                console.log("blarf!", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
+                var summary = new SummaryChart("summary", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
 
 
             }, function (e) {

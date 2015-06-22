@@ -43,11 +43,13 @@ html, body {
 #summary {
     width: 20%;
     display: inline-block;
+    float: right;
 }
 
 #table {
     width: 79%;
     display: inline-block;
+    float: left;
 }
 
 .selectedColumn {

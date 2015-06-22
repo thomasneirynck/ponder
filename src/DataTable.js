@@ -12,6 +12,10 @@ define(["type"], function (type) {
             });
         },
 
+        getSelectedColumns: function () {
+            return this._selectedColumns;
+        },
+
         getColumns: function () {
             return this._columns;
         },
