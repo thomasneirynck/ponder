@@ -4,7 +4,6 @@ html, body {
     height: 100%;
 }
 
-
 #wrapper {
     position: relative;
     width: 100%;
@@ -30,7 +29,7 @@ html, body {
     left: 0;
     width: 100px;
     height: 100px;
-    background-color: rgba(211,211,211,0.6);
+    background-color: rgba(211, 211, 211, 0.6);
     z-index: 2;
 }
 
@@ -41,13 +40,14 @@ html, body {
     z-index: 2;
 }
 
-#table {
-    border: 1px solid red;
-    height: 512px;
+#summary {
+    width: 20%;
+    display: inline-block;
 }
 
-#table * thead * th {
-    user-select: none;
+#table {
+    width: 79%;
+    display: inline-block;
 }
 
 .selectedColumn {
