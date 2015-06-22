@@ -6,6 +6,10 @@ define(["type"], function (type) {
             this._stats = statsData;
             this._dataArray = originalData;
             this._indices = indices;
+        },
+
+        getIndices: function () {
+            return this._indices;
         }
 
     });

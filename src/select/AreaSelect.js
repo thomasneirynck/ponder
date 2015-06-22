@@ -40,7 +40,6 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                 })
                 .mouseout(function (event) {
                     down = false;
-                    self.emit("change", self);
                 });
         },
 

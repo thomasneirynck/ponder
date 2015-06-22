@@ -51,10 +51,9 @@ require(["ponder/SOM", "ponder/blueToWhite"], function (SOM, blueToWhite) {
                 });
                 break;
             case "statistics":
-                var statistics = som.statistics(event.data.data, event.data.indices);
                 postMessage({
                     type: "statisticsSuccess",
-                    statistics: statistics
+                    statistics: som.statistics(event.data.indices)
                 });
         }
     }, false);

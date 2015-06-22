@@ -1,7 +1,6 @@
 define([
-    "type",
-    "./colorRamp"
-], function (type, colorRamp) {
+    "type"
+], function (type) {
 
     function between(x, s, e) {
         return x >= s && x < e;
@@ -176,6 +175,7 @@ define([
         },
 
         trainMap: function (sampleData) {
+            this._trainingData = sampleData;
             var iterationLimit = 16;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
@@ -299,7 +299,7 @@ define([
             this.toXY(minI, out);
         },
 
-        statistics: function (data, indices) {
+        statistics: function (indices) {
             var statistics = {
                 count: indices.length,
                 mins: new Array(this._codeBookSize),
@@ -311,8 +311,8 @@ define([
             }
             for (var i = 0; i < indices.length; i += 1) {
                 for (var c = 0; c < this._codeBookSize; c += 1) {
-                    statistics.mins[c] = Math.min(data[this._codeBookSize * i + c], statistics.mins[c]);
-                    statistics.maxs[c] = Math.max(data[this._codeBookSize * i + c], statistics.maxs[c]);
+                    statistics.mins[c] = Math.min(this._trainingData[this._codeBookSize * i + c], statistics.mins[c]);
+                    statistics.maxs[c] = Math.max(this._trainingData[this._codeBookSize * i + c], statistics.maxs[c]);
                 }
             }
             return statistics;

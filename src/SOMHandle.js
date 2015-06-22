@@ -64,12 +64,12 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
         },
 
         statistics: function (indices) {
+            var self = this;
             return this._doCommand({
                 type: "statistics",
-                data: this._dataArray,
                 indices: indices
             }).then(function (result) {
-                return new Statistics(result.statistics, this._dataArray, indices);
+                return new Statistics(result.statistics, self._dataArray, indices);
             });
         },
 

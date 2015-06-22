@@ -12,6 +12,10 @@ define(["type"], function (type) {
             });
         },
 
+        getColumns: function () {
+            return this._columns;
+        },
+
         createDataArray: function () {
 
             var mins = new Array(this._selectedColumnsIndices.length);
@@ -55,6 +59,10 @@ define(["type"], function (type) {
 
         getValueByRowAndColumnIndex: function (index, columnIndex) {
             return this._data[index][columnIndex];
+        },
+
+        getFeatureData: function (index) {
+            return this._data[index];
         }
 
     });

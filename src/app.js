@@ -31,8 +31,9 @@ require([
     "ponder/ease/EasingInput",
     "ponder/select/AreaSelect",
     "ponder/DataSelector",
-    "ponder/DataTable"
-], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable) {
+    "ponder/DataTable",
+    "datatables"
+], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, datatables) {
 
 
     var somHandle;
@@ -60,10 +61,47 @@ require([
             }
         }
 
-        var stats = somHandle
+
+        somHandle
             .statistics(selectedIndices)
-            .then(function () {
-                console.log("got it", arguments);
+            .then(function (stats) {
+
+                console.log(arguments);
+
+                var data = stats.getIndices().map(function (index) {
+                    return dataTable.getFeatureData(index);
+                });
+                console.log(data);
+
+                document.getElementById("table").innerHTML = "";
+
+                var table = document.createElement("table");
+                table.cellpadding = 0;
+                table.cellspacing = 0;
+                table.border = 0;
+                table.class = "display";
+                document.getElementById("table").appendChild(table);
+
+                console.log("table...", arguments);
+                jquery(table).dataTable({
+                    searching: true,
+                    ordering: true,
+                    paging: true,
+                    "data": data,
+                    "columns": dataTable.getColumns().map(function (e) {
+                        return {
+                            title: e
+                        };
+                    })
+                });
+
+
+            }, function (e) {
+                console.log("cant show databalse...", e);
+                throw e;
+            }).then(Function.prototype, function (e) {
+                console.log("still cant show datatable", e);
+                throw e;
             });
     });
 
