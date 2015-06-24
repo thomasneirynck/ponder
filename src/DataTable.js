@@ -10,6 +10,8 @@ define(["type"], function (type) {
             this._selectedColumnsIndices = this._selectedColumns.map(function (column) {
                 return columns.indexOf(column);
             });
+            this._uniques = [];
+            this._minMax = [];
         },
 
         getSelectedColumns: function () {
@@ -20,14 +22,29 @@ define(["type"], function (type) {
             return this._columns;
         },
 
-        getUniqueValues: function (columnIndex) {
-            var unique = [];
+        getMinMax: function (columnIndex) {
+
+            var min = Infinity;
+            var max = -Infinity;
             for (var i = 0; i < this._data.length; i += 1) {
-                if (unique.indexOf(this._data[i][columnIndex]) < 0) {
-                    unique.push(this._data[i][columnIndex]);
+                min = Math.min(min, this._data[i][columnIndex]);
+                max = Math.max(max, this._data[i][columnIndex]);
+            }
+            return [min, max];
+
+        },
+
+        getUniqueValues: function (columnIndex) {
+            if (this._uniques[columnIndex]) {
+                return this._uniques[columnIndex];
+            }
+            this._uniques[columnIndex] = [];
+            for (var i = 0; i < this._data.length; i += 1) {
+                if (this._uniques[columnIndex].indexOf(this._data[i][columnIndex]) < 0) {
+                    this._uniques[columnIndex].push(this._data[i][columnIndex]);
                 }
             }
-            return unique;
+            return this._uniques[columnIndex];
         },
 
         createDataArray: function () {

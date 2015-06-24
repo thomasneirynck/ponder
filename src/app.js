@@ -85,8 +85,10 @@ require([
     var bufferImageData;
     var bmus;
     var dataTable;
+
     var selectElement;
     var classElement;
+    var sizeElement;
 
 
     var colorMapper = new ColorMapper();
@@ -180,6 +182,14 @@ require([
         classSelectTag.appendTo("#class");
         classSelectTag.on("change", invalidate);
         classElement = classSelectTag[0];
+
+        var sizeTag = $("<select />");
+        for (var index in event.selectedColumns) {
+            $("<option />", {value: index, text: event.selectedColumns[index]}).appendTo(sizeTag);
+        }
+        sizeTag.appendTo("#size");
+        sizeTag.on("change", invalidate);
+        sizeElement = sizeTag[0];
 
         invalidate();
 
@@ -281,13 +291,26 @@ require([
         }
         context2d.fillStyle = "rgb(255,255,255)";
 
+        var minMax = dataTable.getMinMax(sizeElement.value);
+        var minSize = 5;
+        var maxSize = 15;
 
         var uniques = dataTable.getUniqueValues(classElement.value);
         var classAtt;
+        var size;
         for (var i = 0; i < bmus.length; i += 1) {
+
             classAtt = dataTable.getValueByRowAndColumnIndex(i, classElement.value);
+            size = minSize + (dataTable.getValueByRowAndColumnIndex(i, sizeElement.value) - minMax[0]) / (minMax[1] - minMax[0]) * (maxSize - minSize);
+
+            context2d.beginPath();
+            context2d.arc(toViewX(bmus[i].x), toViewY(bmus[i].y), size, 0, Math.PI * 2);
             context2d.fillStyle = classColors[uniques.indexOf(classAtt) % classColors.length];
-            context2d.fillRect(toViewX(bmus[i].x), toViewY(bmus[i].y), 10, 10);
+            context2d.fill();
+            context2d.strokeStyle = "rgba(180,180,180,0.8)";
+            context2d.stroke();
+
+
             context2d.fillText(dataTable.getValueByRowAndColumnIndex(i, selectElement.value), toViewX(bmus[i].x), toViewY(bmus[i].y));
         }
     }
