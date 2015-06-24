@@ -292,16 +292,18 @@ require([
         context2d.fillStyle = "rgb(255,255,255)";
 
         var minMax = dataTable.getMinMax(sizeElement.value);
-        var minSize = 5;
-        var maxSize = 15;
+        var minArea = Math.PI * Math.pow(5, 2);
+        var maxArea = Math.PI * Math.pow(20, 2);
 
         var uniques = dataTable.getUniqueValues(classElement.value);
         var classAtt;
+        var area;
         var size;
         for (var i = 0; i < bmus.length; i += 1) {
 
             classAtt = dataTable.getValueByRowAndColumnIndex(i, classElement.value);
-            size = minSize + (parseFloat(dataTable.getValueByRowAndColumnIndex(i, sizeElement.value)) - minMax[0]) / (minMax[1] - minMax[0]) * (maxSize - minSize);
+            area = minArea + (parseFloat(dataTable.getValueByRowAndColumnIndex(i, sizeElement.value)) - minMax[0]) / (minMax[1] - minMax[0]) * (maxArea - minArea);
+            size = Math.round(Math.sqrt(area / (Math.PI)));
 
             context2d.beginPath();
             context2d.arc(toViewX(bmus[i].x), toViewY(bmus[i].y), size, 0, Math.PI * 2);
