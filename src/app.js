@@ -185,7 +185,7 @@ require([
 
         var sizeTag = $("<select />");
         for (var index in event.selectedColumns) {
-            $("<option />", {value: index, text: event.selectedColumns[index]}).appendTo(sizeTag);
+            $("<option />", {value: dataTable.getColumnIndex(event.selectedColumns[index]), text: event.selectedColumns[index]}).appendTo(sizeTag);
         }
         sizeTag.appendTo("#size");
         sizeTag.on("change", invalidate);
@@ -301,7 +301,7 @@ require([
         for (var i = 0; i < bmus.length; i += 1) {
 
             classAtt = dataTable.getValueByRowAndColumnIndex(i, classElement.value);
-            size = minSize + (dataTable.getValueByRowAndColumnIndex(i, sizeElement.value) - minMax[0]) / (minMax[1] - minMax[0]) * (maxSize - minSize);
+            size = minSize + (parseFloat(dataTable.getValueByRowAndColumnIndex(i, sizeElement.value)) - minMax[0]) / (minMax[1] - minMax[0]) * (maxSize - minSize);
 
             context2d.beginPath();
             context2d.arc(toViewX(bmus[i].x), toViewY(bmus[i].y), size, 0, Math.PI * 2);

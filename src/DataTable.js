@@ -27,8 +27,11 @@ define(["type"], function (type) {
             var min = Infinity;
             var max = -Infinity;
             for (var i = 0; i < this._data.length; i += 1) {
-                min = Math.min(min, this._data[i][columnIndex]);
-                max = Math.max(max, this._data[i][columnIndex]);
+                if (isNaN(parseFloat(this._data[i][columnIndex]))) {
+                    continue;
+                }
+                min = Math.min(min, parseFloat(this._data[i][columnIndex]));
+                max = Math.max(max, parseFloat(this._data[i][columnIndex]));
             }
             return [min, max];
 
@@ -82,6 +85,10 @@ define(["type"], function (type) {
 
             return dataArray;
 
+        },
+
+        getColumnIndex: function (column) {
+            return this._columns.indexOf(column);
         },
 
         getSelectedColumnIndexByDataArrayIndex: function (index) {
