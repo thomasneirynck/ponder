@@ -100,13 +100,15 @@ require([
 
 
             }, function (e) {
-                console.log("cant show databalse...", e);
                 throw e;
             }).then(Function.prototype, function (e) {
-                console.log("still cant show datatable", e);
                 throw e;
             });
+
+        invalidate();
     });
+
+    areaSelect.on("input", invalidate);
 
     var easingInput = new EasingInput("ease");
     easingInput.on("input", refreshUMatrix);
@@ -127,8 +129,10 @@ require([
         }
 
         selectTag.appendTo("#label");
-        selectTag.on("change", drawMap);
+        selectTag.on("change", invalidate);
         selectElement = selectTag[0];
+
+        invalidate();
 
     });
 
@@ -169,14 +173,15 @@ require([
                 uMatrixData = successData.uMatrix;
 
                 refreshUMatrix();
+                invalidate();
+
 
                 return somHandle.bmus();
 
             })
             .then(function (bmuResult) {
-                console.log("bmu", bmuResult);
                 bmus = bmuResult.locations;
-                drawMap();
+                invalidate();
             });
     }
 
@@ -188,6 +193,7 @@ require([
         }
         context2d.canvas.width = jquery(context2d.canvas).parent().width();
         context2d.canvas.height = jquery(context2d.canvas).parent().height();
+        invalidate();
     }
 
     function refreshUMatrix() {
@@ -200,7 +206,7 @@ require([
         colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
         buffer.putImageData(bufferImageData, 0, 0);
 
-        drawMap();
+        invalidate();
     }
 
     function toViewX(x) {
@@ -221,17 +227,14 @@ require([
 
 
     function drawMap() {
-
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-
-        if (!bmus) {
-            return;
-        }
-
         drawLabels();
     }
 
     function drawLabels() {
+        if (!bmus) {
+            return;
+        }
         context2d.fillStyle = "rgb(255,255,255)";
         for (var i = 0; i < bmus.length; i += 1) {
             context2d.fillRect(toViewX(bmus[i].x), toViewY(bmus[i].y), 10, 10);
@@ -240,17 +243,25 @@ require([
     }
 
 
-    requestAnimationFrame(function draw() {
-        requestAnimationFrame(draw);
+    var handle = null;
+
+    function invalidate() {
+        if (!handle) {
+            handle = requestAnimationFrame(draw);
+        }
+    }
+
+
+    function draw() {
+        handle = null;
         if (!context2d) {
             return;
         }
         context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
         drawMap();
         areaSelect.paint(context2d);
-
-
-    })
+        invalid = false;
+    }
 
 });
 
