@@ -40,6 +40,13 @@ html, body {
     z-index: 2;
 }
 
+#class {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 2;
+}
+
 #summary {
     width: 20%;
     display: inline-block;

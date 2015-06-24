@@ -20,6 +20,16 @@ define(["type"], function (type) {
             return this._columns;
         },
 
+        getUniqueValues: function (columnIndex) {
+            var unique = [];
+            for (var i = 0; i < this._data.length; i += 1) {
+                if (unique.indexOf(this._data[i][columnIndex]) < 0) {
+                    unique.push(this._data[i][columnIndex]);
+                }
+            }
+            return unique;
+        },
+
         createDataArray: function () {
 
             var mins = new Array(this._selectedColumnsIndices.length);
