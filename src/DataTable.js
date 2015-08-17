@@ -11,7 +11,6 @@ define(["type"], function (type) {
                 return columns.indexOf(column);
             });
             this._uniques = [];
-            this._minMax = [];
         },
 
         getSelectedColumns: function () {

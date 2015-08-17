@@ -24,15 +24,15 @@ require.config({
 });
 
 require([
-    "ponder/SOMFactory",
+    "ponder/som/SOMFactory",
     "Papa",
     "jquery",
     "ponder/ColorMapper",
-    "ponder/ease/EasingInput",
+    "ponder/ui/EasingInput",
     "ponder/select/AreaSelect",
-    "ponder/DataSelector",
+    "ponder/ui/DataSelector",
     "ponder/DataTable",
-    "ponder/SummaryChart",
+    "ponder/ui/SummaryChart",
     "datatables"
 ], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, SummaryChart, datatables) {
 

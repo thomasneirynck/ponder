@@ -65,6 +65,7 @@ html, body {
     width: 79%;
     display: inline-block;
     float: left;
+    overflow: hidden;
 }
 
 .selectedColumn {
