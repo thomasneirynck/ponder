@@ -93,73 +93,71 @@ require([
     var sizeElement;
 
 
-//    var map = new Map("map");
+//    var colorMapper = new ColorMapper();
+//    var areaSelect = new AreaSelect("som");
+//    areaSelect.on("change", function () {
+//
+//        if (!bmus) {
+//            return;
+//        }
+//
+//        var selectedIndices = [];
+//        for (var i = 0; i < bmus.length; i += 1) {
+//            if (areaSelect.isInsideSelectedArea(toViewX(bmus[i].x), toViewY(bmus[i].y))) {
+//                selectedIndices.push(i);
+//            }
+//        }
+//
+//
+//        somHandle
+//            .statistics(selectedIndices)
+//            .then(function (stats) {
+//
+//
+//                var data = stats.getIndices().map(function (index) {
+//                    return dataTable.getFeatureData(index);
+//                });
+//
+//
+//                document.getElementById("table").innerHTML = "";
+//
+//                var table = document.createElement("table");
+//                table.cellpadding = 0;
+//                table.cellspacing = 0;
+//                table.border = 0;
+//                table.class = "display";
+//                document.getElementById("table").appendChild(table);
+//
+//                jquery(table).dataTable({
+//                    searching: true,
+//                    ordering: true,
+//                    paging: true,
+//                    "data": data,
+//                    "columns": dataTable.getColumns().map(function (e) {
+//                        return {
+//                            title: e
+//                        };
+//                    })
+//                });
+//
+//
+//                document.getElementById("summary").innerHTML = "";
+//                var summary = new SummaryChart("summary", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
+//
+//
+//            }, function (e) {
+//                throw e;
+//            }).then(Function.prototype, function (e) {
+//                throw e;
+//            });
+//
+//        invalidate();
+//    });
 
-    var colorMapper = new ColorMapper();
-    var areaSelect = new AreaSelect("som");
-    areaSelect.on("change", function () {
+//    areaSelect.on("input", invalidate);
 
-        if (!bmus) {
-            return;
-        }
-
-        var selectedIndices = [];
-        for (var i = 0; i < bmus.length; i += 1) {
-            if (areaSelect.isInsideSelectedArea(toViewX(bmus[i].x), toViewY(bmus[i].y))) {
-                selectedIndices.push(i);
-            }
-        }
-
-
-        somHandle
-            .statistics(selectedIndices)
-            .then(function (stats) {
-
-
-                var data = stats.getIndices().map(function (index) {
-                    return dataTable.getFeatureData(index);
-                });
-
-
-                document.getElementById("table").innerHTML = "";
-
-                var table = document.createElement("table");
-                table.cellpadding = 0;
-                table.cellspacing = 0;
-                table.border = 0;
-                table.class = "display";
-                document.getElementById("table").appendChild(table);
-
-                jquery(table).dataTable({
-                    searching: true,
-                    ordering: true,
-                    paging: true,
-                    "data": data,
-                    "columns": dataTable.getColumns().map(function (e) {
-                        return {
-                            title: e
-                        };
-                    })
-                });
-
-
-                document.getElementById("summary").innerHTML = "";
-                var summary = new SummaryChart("summary", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
-
-
-            }, function (e) {
-                throw e;
-            }).then(Function.prototype, function (e) {
-                throw e;
-            });
-
-        invalidate();
-    });
-
-    areaSelect.on("input", invalidate);
-
-    var easingInput = new EasingInput("ease");
-    easingInput.on("input", refreshUMatrix);
+//    var easingInput = new EasingInput("ease");
+//    easingInput.on("input", refreshUMatrix);
 
     var dataSelector = new DataSelector("selector");
     dataSelector.on("change", function (event) {
@@ -171,31 +169,31 @@ require([
 
         createSom(dataArray, event.selectedColumns.length);
 
-        var labelSelectTag = $("<select />");
-        var classSelectTag = $("<select />");
-        for (var index in event.columns) {
-            $("<option />", {value: index, text: event.columns[index]}).appendTo(labelSelectTag);
-            $("<option />", {value: index, text: event.columns[index]}).appendTo(classSelectTag);
-        }
-
-        labelSelectTag.appendTo("#label");
-        labelSelectTag.on("change", invalidate);
-        selectElement = labelSelectTag[0];
-
-
-        classSelectTag.appendTo("#class");
-        classSelectTag.on("change", invalidate);
-        classElement = classSelectTag[0];
-
-        var sizeTag = $("<select />");
-        for (var index in event.selectedColumns) {
-            $("<option />", {value: dataTable.getColumnIndex(event.selectedColumns[index]), text: event.selectedColumns[index]}).appendTo(sizeTag);
-        }
-        sizeTag.appendTo("#size");
-        sizeTag.on("change", invalidate);
-        sizeElement = sizeTag[0];
-
-        invalidate();
+//        var labelSelectTag = $("<select />");
+//        var classSelectTag = $("<select />");
+//        for (var index in event.columns) {
+//            $("<option />", {value: index, text: event.columns[index]}).appendTo(labelSelectTag);
+//            $("<option />", {value: index, text: event.columns[index]}).appendTo(classSelectTag);
+//        }
+//
+//        labelSelectTag.appendTo("#label");
+//        labelSelectTag.on("change", invalidate);
+//        selectElement = labelSelectTag[0];
+//
+//
+//        classSelectTag.appendTo("#class");
+//        classSelectTag.on("change", invalidate);
+//        classElement = classSelectTag[0];
+//
+//        var sizeTag = $("<select />");
+//        for (var index in event.selectedColumns) {
+//            $("<option />", {value: dataTable.getColumnIndex(event.selectedColumns[index]), text: event.selectedColumns[index]}).appendTo(sizeTag);
+//        }
+//        sizeTag.appendTo("#size");
+//        sizeTag.on("change", invalidate);
+//        sizeElement = sizeTag[0];
+//
+//        invalidate();
 
     });
 
@@ -225,18 +223,23 @@ require([
             })
             .then(function (successData) {
 
-                buffer = document.createElement("canvas").getContext("2d");
-                buffer.canvas.width = somHandle.width;
-                buffer.canvas.height = somHandle.height;
-                bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
+                var map = new Map("map");
+                var umatrixLayer = new UMatrixTerrainLayer("ease");
+                umatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
+                map.addLayer(umatrixLayer);
 
-                context2d = document.getElementById("som").getContext("2d");
-                resize();
-
-                uMatrixData = successData.uMatrix;
-
-                refreshUMatrix();
-                invalidate();
+//                buffer = document.createElement("canvas").getContext("2d");
+//                buffer.canvas.width = somHandle.width;
+//                buffer.canvas.height = somHandle.height;
+//                bufferImageData = buffer.getImageData(0, 0, buffer.canvas.width, buffer.canvas.height);
+//
+//                context2d = document.getElementById("som").getContext("2d");
+//                resize();
+//
+//                uMatrixData = successData.uMatrix;
+//
+//                refreshUMatrix();
+//                invalidate();
 
 
                 return somHandle.bmus();
@@ -248,29 +251,29 @@ require([
             });
     }
 
-    window.addEventListener("resize", resize);
+//    window.addEventListener("resize", resize);
+//
+//    function resize() {
+//        if (!context2d) {
+//            return;
+//        }
+//        context2d.canvas.width = jquery(context2d.canvas).parent().width();
+//        context2d.canvas.height = jquery(context2d.canvas).parent().height();
+//        invalidate();
+//    }
 
-    function resize() {
-        if (!context2d) {
-            return;
-        }
-        context2d.canvas.width = jquery(context2d.canvas).parent().width();
-        context2d.canvas.height = jquery(context2d.canvas).parent().height();
-        invalidate();
-    }
-
-    function refreshUMatrix() {
-
-        if (!uMatrixData) {
-            return;
-        }
-
-        colorMapper.setEasingParameters(easingInput.getA(), easingInput.getB());
-        colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
-        buffer.putImageData(bufferImageData, 0, 0);
-
-        invalidate();
-    }
+//    function refreshUMatrix() {
+//
+//        if (!uMatrixData) {
+//            return;
+//        }
+//
+//        colorMapper.setEasingParameters(easingInput.getA(), easingInput.getB());
+//        colorMapper.fillPixelBuffer(uMatrixData, bufferImageData);
+//        buffer.putImageData(bufferImageData, 0, 0);
+//
+//        invalidate();
+//    }
 
     function toViewX(x) {
         return x * context2d.canvas.width / somHandle.width;
@@ -324,23 +327,23 @@ require([
 
     var handle = null;
 
-    function invalidate() {
-        if (!handle) {
-            handle = requestAnimationFrame(draw);
-        }
-    }
+//    function invalidate() {
+//        if (!handle) {
+//            handle = requestAnimationFrame(draw);
+//        }
+//    }
 
 
-    function draw() {
-        handle = null;
-        if (!context2d) {
-            return;
-        }
-        context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
-        context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-        drawBmus();
-        areaSelect.paint(context2d);
-    }
+//    function draw() {
+//        handle = null;
+//        if (!context2d) {
+//            return;
+//        }
+//        context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
+//        context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
+//        drawBmus();
+//        areaSelect.paint(context2d);
+//    }
 
 
 });

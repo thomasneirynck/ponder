@@ -16,16 +16,18 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._handleAnimationFrame = function handleAnimationFrame() {
                 self._animationFrameHandle = 0;
                 for (var i = 0; i < self._layers.length; i += 1) {
-                    self._layers[i].paint();
+                    self._layers[i].paint(self._context2d);
                 }
             };
 
             window.addEventListener("resize", this.resize.bind(this));
+            this.resize();
         },
 
         addLayer: function (layer) {
             this._layers.push(layer);
             layer.on("invalidate", this.invalidate.bind(this));
+            this.invalidate();
         },
 
         resize: function () {

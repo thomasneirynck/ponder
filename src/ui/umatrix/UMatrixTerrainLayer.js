@@ -5,7 +5,7 @@ define(["type", "Evented", "./EasingInput", "./ColorMapper"], function (type, Ev
 
         constructor: function UMatrixTerrainLayer(easingInputNode) {
             this._easingInput = new EasingInput(easingInputNode);
-            this._easingInput.on("input", this._refreshUMatrix.bind(this));
+            this._easingInput.on("input", this._refreshUMatrixViz.bind(this));
             this._colorMapper = new ColorMapper();
         },
 
@@ -18,9 +18,11 @@ define(["type", "Evented", "./EasingInput", "./ColorMapper"], function (type, Ev
             this._buffer.canvas.height = height;
             this._bufferImageData = this._buffer.getImageData(0, 0, this._buffer.canvas.width, this._buffer.canvas.height);
 
+            this._refreshUMatrixViz();
+
         },
 
-        _refreshUMatrix: function () {
+        _refreshUMatrixViz: function () {
 
             if (!this._uMatrixData) {
                 return;
