@@ -10,7 +10,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
             this._context2d = document.createElement("canvas").getContext("2d");
             this._container = (typeof node === "string") ? document.getElementById(node) : node;
-            this._container.appendChild(this._context2d);
+            this._container.appendChild(this._context2d.canvas);
 
             var self = this;
             this._handleAnimationFrame = function handleAnimationFrame() {

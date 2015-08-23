@@ -13,7 +13,6 @@ define(["type", "./blueToWhite"], function (type, blueToWhite2) {
             return Math.pow(value, 1 / y);
         },
 
-
         setEasingParameters: function (a, b) {
             this._a = a;
             this._b = b;

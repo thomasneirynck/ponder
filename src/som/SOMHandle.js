@@ -1,4 +1,4 @@
-define(["type", "Promise", "../Statistics"], function (type, Promise, Statistics) {
+define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics) {
 
     console.log("blarf!");
 

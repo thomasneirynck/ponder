@@ -33,8 +33,10 @@ require([
     "ponder/ui/DataSelector",
     "ponder/DataTable",
     "ponder/ui/SummaryChart",
+    "ponder/ui/Map",
+    "ponder/ui/umatrix/UMatrixTerrainLayer",
     "datatables"
-], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, SummaryChart, datatables) {
+], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, SummaryChart, Map, UMatrixTerrainLayer, datatables) {
 
 
     var classColors = ["#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
@@ -90,6 +92,8 @@ require([
     var classElement;
     var sizeElement;
 
+
+//    var map = new Map("map");
 
     var colorMapper = new ColorMapper();
     var areaSelect = new AreaSelect("som");
