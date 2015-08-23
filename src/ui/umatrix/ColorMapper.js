@@ -1,4 +1,4 @@
-define(["type", "./blueToWhite"], function (type, blueToWhite2) {
+define(["../../../bower_components/type/type", "./blueToWhite"], function (type, blueToWhite2) {
 
 
     return type({
@@ -20,7 +20,6 @@ define(["type", "./blueToWhite"], function (type, blueToWhite2) {
         },
 
         /**
-         *
          * @param values array with values, layed row by row
          * @param imageData 2d pixel buffer from html-canvas. length should be 4 times the length of the featurebuffer
          */

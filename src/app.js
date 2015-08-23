@@ -28,7 +28,7 @@ require([
     "Papa",
     "jquery",
     "ponder/ColorMapper",
-    "ponder/ui/EasingInput",
+    "ponder/ui/umatrix/EasingInput",
     "ponder/select/AreaSelect",
     "ponder/ui/DataSelector",
     "ponder/DataTable",
