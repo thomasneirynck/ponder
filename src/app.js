@@ -27,7 +27,7 @@ require([
     "ponder/som/SOMFactory",
     "Papa",
     "jquery",
-    "ponder/ColorMapper",
+    "ponder/ui/umatrix/ColorMapper",
     "ponder/ui/umatrix/EasingInput",
     "ponder/select/AreaSelect",
     "ponder/ui/DataSelector",

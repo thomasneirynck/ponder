@@ -1,4 +1,4 @@
-define(["../../../bower_components/type/type", "./blueToWhite"], function (type, blueToWhite2) {
+define(["type", "./blueToWhite"], function (type, blueToWhite2) {
 
 
     return type({
