@@ -336,7 +336,6 @@ require([
         context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
         drawBmus();
         areaSelect.paint(context2d);
-        invalid = false;
     }
 
 
