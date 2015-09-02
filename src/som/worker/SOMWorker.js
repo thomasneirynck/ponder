@@ -60,5 +60,4 @@ require(["ponder/som/SOM"], function (SOM) {
 
     postMessage("worker-loaded");
 
-
 });

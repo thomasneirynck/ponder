@@ -46,16 +46,16 @@ define([
 
         constructor: function SOM(options) {
 
-            this._width = options.width;
-            this._height = options.height;
+            this._worldWidth = options.width;
+            this._worldHeight = options.height;
             this._codeBookSize = options.codeBookSize;
-            this._neuralWeights = new Array(this._width * this._height * this._codeBookSize);
+            this._neuralWeights = new Array(this._worldWidth * this._worldHeight * this._codeBookSize);
 
             for (var i = 0; i < this._neuralWeights.length; i += 1) {
                 this._neuralWeights[i] = Math.random();
             }
 
-            this._mapRadius = Math.max(this._width, this._height) / 2;
+            this._mapRadius = Math.max(this._worldWidth, this._worldHeight) / 2;
             this._initialLearningRate = 0.5;
         },
 
@@ -65,29 +65,29 @@ define([
             var distance , total, ni, i;
             var min = Infinity;
             var max = -Infinity;
-            var uMatrix = new Array(this._width * this._height);
+            var uMatrix = new Array(this._worldWidth * this._worldHeight);
             for (i = 0; i < this._neuralWeights.length; i += this._codeBookSize) {
 
                 distance = 0;
                 total = 0;
                 this.toXY(i, xy);
 
-                if (between(xy.x - 1, 0, this._width)) {
+                if (between(xy.x - 1, 0, this._worldWidth)) {
                     ni = this.toIndex(xy.x - 1, xy.y);
                     distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
                     total += 1;
                 }
-                if (between(xy.x + 1, 0, this._width)) {
+                if (between(xy.x + 1, 0, this._worldWidth)) {
                     ni = this.toIndex(xy.x + 1, xy.y);
                     distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
                     total += 1;
                 }
-                if (between(xy.y - 1, 0, this._height)) {
+                if (between(xy.y - 1, 0, this._worldHeight)) {
                     ni = this.toIndex(xy.x, xy.y - 1);
                     distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
                     total += 1;
                 }
-                if (between(xy.y + 1, 0, this._height)) {
+                if (between(xy.y + 1, 0, this._worldHeight)) {
                     ni = this.toIndex(xy.x, xy.y + 1);
                     distance += (this.distance(this._neuralWeights, i, this._neuralWeights, ni) / this._codeBookSize);
                     total += 1;
@@ -122,9 +122,9 @@ define([
 
             var i, dist;
             var cstart = Math.max(Math.floor(bmu.x - neighbourhoodDistance), 0);
-            var cend = Math.min(Math.ceil(bmu.x + neighbourhoodDistance), this._width);
+            var cend = Math.min(Math.ceil(bmu.x + neighbourhoodDistance), this._worldWidth);
             var rstart = Math.max(Math.floor(bmu.y - neighbourhoodDistance), 0);
-            var rend = Math.min(Math.ceil(bmu.y + neighbourhoodDistance), this._height);
+            var rend = Math.min(Math.ceil(bmu.y + neighbourhoodDistance), this._worldHeight);
             for (var c = cstart; c < cend; c += 1) {
                 for (var r = rstart; r < rend; r += 1) {
                     i = this.toIndex(c, r);
@@ -153,18 +153,18 @@ define([
             for (var r = 0; r < targetHeight; r += 1) {
                 for (var c = 0; c < targetWidth; c += 1) {
 
-                    x = c * (this._width - 1) / (targetWidth - 1);
-                    y = r * (this._height - 1) / (targetHeight - 1);
+                    x = c * (this._worldWidth - 1) / (targetWidth - 1);
+                    y = r * (this._worldHeight - 1) / (targetHeight - 1);
 
-                    x1 = Math.min(Math.floor(x), this._width - 2);
+                    x1 = Math.min(Math.floor(x), this._worldWidth - 2);
                     x2 = x1 + 1;
-                    y1 = Math.min(Math.floor(y), this._height - 2);
+                    y1 = Math.min(Math.floor(y), this._worldHeight - 2);
                     y2 = y1 + 1;
 
-                    Q11 = values[toIndex(x1, y1, this._width, 1)];
-                    Q12 = values[toIndex(x1, y2, this._width, 1)];
-                    Q21 = values[toIndex(x2, y1, this._width, 1)];
-                    Q22 = values[toIndex(x2, y2, this._width, 1)];
+                    Q11 = values[toIndex(x1, y1, this._worldWidth, 1)];
+                    Q12 = values[toIndex(x1, y2, this._worldWidth, 1)];
+                    Q21 = values[toIndex(x2, y1, this._worldWidth, 1)];
+                    Q22 = values[toIndex(x2, y2, this._worldWidth, 1)];
 
                     interpolated[(targetWidth * r) + c] = calculateBilinearInterpolant(x1, x, x2, y1, y, y2, Q11, Q12, Q21, Q22);
                 }
@@ -205,13 +205,13 @@ define([
         },
 
         toIndex: function (x, y) {
-            return ((this._width * y) + x) * this._codeBookSize;
+            return ((this._worldWidth * y) + x) * this._codeBookSize;
         },
 
 
         toXY: function (index, out) {
-            out.x = (index / this._codeBookSize) % this._width;
-            out.y = Math.floor(index / this._codeBookSize / this._width);
+            out.x = (index / this._codeBookSize) % this._worldWidth;
+            out.y = Math.floor(index / this._codeBookSize / this._worldWidth);
         },
 
 
@@ -223,24 +223,24 @@ define([
 
             var total = 0;
             //up down top left
-            if (between(x - 1, 0, this._width)) {
+            if (between(x - 1, 0, this._worldWidth)) {
                 i = this.toIndex(x - 1, y);
                 dx -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
-            if (between(x + 1, 0, this._width)) {
+            if (between(x + 1, 0, this._worldWidth)) {
                 i = this.toIndex(x + 1, y);
                 dx += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
 
-            if (between(y - 1, 0, this._height)) {
+            if (between(y - 1, 0, this._worldHeight)) {
                 i = this.toIndex(x, y - 1);
                 dy -= (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
             }
 
-            if (between(y + 1, 0, this._height)) {
+            if (between(y + 1, 0, this._worldHeight)) {
                 i = this.toIndex(x, y + 1);
                 dy += (1 - this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) / 2;
                 total += 1;
@@ -249,28 +249,28 @@ define([
 
             //diagonal
             var d;
-            if (between(x - 1, 0, this._width) && between(y - 1, 0, this._height)) {
+            if (between(x - 1, 0, this._worldWidth) && between(y - 1, 0, this._worldHeight)) {
                 i = this.toIndex(x - 1, y - 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
                 dx -= d / 2;
                 dy -= d / 2;
                 total += 1;
             }
-            if (between(x - 1, 0, this._width) && between(y + 1, 0, this._height)) {
+            if (between(x - 1, 0, this._worldWidth) && between(y + 1, 0, this._worldHeight)) {
                 i = this.toIndex(x - 1, y + 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
                 dx -= d / 2;
                 dy += d / 2;
                 total += 1;
             }
-            if (between(x + 1, 0, this._width) && between(y - 1, 0, this._height)) {
+            if (between(x + 1, 0, this._worldWidth) && between(y - 1, 0, this._worldHeight)) {
                 i = this.toIndex(x + 1, y - 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
                 dx += d / 2;
                 dy -= d / 2;
                 total += 1;
             }
-            if (between(x + 1, 0, this._width) && between(y + 1, 0, this._height)) {
+            if (between(x + 1, 0, this._worldWidth) && between(y + 1, 0, this._worldHeight)) {
                 i = this.toIndex(x + 1, y + 1);
                 d = 1 - (this.distance(this._neuralWeights, i, feature, fi) / this._codeBookSize) * 1.4142135623730951;
                 dx += d / 2;

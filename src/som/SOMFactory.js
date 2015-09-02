@@ -12,9 +12,8 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
 
                 var width = 64;
                 var height = 64;
-                var somHandle = new SOMHandle(somWorker, dataArray);
-                somHandle.width = width;
-                somHandle.height = height;
+                var somHandle = new SOMHandle(somWorker, dataArray, width, height);
+
 
                 somWorker.addEventListener("message", function init(event) {
                     somWorker.removeEventListener("message", init);
@@ -29,7 +28,6 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
                 });
 
             });
-
 
             return somReady.thenable();
         }

@@ -1,14 +1,14 @@
 define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics) {
 
-    console.log("blarf!");
-
     return type({
 
-        constructor: function SOMHandle(somWorker, dataArray) {
+        constructor: function SOMHandle(somWorker, dataArray, width, height) {
             this._dataArray = dataArray;
             this._somWorker = somWorker;
             this._queue = [];
             this._busy = false;
+            this.width = width;
+            this.height = height;
         },
 
         kill: function () {

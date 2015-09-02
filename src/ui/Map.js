@@ -3,10 +3,14 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function Map(node) {
+        constructor: function Map(node, worldWidth, worldHeight) {
+
             Evented.call(this);
             this._layers = [];
             this._animationFrameHandle = 0;
+
+            this._worldWidth = worldWidth;
+            this._worldHeight = worldHeight;
 
             this._context2d = document.createElement("canvas").getContext("2d");
             this._container = (typeof node === "string") ? document.getElementById(node) : node;
@@ -16,12 +20,28 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._handleAnimationFrame = function handleAnimationFrame() {
                 self._animationFrameHandle = 0;
                 for (var i = 0; i < self._layers.length; i += 1) {
-                    self._layers[i].paint(self._context2d);
+                    self._layers[i].paint(self._context2d, self);
                 }
             };
 
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
+        },
+
+        toViewX: function (x) {
+            return x * this._context2d.canvas.width / this._worldWidth;
+        },
+
+        toViewY: function (y) {
+            return y * this._context2d.canvas.height / this._worldHeight;
+        },
+
+        toWorldX: function (x) {
+            return x * this._worldWidth / this._context2d.canvas.width;
+        },
+
+        toWorldY: function (y) {
+            return y * this._worldHeight / this._context2d.canvas.height;
         },
 
         addLayer: function (layer) {
