@@ -1,4 +1,4 @@
-define(["type", "jquery", "Evented"], function (type, $, Evented) {
+define(["../../../bower_components/type/type", "jquery", "Evented"], function (type, $, Evented) {
 
 
     var mbr = {minx: 0, maxx: 0, miny: 0, maxy: 0};

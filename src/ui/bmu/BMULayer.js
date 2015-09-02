@@ -44,7 +44,7 @@ define(["type", "Evented"], function (type, Evented) {
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function BMULayer(labelNode, classNode, sizeNode, columns, selectedColumns, dataTable, bmus) {
+        constructor: function BMULayer(labelNode, classNode, sizeNode, dataTable, bmus) {
 
             Evented.call(this);
 
@@ -53,9 +53,9 @@ define(["type", "Evented"], function (type, Evented) {
 
             var labelSelectTag = $("<select />");
             var classSelectTag = $("<select />");
-            for (var index in columns) {
-                $("<option />", {value: index, text: columns[index]}).appendTo(labelSelectTag);
-                $("<option />", {value: index, text: columns[index]}).appendTo(classSelectTag);
+            for (var index in dataTable.getColumns()) {
+                $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(labelSelectTag);
+                $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(classSelectTag);
             }
 
             labelSelectTag.appendTo("#" + labelNode);
@@ -67,8 +67,8 @@ define(["type", "Evented"], function (type, Evented) {
             this._classElement = classSelectTag[0];
 
             var sizeTag = $("<select />");
-            for (var index in selectedColumns) {
-                $("<option />", {value: dataTable.getColumnIndex(selectedColumns[index]), text: selectedColumns[index]}).appendTo(sizeTag);
+            for (var index in dataTable.getSelectedColumns()) {
+                $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedColumns()[index]), text: dataTable.getSelectedColumns()[index]}).appendTo(sizeTag);
             }
             sizeTag.appendTo("#" + sizeNode);
             sizeTag.on("change", this.invalidate.bind(this));

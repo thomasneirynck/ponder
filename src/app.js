@@ -30,8 +30,8 @@ require([
     "ponder/ui/umatrix/ColorMapper",
     "ponder/ui/umatrix/EasingInput",
     "ponder/select/AreaSelect",
-    "ponder/ui/DataSelector",
-    "ponder/DataTable",
+    "ponder/dataload/DataSelector",
+    "ponder/dataload/DataTable",
     "ponder/ui/SummaryChart",
     "ponder/ui/Map",
     "ponder/ui/umatrix/UMatrixTerrainLayer",
@@ -53,8 +53,6 @@ require([
     var sizeElement;
 
 
-//    var colorMapper = new ColorMapper();
-//    var areaSelect = new AreaSelect("som");
 //    areaSelect.on("change", function () {
 //
 //        if (!bmus) {
@@ -118,40 +116,15 @@ require([
 
 
     var dataSelector = new DataSelector("selector");
-    dataSelector.on("change", function (event) {
+    dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
 
-        dataTable = new DataTable(event.data, event.columns, event.selectedColumns);
-        var dataArray = dataTable.createDataArray();
 
-        createSom(dataArray, event.selectedColumns.length, event.columns, event.selectedColumns, dataTable);
+        var dataArray = table.createDataArray();
 
-//        var labelSelectTag = $("<select />");
-//        var classSelectTag = $("<select />");
-//        for (var index in event.columns) {
-//            $("<option />", {value: index, text: event.columns[index]}).appendTo(labelSelectTag);
-//            $("<option />", {value: index, text: event.columns[index]}).appendTo(classSelectTag);
-//        }
-//
-//        labelSelectTag.appendTo("#label");
-//        labelSelectTag.on("change", invalidate);
-//        selectElement = labelSelectTag[0];
-//
-//
-//        classSelectTag.appendTo("#class");
-//        classSelectTag.on("change", invalidate);
-//        classElement = classSelectTag[0];
-//
-//        var sizeTag = $("<select />");
-//        for (var index in event.selectedColumns) {
-//            $("<option />", {value: dataTable.getColumnIndex(event.selectedColumns[index]), text: event.selectedColumns[index]}).appendTo(sizeTag);
-//        }
-//        sizeTag.appendTo("#size");
-//        sizeTag.on("change", invalidate);
-//        sizeElement = sizeTag[0];
-//
-//        invalidate();
+        createSom(dataArray, table.getSelectedColumns().length, table);
+
 
     });
 
@@ -161,7 +134,7 @@ require([
     }
 
 
-    function createSom(dataArray, codebookLength, columns, selectedColumns, dataTable) {
+    function createSom(dataArray, codebookLength, dataTable) {
 
         var map;
         if (somHandle) {
@@ -193,13 +166,8 @@ require([
             })
             .then(function (bmuResult) {
 
-                bmus = bmuResult.locations;
-
-                console.log("loading bmu layer");
-                var bmuLayer = new BMULayer("label", "class", "size", columns, selectedColumns, dataTable, bmus);
+                var bmuLayer = new BMULayer("label", "class", "size", dataTable, bmuResult.locations);
                 map.addLayer(bmuLayer);
-
-//                labelNode, classNode, columns, selectedColumns, dataTable, bmus
 
             }, throwError)
             .then(function(){

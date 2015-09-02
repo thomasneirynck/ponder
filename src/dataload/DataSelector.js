@@ -3,8 +3,9 @@ define([
     "type",
     "Evented",
     "jquery",
+    "./DataTable",
     "datatables"
-], function (Papa, type, Evented, jquery) {
+], function (Papa, type, Evented, jquery, DataTable) {
 
 
     return type(Object.prototype, Evented.prototype, {
@@ -105,12 +106,11 @@ define([
                 });
 
                 jquery(doneButton).on("click", function () {
-                    self.emit("change", {
-                        file: self._file,
-                        data: self._data.slice(1),
-                        columns: self._data[0],
-                        selectedColumns: self._selectedColumns
-                    });
+
+
+                    var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedColumns);
+
+                    self.emit("change", dataTable);
                 });
 
             }
