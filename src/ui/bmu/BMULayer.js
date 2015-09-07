@@ -109,6 +109,14 @@ define(["type", "Evented"], function (type, Evented) {
             }
         },
 
+        getDataTable: function(){
+          return this._dataTable;
+        },
+
+        getBmus: function () {
+            return this._bmus;
+        },
+
         invalidate: function () {
             this.emit("invalidate", this);
         }

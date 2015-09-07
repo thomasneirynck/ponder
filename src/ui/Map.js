@@ -26,6 +26,27 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
+
+
+            jquery(this._container)
+                .mousedown(function (event) {
+                    self.emit("mousedown", event);
+                })
+                .mousemove(function (event) {
+                    self.emit("mousemove", event);
+                })
+                .mouseout(function (event) {
+                    self.emit("mouseout", event);
+                })
+                .mouseup(function (event) {
+                    self.emit("mouseup", event);
+                });
+
+            jquery(window)
+                .mouseup(function (event) {
+                    self.emit("window_mouseup", event);
+                });
+
         },
 
         toViewX: function (x) {

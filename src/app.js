@@ -25,118 +25,35 @@ require.config({
 
 require([
     "ponder/som/SOMFactory",
-    "Papa",
-    "jquery",
-    "ponder/ui/umatrix/ColorMapper",
-    "ponder/ui/umatrix/EasingInput",
-    "ponder/select/AreaSelect",
     "ponder/dataload/DataSelector",
-    "ponder/dataload/DataTable",
-    "ponder/ui/SummaryChart",
     "ponder/ui/Map",
     "ponder/ui/umatrix/UMatrixTerrainLayer",
     "ponder/ui/bmu/BMULayer",
-    "datatables"
-], function (SOMFactory, Papa, jquery, ColorMapper, EasingInput, AreaSelect, DataSelector, DataTable, SummaryChart, Map, UMatrixTerrainLayer, BMULayer, datatables) {
+    "ponder/ui/areaselect/AreaSelectLayerController",
+    "ponder/ui/bmu/BMUSelector"
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector) {
 
 
     var somHandle;
-    var buffer;
-    var context2d;
     var uMatrixData;
-    var bufferImageData;
     var bmus;
-    var dataTable;
-
-    var selectElement;
-    var classElement;
-    var sizeElement;
-
-
-//    areaSelect.on("change", function () {
-//
-//        if (!bmus) {
-//            return;
-//        }
-//
-//        var selectedIndices = [];
-//        for (var i = 0; i < bmus.length; i += 1) {
-//            if (areaSelect.isInsideSelectedArea(toViewX(bmus[i].x), toViewY(bmus[i].y))) {
-//                selectedIndices.push(i);
-//            }
-//        }
-//
-//
-//        somHandle
-//            .statistics(selectedIndices)
-//            .then(function (stats) {
-//
-//
-//                var data = stats.getIndices().map(function (index) {
-//                    return dataTable.getFeatureData(index);
-//                });
-//
-//
-//                document.getElementById("table").innerHTML = "";
-//
-//                var table = document.createElement("table");
-//                table.cellpadding = 0;
-//                table.cellspacing = 0;
-//                table.border = 0;
-//                table.class = "display";
-//                document.getElementById("table").appendChild(table);
-//
-//                jquery(table).dataTable({
-//                    searching: true,
-//                    ordering: true,
-//                    paging: true,
-//                    "data": data,
-//                    "columns": dataTable.getColumns().map(function (e) {
-//                        return {
-//                            title: e
-//                        };
-//                    })
-//                });
-//
-//
-//                document.getElementById("summary").innerHTML = "";
-//                var summary = new SummaryChart("summary", stats.getMins(), stats.getMaxs(), dataTable.getSelectedColumns());
-//
-//
-//            }, function (e) {
-//                throw e;
-//            }).then(Function.prototype, function (e) {
-//                throw e;
-//            });
-//
-//        invalidate();
-//    });
-
-//    areaSelect.on("input", invalidate);
-
-
-    var dataSelector = new DataSelector("selector");
-    dataSelector.on("change", function (table) {
-
-        dataSelector.destroy();
-
-
-        var dataArray = table.createDataArray();
-
-        createSom(dataArray, table.getSelectedColumns().length, table);
-
-
-    });
-
 
     function throwError(error) {
         throw error;
     }
 
 
+    var dataSelector = new DataSelector("selector");
+    dataSelector.on("change", function (table) {
+        dataSelector.destroy();
+        var dataArray = table.createDataArray();
+        createSom(dataArray, table.getSelectedColumns().length, table);
+    });
+
     function createSom(dataArray, codebookLength, dataTable) {
 
         var map;
+        var bmuLayer;
         if (somHandle) {
             somHandle.kill();
             somHandle = null;
@@ -153,39 +70,30 @@ require([
             }, throwError)
             .then(function () {
                 return somHandle.uMatrixNormalized();
-            })
+            }, throwError)
             .then(function (successData) {
-
                 map = new Map("map", somHandle.width, somHandle.height);
+
+                //u-matrix
                 var umatrixLayer = new UMatrixTerrainLayer("ease");
                 umatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
                 map.addLayer(umatrixLayer);
-
                 return somHandle.bmus();
-
-            })
+            }, throwError)
             .then(function (bmuResult) {
 
+                //bmus
                 var bmuLayer = new BMULayer("label", "class", "size", dataTable, bmuResult.locations);
                 map.addLayer(bmuLayer);
 
+                var areaSelectLayerController = new AreaSelectLayerController();
+                areaSelectLayerController.setOnMap(map);
+
+                new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
+
             }, throwError)
-            .then(function(){
-
-            }, throwError);
+            .then(Function.prototype, throwError);
     }
-
-
-//    function draw() {
-//        handle = null;
-//        if (!context2d) {
-//            return;
-//        }
-//        context2d.clearRect(0, 0, context2d.canvas.width, context2d.canvas.height);
-//        context2d.drawImage(buffer.canvas, 0, 0, context2d.canvas.width, context2d.canvas.height);
-//        drawBmus();
-//        areaSelect.paint(context2d);
-//    }
 
 
 });

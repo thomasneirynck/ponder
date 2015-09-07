@@ -57,7 +57,6 @@ define([
                 doneButton.value = "Continue";
                 headerWrapper.appendChild(doneButton);
 
-
                 self._wrapperNode.appendChild(headerWrapper);
 
                 var table = document.createElement("table");
