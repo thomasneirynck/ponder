@@ -49,6 +49,9 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
         },
 
+        destroy: function(){
+          //do cleanup here
+        },
         toViewX: function (x) {
             return x * this._context2d.canvas.width / this._worldWidth;
         },

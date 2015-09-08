@@ -6,33 +6,35 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
             this._dataArray = dataArray;
             this._somWorker = somWorker;
             this._queue = [];
-            this._busy = false;
+            this._pendingCommand = null;
             this.width = width;
             this.height = height;
         },
 
         kill: function () {
             this._somWorker.terminate();
+            this._pendingCommand && this._pendingCommand.promise.reject();
+            var command;
+            while (command = this._queue.pop()) {
+                command.reject();
+            }
         },
 
         _process: function () {
 
-            if (this._busy || !this._queue.length) {
+            if (this._pendingCommand || !this._queue.length) {
                 return;
             }
 
             var self = this;
-
-            var command = this._queue.pop();
-
-            this._busy = true;
+            this._pendingCommand = this._queue.pop();
             this._somWorker.addEventListener("message", function handleMessage(event) {
-                command.promise.resolve(event.data);
+                self._pendingCommand.promise.resolve(event.data);
                 self._somWorker.removeEventListener("message", handleMessage);
-                self._busy = false;
+                self._pendingCommand = null;
                 self._schedule();
             });
-            this._somWorker.postMessage(command.message);
+            this._somWorker.postMessage(this._pendingCommand.message);
         },
 
         _schedule: function () {

@@ -35,8 +35,6 @@ require([
 
 
     var somHandle;
-    var uMatrixData;
-    var bmus;
 
     function throwError(error) {
         throw error;
@@ -45,25 +43,20 @@ require([
 
     var dataSelector = new DataSelector("selector");
     dataSelector.on("change", function (table) {
+
         dataSelector.destroy();
         var dataArray = table.createDataArray();
-        createSom(dataArray, table.getSelectedColumns().length, table);
-    });
-
-    function createSom(dataArray, codebookLength, dataTable) {
 
         var map;
-        var bmuLayer;
         if (somHandle) {
             somHandle.kill();
             somHandle = null;
-            uMatrixData = null;
-            bmus = null;
+            map && map.destroy();
             map = null;
         }
 
         SOMFactory
-            .makeSOMAsync(dataArray, codebookLength)
+            .makeSOMAsync(dataArray, table.getSelectedColumns().length)
             .then(function (aSomHandle) {
                 somHandle = aSomHandle;
                 return somHandle.trainMap();
@@ -72,6 +65,7 @@ require([
                 return somHandle.uMatrixNormalized();
             }, throwError)
             .then(function (successData) {
+
                 map = new Map("map", somHandle.width, somHandle.height);
 
                 //u-matrix
@@ -93,6 +87,11 @@ require([
 
             }, throwError)
             .then(Function.prototype, throwError);
+    });
+
+    function createSom(dataArray, codebookLength, dataTable) {
+
+
     }
 
 
