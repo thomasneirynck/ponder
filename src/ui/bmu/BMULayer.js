@@ -59,10 +59,12 @@ define(["type", "Evented"], function (type, Evented) {
             }
 
             labelSelectTag.appendTo("#" + labelNode);
+            labelSelectTag.css("width","100%");
             labelSelectTag.on("change", this.invalidate.bind(this));
             this._selectElement = labelSelectTag[0];
 
             classSelectTag.appendTo("#" + classNode);
+            classSelectTag.css("width","100%");
             classSelectTag.on("change", this.invalidate.bind(this));
             this._classElement = classSelectTag[0];
 
@@ -70,6 +72,7 @@ define(["type", "Evented"], function (type, Evented) {
             for (var index in dataTable.getSelectedColumns()) {
                 $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedColumns()[index]), text: dataTable.getSelectedColumns()[index]}).appendTo(sizeTag);
             }
+            sizeTag.css("width","100%");
             sizeTag.appendTo("#" + sizeNode);
             sizeTag.on("change", this.invalidate.bind(this));
             this._sizeElement = sizeTag[0];
