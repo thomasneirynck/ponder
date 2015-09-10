@@ -17,6 +17,7 @@ define([
             this._wrapperNode = typeof node === "string" ? document.getElementById(node) : node;
 
             var fileSelector = document.createElement("input");
+            fileSelector.style.margin = "auto";
             fileSelector.type = "file";
             fileSelector.name = "files[]";
 
