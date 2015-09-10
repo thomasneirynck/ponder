@@ -41,7 +41,7 @@ require([
     }
 
 
-    var dataSelector = new DataSelector("selector");
+    var dataSelector = new DataSelector("selector","selectorStyle");
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();

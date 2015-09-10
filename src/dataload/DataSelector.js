@@ -10,14 +10,14 @@ define([
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function DataSelector(node) {
+        constructor: function DataSelector(node, cssStyleButton) {
 
             Evented.call(this);
 
             this._wrapperNode = typeof node === "string" ? document.getElementById(node) : node;
 
             var fileSelector = document.createElement("input");
-            fileSelector.style.margin = "auto";
+            fileSelector.className = cssStyleButton;
             fileSelector.type = "file";
             fileSelector.name = "files[]";
 
