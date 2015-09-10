@@ -37,14 +37,6 @@ html, body {
 
 
 
-
-#size {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    z-index: 2;
-}
-
 #summary {
     width: 20%;
     display: inline-block;
