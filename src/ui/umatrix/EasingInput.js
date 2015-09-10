@@ -126,9 +126,9 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.fillRect(this._a * this._context2d.canvas.width, this._context2d.canvas.height - this._b * this._context2d.canvas.height, 10, 10);
             this._context2d.restore();
 
-            this._readoutContainer.innerHTML = this.getA() > 0.58 && this.getB() < 0.42 ? "Muted" :
-                                               this.getA() <  0.42 && this.getB() > 0.58 ?  "Exaggerated" :
-                                               "Balanced";
+            this._readoutContainer.innerHTML = this.getA() > 0.58 && this.getB() < 0.42 ? "Mute differences" :
+                                               this.getA() <  0.42 && this.getB() > 0.58 ?  "Amplify differences" :
+                                               "Balance";
 
         }
 
