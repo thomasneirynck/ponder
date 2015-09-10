@@ -6,12 +6,13 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function EasingInput(node) {
+        constructor: function EasingInput(node, contrastReadout) {
 
             Evented.call(this);
 
             this._container = (typeof node === "string") ? document.getElementById(node) : node;
             this._context2d = document.createElement("canvas").getContext("2d");
+            this._readoutContainer = (typeof contrastReadout === "string") ? document.getElementById(contrastReadout) : contrastReadout;
             this._a = 0.5;
             this._b = 0.5;
             this._handleWidth = 10;
@@ -124,6 +125,10 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.translate(-5, -5);
             this._context2d.fillRect(this._a * this._context2d.canvas.width, this._context2d.canvas.height - this._b * this._context2d.canvas.height, 10, 10);
             this._context2d.restore();
+
+            this._readoutContainer.innerHTML = this.getA() > 0.58 && this.getB() < 0.42 ? "Muted" :
+                                               this.getA() <  0.42 && this.getB() > 0.58 ?  "Exaggerated" :
+                                               "Balanced";
 
         }
 

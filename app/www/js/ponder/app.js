@@ -33,8 +33,6 @@ require([
     "ponder/ui/bmu/BMUSelector"
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector) {
 
-    alert('loaded!');
-
     var somHandle;
 
     function throwError(error) {
@@ -70,7 +68,7 @@ require([
                 map = new Map("map", somHandle.width, somHandle.height);
 
                 //u-matrix
-                var umatrixLayer = new UMatrixTerrainLayer("ease");
+                var umatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
                 umatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
                 map.addLayer(umatrixLayer);
                 return somHandle.bmus();

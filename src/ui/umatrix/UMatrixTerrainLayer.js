@@ -3,8 +3,8 @@ define(["type", "Evented", "./EasingInput", "./ColorMapper"], function (type, Ev
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function UMatrixTerrainLayer(easingInputNode) {
-            this._easingInput = new EasingInput(easingInputNode);
+        constructor: function UMatrixTerrainLayer(easingInputNode, easingInputReadout) {
+            this._easingInput = new EasingInput(easingInputNode, easingInputReadout);
             this._easingInput.on("input", this._refreshUMatrixViz.bind(this));
             this._colorMapper = new ColorMapper();
         },
