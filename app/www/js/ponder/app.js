@@ -30,8 +30,9 @@ require([
     "ponder/ui/umatrix/UMatrixTerrainLayer",
     "ponder/ui/bmu/BMULayer",
     "ponder/ui/areaselect/AreaSelectLayerController",
-    "ponder/ui/bmu/BMUSelector"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector) {
+    "ponder/ui/bmu/BMUSelector",
+    "jquery"
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery) {
 
     var somHandle;
 
@@ -44,6 +45,7 @@ require([
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
+        jquery("#selector").hide();
         var dataArray = table.createDataArray();
 
         var map;
