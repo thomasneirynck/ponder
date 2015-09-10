@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: ".",
+    baseUrl: "../..",
     paths: {
         'ponder': 'src',
         'type': "bower_components/type/type",
@@ -14,7 +14,7 @@ require.config({
         Papa: {
             exports: "Papa",
             init: function () {
-                Papa.SCRIPT_PATH = "vendor/papaparse.js";
+                Papa.SCRIPT_PATH = "../../vendor/papaparse.js";
             }
         },
         jquery: {
@@ -33,6 +33,7 @@ require([
     "ponder/ui/bmu/BMUSelector"
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector) {
 
+    alert('loaded!');
 
     var somHandle;
 
