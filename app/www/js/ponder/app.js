@@ -1,11 +1,11 @@
 require.config({
-    baseUrl: "../..",
+    baseUrl: /**{{BASE_URL}}*/"../.."/**{{BASE_URL}}*/,
     paths: {
         'ponder': 'src',
         'type': "bower_components/type/type",
         'Promise': "bower_components/Promise/Promise",
         'Evented': "bower_components/Evented/Evented",
-        'Papa': "vendor/papaparse",
+        'Papa': /**{{PAPA_PARSE_MODULE_PATH}}*/"vendor/papaparse"/**{{PAPA_PARSE_MODULE_PATH}}*/,
         'jquery': "bower_components/jquery/dist/jquery",
         datatables: 'bower_components/datatables/media/js/jquery.dataTables',
         datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis'
@@ -14,7 +14,9 @@ require.config({
         Papa: {
             exports: "Papa",
             init: function () {
-                Papa.SCRIPT_PATH = "../../vendor/papaparse.js";
+
+                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js";/**{{PAPA_PARSE_SCRIPT_PATH}}*/
+
             }
         },
         jquery: {
@@ -37,11 +39,12 @@ require([
     var somHandle;
 
     function throwError(error) {
+        console.error(error);
         throw error;
     }
 
 
-    var dataSelector = new DataSelector("selector","selectorStyle");
+    var dataSelector = new DataSelector("selector", "selectorStyle");
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
