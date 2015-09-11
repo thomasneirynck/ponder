@@ -2,10 +2,12 @@ var git = require("git-rev");
 var async = require("async");
 var buildify = require('buildify');
 
-var wwwReleaseDir = "./wwwwrelease/";
+var wwwReleaseDir = "./wwwrelease/";
 
 var workerDir = "js/worker/";
 var PapaParse = "papaparse.js";
+
+var versionSlug = "";
 
 module.exports = function (grunt) {
 
@@ -78,7 +80,7 @@ module.exports = function (grunt) {
                     wrapShim: true,
                     optimize: "uglify2",
                     uglify2: {
-                        mangle: false
+                        mangle: true
                     },
                     exclude: ["Papa"],
                     onBuildRead: function (moduleName, path, contents) {
@@ -102,7 +104,7 @@ module.exports = function (grunt) {
                     wrapShim: true,
                     optimize: "uglify2",
                     uglify2: {
-                        mangle: false
+                        mangle: true
                     },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === "src/som/worker/SOMWorker") {
@@ -115,7 +117,20 @@ module.exports = function (grunt) {
                     }
                 }
             }
-        }
+        },
+
+       compress: {
+           main: {
+               options: {
+                   archive: function(){
+                       return "ha.ponder" + ((versionSlug) ? "_" + versionSlug : "") + ".zip"
+                   }
+               },
+               files: [
+                   {cwd: wwwReleaseDir, src: ["**"], dest: '.', filter: 'isFile',expand:true}
+               ]
+           }
+       }
     });
 
 
@@ -132,12 +147,12 @@ module.exports = function (grunt) {
         }
 
         async.parallel([git.branch, git.tag, git.short].map(nodify), function (err, results) {
-            var version = results.join("_") + "_SNAPSHOT";
+            versionSlug = results.join("_") + "_SNAPSHOT";
             [wwwReleaseDir + "js/worker/SOMWorker.js", wwwReleaseDir + "js/ponder/app.js"].forEach(function (file) {
                 buildify()
                     .load(file)
                     .perform(function (content) {
-                        var versionTag = "if(!this['ha_ponder']){this['ha_ponder']={version:\"" + version + "\"}};";
+                        var versionTag = "if(!this['ha_ponder']){this['ha_ponder']={version:\"" + versionSlug + "\"}};";
                         return versionTag + content;
                     })
                     .save(file);
@@ -152,6 +167,6 @@ module.exports = function (grunt) {
 
 
 
-    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision"]);
+    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision","compress"]);
 
 };
