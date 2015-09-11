@@ -28,10 +28,35 @@ module.exports = function (grunt) {
                 wwwReleaseDir
             ]
         },
+        concat: {
+            css: {
+                options: {
+                    separator: '\n'
+                },
+                src: ['app/www/css/app.css', 'bower_components/datatables/media/css/jquery.dataTables.css'],
+                dest: wwwReleaseDir + "css/all.css"
+            }
+        },
         copy: {
-            www_resources: {
+            www_images: {
                 files: [
-                    {expand: true, cwd: "app/www", src: ['**', '!js/**'], dest: wwwReleaseDir, filter: 'isFile'}
+                    {expand: true, cwd: "app/www", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'}
+                ]
+            },
+            www_text: {
+                options: {
+                    process: function (content, name) {
+                        if (name === "app/www/index.html") {
+                            content = content.replace(/\<\!\-\-CSS_FILES\-\-\>((.|[\r\n])*?)\<\!\-\-CSS_FILES\-\-\>/g, '<link rel="stylesheet" type="text/css" href="css/all.css"/>');
+                            content = content.replace(/\<\!\-\-REQUIRE_SOURCE\-\-\>((.|[\r\n])*?)\<\!\-\-REQUIRE_SOURCE\-\-\>/g, ' <script data-main="js/ponder/app.js" src="js/require.js" ></script>');
+                            return content;
+                        } else {
+                            return content;
+                        }
+                    }
+                },
+                files: [
+                    {expand: true, cwd: "app/www", src: ['**', '!js/**', '!css/app.css', '!images/**'], dest: wwwReleaseDir, filter: 'isFile'}
                 ]
             },
             www_js: {
@@ -60,7 +85,6 @@ module.exports = function (grunt) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + "papaparse" + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
-                            console.log(contents);
                             return contents;
                         } else {
                             return contents;
@@ -95,8 +119,6 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.registerTask("default", ["build", "watch"]);
-
     grunt.registerTask("tag_with_revision", function (a, b) {
 
         var done = this.async();
@@ -126,7 +148,8 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask("build-www", ["clean", "copy", "requirejs"]);
+    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
+
 
     grunt.registerTask("release", ["jshint", "build-www", "tag_with_revision"]);
 

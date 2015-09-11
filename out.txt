@@ -1,3 +1,4 @@
+[4mRunning "copy:www_resources" (copy) task[24m
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +12,18 @@
     <!--<![endif]&ndash;&gt;-->
 
 
-     <script data-main="js/ponder/app.js" src="js/require.js" ></script>
+    <!--REQUIRE_SOURCE-->
+    <script data-main="js/ponder/app.js" src="../../bower_components/requirejs/require.js" ></script>
 
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="css/datepicker3.css" rel="stylesheet">-->
     <link href="css/styles.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="css/all.css"/>
+    <!--CSS_FILES-->
+    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <link rel="stylesheet" type="text/css" href="../../bower_components/datatables/media/css/jquery.dataTables.css"/>
+    <!--CSS_FILES-->
 
 
 </head>
@@ -455,3 +460,7 @@
 </body>
 
 </html>
+
+Copied 29 files
+
+[32mDone, without errors.[39m
