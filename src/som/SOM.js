@@ -191,7 +191,7 @@ define([
         distance: function (vector1, i1, vector2, i2) {
             var sum = 0;
             for (var i = 0; i < this._codeBookSize; i += 1) {
-                sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)
+                sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2);
             }
             return sum;
         },

@@ -69,7 +69,7 @@ define(["type", "Evented"], function (type, Evented) {
             this._classElement = classSelectTag[0];
 
             var sizeTag = $("<select />");
-            for (var index in dataTable.getSelectedColumns()) {
+            for (index in dataTable.getSelectedColumns()) {
                 $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedColumns()[index]), text: dataTable.getSelectedColumns()[index]}).appendTo(sizeTag);
             }
             sizeTag.css("width","100%");

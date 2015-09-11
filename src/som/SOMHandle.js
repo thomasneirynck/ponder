@@ -13,10 +13,13 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
 
         kill: function () {
             this._somWorker.terminate();
-            this._pendingCommand && this._pendingCommand.promise.reject();
-            var command;
-            while (command = this._queue.pop()) {
+            if (this._pendingCommand) {
+                this._pendingCommand.promise.reject();
+            }
+            var command = this._queue.pop();
+            while (command) {
                 command.reject();
+                command = this._queue.pop();
             }
         },
 

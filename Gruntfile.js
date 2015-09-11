@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                     name: "app/www/js/ponder/app",
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
-                    optimize: "none",
+                    optimize: "uglify2",
                     uglify2: {
                         mangle: false
                     },
@@ -86,7 +86,6 @@ module.exports = function (grunt) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + "papaparse" + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
                             contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"js/worker/SOMWorker.js\"");
-                            console.log(contents);
                         }
                         return contents;
 
@@ -100,7 +99,7 @@ module.exports = function (grunt) {
                     name: "src/som/worker/SOMWorker",
                     out: wwwReleaseDir + "js/worker/SOMWorker.js",
                     wrapShim: true,
-                    optimize: "none",
+                    optimize: "uglify2",
                     uglify2: {
                         mangle: false
                     },
@@ -119,7 +118,7 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.registerTask("tag_with_revision", function (a, b) {
+    grunt.registerTask("tag-with-revision", function (a, b) {
 
         var done = this.async();
 
@@ -133,11 +132,11 @@ module.exports = function (grunt) {
 
         async.parallel([git.branch, git.tag, git.short].map(nodify), function (err, results) {
             var version = results.join("_") + "_SNAPSHOT";
-            [ponderApp, somWorker].forEach(function (file) {
+            [wwwReleaseDir + "js/worker/SOMWorker.js", wwwReleaseDir + "js/ponder/app.js"].forEach(function (file) {
                 buildify()
                     .load(file)
                     .perform(function (content) {
-                        var versionTag = "if(!this['ha.ponder']){this['ha.ponder']={version:\"" + version + "\"}};";
+                        var versionTag = "if(!this['ha_ponder']){this['ha_ponder']={version:\"" + version + "\"}};";
                         return versionTag + content;
                     })
                     .save(file);
@@ -151,6 +150,7 @@ module.exports = function (grunt) {
     grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
 
 
-    grunt.registerTask("release", ["jshint", "build-www", "tag_with_revision"]);
+
+    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision"]);
 
 };

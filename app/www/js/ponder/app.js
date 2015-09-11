@@ -58,7 +58,9 @@ require([
         if (somHandle) {
             somHandle.kill();
             somHandle = null;
-            map && map.destroy();
+            if (map) {
+                map.destroy();
+            }
             map = null;
         }
 

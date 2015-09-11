@@ -32,7 +32,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             };
 
             this._projectY = function (y) {
-                return this._context2d.canvas.height - y * this._context2d.canvas.height
+                return this._context2d.canvas.height - y * this._context2d.canvas.height;
             };
 
 
@@ -63,7 +63,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
                         self._a = event.offsetX / self._context2d.canvas.width;
                     }
                     if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)) {
-                        self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height
+                        self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height;
                     }
 
                     self.paint();
