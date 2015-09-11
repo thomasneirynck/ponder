@@ -40,7 +40,8 @@ module.exports = function (grunt) {
         copy: {
             www_images: {
                 files: [
-                    {expand: true, cwd: "app/www", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'}
+                    {expand: true, cwd: "app/www", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'},
+                    {expand: true, cwd: "bower_components/datatables/media", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'}
                 ]
             },
             www_text: {
