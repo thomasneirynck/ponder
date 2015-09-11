@@ -1,4 +1,4 @@
-importScripts("../../../bower_components/requirejs/require.js");
+/**{{REQUIREJS_IMPORT}}*/importScripts("../../../bower_components/requirejs/require.js");/**{{REQUIREJS_IMPORT}}*/
 
 require.config({
     baseUrl: "../../..",

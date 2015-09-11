@@ -358,10 +358,11 @@ define('ponder/som/SOMHandle',["type", "Promise", "./Statistics"], function (typ
 define('ponder/som/SOMFactory',["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, require) {
 
 
-    return {
+    var somFactory = {
+        SCRIPT_PATH: null,
         makeSOMAsync: function (dataArray, codebookLength) {
-
-            var somWorker = new Worker(require.toUrl("ponder") + "/som/worker/SOMWorker.js");
+            var script = somFactory.SCRIPT_PATH === null ? require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
+            var somWorker = new Worker(script);
             var somReady = new Promise();
 
             somWorker.addEventListener("message", function workerLoaded(event) {
@@ -391,7 +392,7 @@ define('ponder/som/SOMFactory',["Promise", "./SOMHandle", "require"], function (
 
     };
 
-
+    return somFactory;
 });
 define('Evented',[], function() {
 
@@ -25797,7 +25798,8 @@ require.config({
             exports: "Papa",
             init: function () {
 
-                Papa.SCRIPT_PATH = "js/worker/papaparse.js"
+                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js";
+                /**{{PAPA_PARSE_SCRIPT_PATH}}*/
 
             }
         },
@@ -25819,6 +25821,8 @@ require([
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery) {
 
     var somHandle;
+
+    SOMFactory.SCRIPT_PATH = "js/worker/SOMWorker.js";
 
     function throwError(error) {
         console.error(error);

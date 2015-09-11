@@ -15,7 +15,8 @@ require.config({
             exports: "Papa",
             init: function () {
 
-                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js";/**{{PAPA_PARSE_SCRIPT_PATH}}*/
+                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js";
+                /**{{PAPA_PARSE_SCRIPT_PATH}}*/
 
             }
         },
@@ -37,6 +38,8 @@ require([
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery) {
 
     var somHandle;
+
+    SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
 
     function throwError(error) {
         console.error(error);

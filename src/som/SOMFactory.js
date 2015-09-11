@@ -1,10 +1,11 @@
 define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, require) {
 
 
-    return {
+    var somFactory = {
+        SCRIPT_PATH: null,
         makeSOMAsync: function (dataArray, codebookLength) {
-
-            var somWorker = new Worker(require.toUrl("ponder") + "/som/worker/SOMWorker.js");
+            var script = somFactory.SCRIPT_PATH === null ? require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
+            var somWorker = new Worker(script);
             var somReady = new Promise();
 
             somWorker.addEventListener("message", function workerLoaded(event) {
@@ -34,5 +35,5 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
 
     };
 
-
+    return somFactory;
 });

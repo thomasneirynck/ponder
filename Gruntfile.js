@@ -85,36 +85,36 @@ module.exports = function (grunt) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + "papaparse" + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
-                            return contents;
-                        } else {
-                            return contents;
+                            contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"js/worker/SOMWorker.js\"");
+                            console.log(contents);
                         }
+                        return contents;
+
+                    }
+                }
+            },
+            somWorker: {
+                options: {
+                    baseUrl: ".",
+                    mainConfigFile: "src/som/worker/SOMWorker.js",
+                    name: "src/som/worker/SOMWorker",
+                    out: wwwReleaseDir + "js/worker/SOMWorker.js",
+                    wrapShim: true,
+                    optimize: "none",
+                    uglify2: {
+                        mangle: false
+                    },
+                    onBuildRead: function (moduleName, path, contents) {
+                        if (moduleName === "src/som/worker/SOMWorker") {
+                            contents = contents.replace(/\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\/(.*?)\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\//g, "");
+                        }
+                        return contents;
+                    },
+                    wrap: {
+                        start: "importScripts(\"../require.js\");"
                     }
                 }
             }
-            //,
-//            papaFileAndWorker: {
-//
-//            },
-//            somWorker: {
-////        options: {
-////          mainConfigFile: "www/src/worker/WorkerCommandParser.js",
-////          name: "./src/worker/WorkerCommandParser",
-////          out: workerFile,
-////          wrapShim: true,
-////          optimize: "uglify2",
-////          uglify2: {
-////            mangle: false
-////          },
-////          onBuildWrite: function (moduleName, path, contents) {
-////            contents = contents.replace("importScripts(\"../../vendor/requirejs/require.js\");", "");
-////            return contents;
-////          },
-////          wrap: {
-////            start: "importScripts(\"../../vendor/requirejs/require.js\");self.jQuery = {};self.$ = self.jQuery;"
-////          }
-////        }
-//            }
         }
     });
 
