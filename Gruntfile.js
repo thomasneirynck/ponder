@@ -8,9 +8,12 @@ var releaseDir = "./release/";
 var wwwRelease = "www/";
 var wwwReleaseDir = releaseDir + wwwRelease;
 
+var somWorkerScript = "src/som/worker/SOMWorker.js";
+var somWorkerScriptDestination = "js/worker/SOMWorker.js";
+var appScript = "app/www/js/ponder/app.js";
 
 var workerDir = "js/worker/";
-var PapaParse = "papaparse.js";
+var PapaParse = "papaparse";
 
 var versionSlug = "";
 
@@ -65,7 +68,7 @@ module.exports = function (grunt) {
             },
             www_js: {
                 files: [
-                    {expand: true, cwd: "vendor", src: [PapaParse], dest: wwwReleaseDir + workerDir, filter: 'isFile'},
+                    {expand: true, cwd: "vendor", src: [PapaParse + ".js"], dest: wwwReleaseDir + workerDir, filter: 'isFile'},
                     {expand: true, cwd: "bower_components/requirejs", src: ["require.js"], dest: wwwReleaseDir + "js/", filter: 'isFile'}
                 ]
             }
@@ -75,8 +78,8 @@ module.exports = function (grunt) {
             ponderApp: {
                 options: {
                     baseUrl: ".",
-                    mainConfigFile: "app/www/js/ponder/app.js",
-                    name: "app/www/js/ponder/app",
+                    mainConfigFile: appScript,
+                    name: appScript,
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
                     optimize: "uglify2",
@@ -86,10 +89,10 @@ module.exports = function (grunt) {
                     exclude: ["Papa"],
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === "app/www/js/ponder/app") {
-                            contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
-                            contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + "papaparse" + "\"");
+                            contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
+                            contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
-                            contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"js/worker/SOMWorker.js\"");
+                            contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"" + somWorkerScriptDestination +"\"");
                         }
                         return contents;
 
@@ -99,16 +102,16 @@ module.exports = function (grunt) {
             somWorker: {
                 options: {
                     baseUrl: ".",
-                    mainConfigFile: "src/som/worker/SOMWorker.js",
-                    name: "src/som/worker/SOMWorker",
-                    out: wwwReleaseDir + "js/worker/SOMWorker.js",
+                    mainConfigFile: somWorkerScript,
+                    name: somWorkerScript,
+                    out: wwwReleaseDir + somWorkerScriptDestination,
                     wrapShim: true,
                     optimize: "uglify2",
                     uglify2: {
                         mangle: true
                     },
                     onBuildRead: function (moduleName, path, contents) {
-                        if (moduleName === "src/som/worker/SOMWorker") {
+                        if (moduleName === somWorkerScript) {
                             contents = contents.replace(/\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\/(.*?)\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\//g, "");
                         }
                         return contents;
