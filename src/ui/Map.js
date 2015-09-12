@@ -27,30 +27,77 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
 
+            this._rx = 0;
+            this._ry = 0;
+            var mapEvent = Object.freeze({
+                getMapViewX: function () {
+                    return self._rx;
+                },
+                getMapViewY: function () {
+                    return self._ry;
+                }
+            });
 
+            var down = false;
+            var out = false;
             jquery(this._container)
                 .mousedown(function (event) {
-                    self.emit("mousedown", event);
+                    out = false;
+                    down = true;
+                    self._rx = event.offsetX;
+                    self._ry = event.offsetY;
+                    self.emit("dragstart", mapEvent);
                 })
                 .mousemove(function (event) {
-                    self.emit("mousemove", event);
+                    out = false;
+                    if (down) {
+                        self._rx = event.offsetX;
+                        self._ry = event.offsetY;
+                        self.emit("drag", mapEvent);
+                    }
                 })
                 .mouseout(function (event) {
-                    self.emit("mouseout", event);
+                    out = true;
+                    self._rx = event.offsetX;
+                    self._ry = event.offsetY;
+                    self.emit("mouseout", mapEvent);
                 })
                 .mouseup(function (event) {
-                    self.emit("mouseup", event);
+                    out = false;
+                    if (down) {
+                        down = false;
+                        self._rx = event.offsetX;
+                        self._ry = event.offsetY;
+                        self.emit("dragend", mapEvent);
+                    }
                 });
 
+
+            function updateRelativeXY(event) {
+                var offset = jquery(self._container).offset();
+                self._rx = event.pageX - offset.left;
+                self._ry = event.pageY - offset.top;
+            }
+
             jquery(window)
+                .mousemove(function (event) {
+                    if (down && out) {
+                        updateRelativeXY(event);
+                        self.emit("drag", mapEvent);
+                    }
+                })
                 .mouseup(function (event) {
-                    self.emit("window_mouseup", event);
+                    if (down && out) {
+                        down = false;
+                        updateRelativeXY(event);
+                        self.emit("dragend", mapEvent);
+                    }
                 });
 
         },
 
-        destroy: function(){
-          //do cleanup here
+        destroy: function () {
+            //do cleanup here
         },
         toViewX: function (x) {
             return x * this._context2d.canvas.width / this._worldWidth;

@@ -57,46 +57,31 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
 
             var self = this;
 
-            var down;
-            this._downListener = this._map.on("mousedown", function (event) {
-                down = true;
+            this._downListener = this._map.on("dragstart", function (event) {
                 self._linearRing.length = 0;
                 self._linearRing.push({
-                    x: self._map.toWorldX(event.offsetX),
-                    y: self._map.toWorldY(event.offsetY)
+                    x: self._map.toWorldX(event.getMapViewX()),
+                    y: self._map.toWorldY(event.getMapViewY())
                 });
                 self.emit("invalidate");
             });
 
-            this._moveListener = this._map.on("mousemove", function (event) {
-                if (!down) {
-                    return;
-                }
+            this._moveListener = this._map.on("drag", function (event) {
                 self._linearRing.push({
-                    x: self._map.toWorldX(event.offsetX),
-                    y: self._map.toWorldY(event.offsetY)
+                    x: self._map.toWorldX(event.getMapViewX()),
+                    y: self._map.toWorldY(event.getMapViewY())
                 });
                 self.emit("input", self);
                 self.emit("invalidate");
             });
 
-            this._outListener = this._map.on("mouseout", function (event) {
-                if (!down) {
-                    return;
-                }
+            this._outListener = this._map.on("dragend", function (event) {
                 self._linearRing.push({
-                    x: self._map.toWorldX(event.offsetX),
-                    y: self._map.toWorldY(event.offsetY)
+                    x: self._map.toWorldX(event.getMapViewX()),
+                    y: self._map.toWorldY(event.getMapViewY())
                 });
-                self.emit("input", self);
-                self.emit("invalidate");
-            });
-
-
-            this._upListener = this._map.on("window_mouseup", function (event) {
-                down = false;
                 self.emit("change", self);
-                self.emit("invalidate", self);
+                self.emit("invalidate");
             });
 
         },
