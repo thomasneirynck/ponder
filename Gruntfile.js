@@ -10,7 +10,7 @@ var wwwReleaseDir = releaseDir + wwwRelease;
 
 var somWorkerScript = "src/som/worker/SOMWorker.js";
 var somWorkerScriptDestination = "js/worker/SOMWorker.js";
-var appScript = "app/www/js/ponder/app.js";
+var appModule = "app/www/js/ponder/app";
 
 var workerDir = "js/worker/";
 var PapaParse = "papaparse";
@@ -78,8 +78,8 @@ module.exports = function (grunt) {
             ponderApp: {
                 options: {
                     baseUrl: ".",
-                    mainConfigFile: appScript,
-                    name: appScript,
+                    mainConfigFile: appModule + ".js",
+                    name: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
                     optimize: "uglify2",
@@ -88,7 +88,7 @@ module.exports = function (grunt) {
                     },
                     exclude: ["Papa"],
                     onBuildRead: function (moduleName, path, contents) {
-                        if (moduleName === "app/www/js/ponder/app") {
+                        if (moduleName === appModule) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
@@ -131,7 +131,7 @@ module.exports = function (grunt) {
                     }
                 },
                 files: [
-                    {cwd: releaseDir, src: [wwwRelease + "**"], dest: 'ponder/www', filter: 'isFile', expand: true}
+                    {cwd: releaseDir, src: [wwwRelease + "**"], dest: 'ponder', filter: 'isFile', expand: true}
                 ]
             }
         }
