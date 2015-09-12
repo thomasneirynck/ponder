@@ -1,30 +1,21 @@
-define(["type"], function (type) {
+define(["type","./util"], function (type, util) {
 
 
-    function toNumber(value) {
-        if (!isNaN(parseFloat(value))) {
-            return parseFloat(value);
-        } else if (typeof value === "string") {
-            return parseFloat(value.replace(/^\D*/g, '').replace(/\D*$/g, ''));
-        } else {
-            return NaN;
-        }
-    }
 
     return type({
 
         constructor: function DataTable(data, columns, selectedColumns) {
             this._data = data;
             this._columns = columns;
-            this._selectedColumns = selectedColumns;
-            this._selectedColumnsIndices = this._selectedColumns.map(function (column) {
+            this._selectedOrdinalColumns = selectedColumns;
+            this._selectedColumnsIndices = this._selectedOrdinalColumns.map(function (column) {
                 return columns.indexOf(column);
             });
             this._uniques = [];
         },
 
         getSelectedColumns: function () {
-            return this._selectedColumns;
+            return this._selectedOrdinalColumns;
         },
 
         getColumns: function () {
@@ -36,11 +27,11 @@ define(["type"], function (type) {
             var min = Infinity;
             var max = -Infinity;
             for (var i = 0; i < this._data.length; i += 1) {
-                if (isNaN(toNumber(this._data[i][columnIndex]))) {
+                if (isNaN(util.toNumber(this._data[i][columnIndex]))) {
                     continue;
                 }
-                min = Math.min(min, toNumber(this._data[i][columnIndex]));
-                max = Math.max(max, toNumber(this._data[i][columnIndex]));
+                min = Math.min(min, util.toNumber(this._data[i][columnIndex]));
+                max = Math.max(max, util.toNumber(this._data[i][columnIndex]));
             }
             return [min, max];
 
@@ -70,12 +61,12 @@ define(["type"], function (type) {
             }
             for (r = 0; r < this._data.length; r += 1) {
                 for (c = 0; c < this._selectedColumnsIndices.length; c += 1) {
-                    if (isNaN(toNumber(this._data[r][this._selectedColumnsIndices[c]]))) {
+                    if (isNaN(util.toNumber(this._data[r][this._selectedColumnsIndices[c]]))) {
                         console.warn("ignoring missing value" + " row: " + r + ", col: " + c);
                         continue;
                     }
-                    mins[c] = Math.min(mins[c], toNumber(this._data[r][this._selectedColumnsIndices[c]]));
-                    maxs[c] = Math.max(maxs[c], toNumber(this._data[r][this._selectedColumnsIndices[c]]));
+                    mins[c] = Math.min(mins[c], util.toNumber(this._data[r][this._selectedColumnsIndices[c]]));
+                    maxs[c] = Math.max(maxs[c], util.toNumber(this._data[r][this._selectedColumnsIndices[c]]));
                 }
             }
 
@@ -83,7 +74,7 @@ define(["type"], function (type) {
             var value;
             for (i = 0, r = 0; r < this._data.length; r += 1) {
                 for (c = 0; c < this._selectedColumnsIndices.length; c += 1, i += 1) {
-                    value = toNumber(this._data[r][this._selectedColumnsIndices[c]]);
+                    value = util.toNumber(this._data[r][this._selectedColumnsIndices[c]]);
                     if (isNaN(value)) {
                         console.warn("Missing value for: " + " row: " + r + ", col: " + c);
                         value = (maxs[c] + mins[c]) / 2;

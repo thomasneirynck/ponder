@@ -28,7 +28,16 @@ img {
     width: 100%;
 }
 
-.selectorStyle {
+#selector {
+    width: 100%;
+    height: 100%;
+}
+
+.selector {
+
+}
+
+.selector > input {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -36,9 +45,17 @@ img {
     transform: translate(-50%, -50%)
 }
 
-#selector {
-    width: 100%;
-    height: 100%;
+.selector table {
+    position: relative;
+}
+
+.selector table tr tr{
+    position: relative;
+}
+
+.selector table td input {
+    vertical-align: middle;
+    margin: 0 auto;
 }
 
 #map {
