@@ -2,7 +2,12 @@ var git = require("git-rev");
 var async = require("async");
 var buildify = require('buildify');
 
-var wwwReleaseDir = "./wwwrelease/";
+
+
+var releaseDir = "./release/";
+var wwwRelease = "www/";
+var wwwReleaseDir = releaseDir + wwwRelease;
+
 
 var workerDir = "js/worker/";
 var PapaParse = "papaparse.js";
@@ -16,10 +21,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         jshint: {
-            options: {
-                multistr: true,
-                eqnull: true
-            },
             source: [
                 "./src",
                 "app/www/js/ponder"
@@ -27,7 +28,7 @@ module.exports = function (grunt) {
         },
         clean: {
             release: [
-                wwwReleaseDir
+                releaseDir
             ]
         },
         concat: {
@@ -119,18 +120,18 @@ module.exports = function (grunt) {
             }
         },
 
-       compress: {
-           main: {
-               options: {
-                   archive: function(){
-                       return "ha.ponder" + ((versionSlug) ? "_" + versionSlug : "") + ".zip"
-                   }
-               },
-               files: [
-                   {cwd: wwwReleaseDir, src: ["**"], dest: '.', filter: 'isFile',expand:true}
-               ]
-           }
-       }
+        compress: {
+            main: {
+                options: {
+                    archive: function () {
+                        return releaseDir + "ha.ponder" + ((versionSlug) ? "_" + versionSlug : "") + ".zip"
+                    }
+                },
+                files: [
+                    {cwd: releaseDir, src: [wwwRelease + "**"], dest: 'ponder/www', filter: 'isFile', expand: true}
+                ]
+            }
+        }
     });
 
 
@@ -165,8 +166,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
 
-
-
-    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision","compress"]);
+    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision", "compress"]);
 
 };
