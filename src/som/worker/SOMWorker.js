@@ -19,7 +19,7 @@ require(["ponder/som/SOM"], function (SOM) {
                 som = new SOM({
                     width: event.data.width,
                     height: event.data.height,
-                    codeBookSize: event.data.codeBookSize
+                    codeBookWeights: event.data.codeBookWeights
                 });
                 postMessage({
                     type: "initSuccess"

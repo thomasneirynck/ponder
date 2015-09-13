@@ -52,7 +52,9 @@ require([
 
         dataSelector.destroy();
         jquery("#selector").hide();
-        var dataArray = table.createDataArray();
+        var somTrainingData = table.createSOMTrainingData();
+
+
 
         var map;
         if (somHandle) {
@@ -65,7 +67,7 @@ require([
         }
 
         SOMFactory
-            .makeSOMAsync(dataArray, table.getSelectedColumns().length)
+            .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
             .then(function (aSomHandle) {
                 somHandle = aSomHandle;
                 return somHandle.trainMap();

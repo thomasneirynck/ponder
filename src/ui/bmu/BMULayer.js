@@ -69,8 +69,8 @@ define(["type", "Evented"], function (type, Evented) {
             this._classElement = classSelectTag[0];
 
             var sizeTag = $("<select />");
-            for (index in dataTable.getSelectedColumns()) {
-                $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedColumns()[index]), text: dataTable.getSelectedColumns()[index]}).appendTo(sizeTag);
+            for (index in dataTable.getSelectedOrdinalColumns()) {
+                $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumns()[index]), text: dataTable.getSelectedOrdinalColumns()[index]}).appendTo(sizeTag);
             }
             sizeTag.css("width","100%");
             sizeTag.appendTo("#" + sizeNode);

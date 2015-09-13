@@ -53,8 +53,9 @@ define([
                         });
 
 
-                        document.getElementById(summaryContainer).innerHTML = "";
-                        new SummaryChart(summaryContainer, stats.getMins(), stats.getMaxs(), bmuLayer.getDataTable().getSelectedColumns());
+                        //this is wrong! this should work with bmu values, not SOM map values
+//                        document.getElementById(summaryContainer).innerHTML = "";
+//                        new SummaryChart(summaryContainer, stats.getMins(), stats.getMaxs(), bmuLayer.getDataTable().getSelectedOrdinalColumns());
 
 
                     }, function (e) {

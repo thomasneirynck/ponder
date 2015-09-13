@@ -3,7 +3,7 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
 
     var somFactory = {
         SCRIPT_PATH: null,
-        makeSOMAsync: function (dataArray, codebookLength) {
+        makeSOMAsync: function (dataArray, codeBookWeights) {
             var script = somFactory.SCRIPT_PATH === null ? require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
             var somWorker = new Worker(script);
             var somReady = new Promise();
@@ -11,9 +11,9 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
             somWorker.addEventListener("message", function workerLoaded(event) {
                 somWorker.removeEventListener("message", workerLoaded);
 
-                var width = 64;
-                var height = 64;
-                var somHandle = new SOMHandle(somWorker, dataArray, width, height);
+                var mapWidth = 64;
+                var mapHeight = 64;
+                var somHandle = new SOMHandle(somWorker, dataArray, mapWidth, mapHeight);
 
 
                 somWorker.addEventListener("message", function init(event) {
@@ -23,9 +23,9 @@ define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, requ
                 somWorker.postMessage({
                     type: "init",
                     trainingData: dataArray,
-                    width: width,
-                    height: height,
-                    codeBookSize: codebookLength
+                    width: mapWidth,
+                    height: mapHeight,
+                    codeBookWeights: codeBookWeights
                 });
 
             });

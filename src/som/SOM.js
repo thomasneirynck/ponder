@@ -48,10 +48,12 @@ define([
 
             this._worldWidth = options.width;
             this._worldHeight = options.height;
-            this._codeBookSize = options.codeBookSize;
+            this._codeBookSize = options.codeBookWeights.length;
+            this._codeBookWeights = options.codeBookWeights;
+
             this._neuralWeights = new Array(this._worldWidth * this._worldHeight * this._codeBookSize);
 
-            for (var i = 0; i < this._neuralWeights.length; i += 1) {
+            for (i = 0; i < this._neuralWeights.length; i += 1) {
                 this._neuralWeights[i] = Math.random();
             }
 
@@ -191,7 +193,7 @@ define([
         distance: function (vector1, i1, vector2, i2) {
             var sum = 0;
             for (var i = 0; i < this._codeBookSize; i += 1) {
-                sum += Math.pow(vector1[i1 + i] - vector2[i2 + i], 2);
+                sum += (Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)) * this._codeBookWeights[i];
             }
             return sum;
         },

@@ -22,9 +22,10 @@ define([
     }
 
     function suggestType(name, sampleValue, position) {
-        return  position === 0 || shouldSkip(name, sampleValue) ? "exclude" :
-            isOrdinal(name, sampleValue) ? "ordinal" :
-                "exclude";
+        return  (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
+                                     isOrdinal(name, sampleValue) ? "ordinal" :
+                                 isCategorical(name, sampleValue) ? "category" :
+                                                                    "exclude";
     }
 
     function addRadioColumn(parentRow, buttonsMap, radioName, checked, type) {
@@ -83,6 +84,7 @@ define([
                 self._data = event.data;
 
                 self._selectedOrdinalColumns = [];
+                self._selectedCategoryColumns = [];
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
@@ -103,13 +105,13 @@ define([
                 nameColHead.innerHTML = "Name";
                 var ordinalColHead = document.createElement("th");
                 ordinalColHead.innerHTML = "Number";
-//                var categoryColHead = document.createElement("th");
-//                categoryColHead.innerHTML = "Category";
+                var categoryColHead = document.createElement("th");
+                categoryColHead.innerHTML = "Category";
                 var ignoreColHead = document.createElement("th");
                 ignoreColHead.innerHTML = "Exclude";
                 tableHeader.appendChild(nameColHead);
                 tableHeader.appendChild(ordinalColHead);
-//                tableHeader.appendChild(categoryColHead);
+                tableHeader.appendChild(categoryColHead);
                 tableHeader.appendChild(ignoreColHead);
                 table.appendChild(tableHeader);
 
@@ -124,69 +126,26 @@ define([
 
                     radioButtonsMap[self._data[0][i]] = {};
                     var suggestedType = suggestType(self._data[0][i], self._data[1] ? self._data[1][i] : null, i);
-                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "ordinal","ordinal");
-                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude","exclude");
+                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "ordinal", "ordinal");
+                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "category", "category");
+                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
 
                     table.appendChild(row);
                 }
 
                 self._wrapperNode.appendChild(table);
-//
-//                var table = document.createElement("table");
-//                table.cellpadding = 0;
-//                table.cellspacing = 0;
-//                table.border = 0;
-//                table.class = "display";
-//                self._wrapperNode.appendChild(table);
-//
-//                jquery(table).dataTable({
-//                    searching: false,
-//                    ordering: false,
-//                    paging: true,
-//                    preview: 10,
-//                    "data": event.data.slice(1),
-//                    "pageLength": 10,
-//                    "columns": event.data[0].map(function (e) {
-//                        return {
-//                            title: e
-//                        };
-//                    })
-//                });
-//
-
-//                jquery("#" + table.id + " thead").on('mousedown', 'th', function (event) {
-//                    if (self._selectedOrdinalColumns.indexOf(this.innerHTML) === -1) {
-//                        self._selectedOrdinalColumns.push(this.innerHTML);
-//                        this.classList.add("selectedColumn");
-//                    } else {
-//                        self._selectedOrdinalColumns.splice(self._selectedOrdinalColumns.indexOf(this.innerHTML), 1);
-//                        this.classList.remove("selectedColumn");
-//                    }
-//                });
-//                jquery("#" + table.id + " thead").on('mouseenter', 'th', function (event) {
-//                    if (event.which === 1 && self._selectedOrdinalColumns.indexOf(this.innerHTML) === -1) {
-//                        self._selectedOrdinalColumns.push(this.innerHTML);
-//                        this.classList.add("selectedColumn");
-//                    }
-//                });
-//
-//
-//                jquery("#" + table.id + " thead th").hover(function (event) {
-//                    jquery(event.target).css('cursor', 'pointer');
-//                }, function () {
-//                    jquery(event.target).css('cursor', 'auto');
-//                });
-
 
                 jquery(doneButton).on("click", function () {
 
-                    for (var key in radioButtonsMap){
-                        if (radioButtonsMap[key].ordinal.checked){
+                    for (var key in radioButtonsMap) {
+                        if (radioButtonsMap[key].ordinal.checked) {
                             self._selectedOrdinalColumns.push(key);
+                        } else if (radioButtonsMap[key].category.checked) {
+                            self._selectedCategoryColumns.push(key);
                         }
                     }
 
-                    var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedOrdinalColumns);
+                    var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
                     self.emit("change", dataTable);
                 });
 
