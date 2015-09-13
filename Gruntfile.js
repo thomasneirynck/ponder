@@ -82,7 +82,7 @@ module.exports = function (grunt) {
                     include: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
-                    optimize: "none",
+                    optimize: "uglify2",
                     uglify2: {
                         mangle: true
                     },
@@ -104,7 +104,9 @@ module.exports = function (grunt) {
                 options: {
                     baseUrl: ".",
                     mainConfigFile: somWorkerScript,
-                    name: somWorkerScript,
+//                    name: somWorkerScript,
+                    name: "bower_components/almond/almond.js",
+                    include: somWorkerScript,
                     out: wwwReleaseDir + somWorkerScriptDestination,
                     wrapShim: true,
                     optimize: "uglify2",
@@ -168,17 +170,9 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask("correct-AMD-shiat", function () {
-        buildify()
-            .load(wwwReleaseDir + "js/ponder/app.js")
-            .perform(function (content) {
-                console.log("replace da shit!");
-                return content.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"")
-            })
-            .save(wwwReleaseDir + "js/ponder/app.js");
-    });
 
-    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs","correct-AMD-shiat"]);
+
+    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
 
     grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision", "compress"]);
 

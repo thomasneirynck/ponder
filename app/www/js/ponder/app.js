@@ -15,10 +15,7 @@ require.config({
     },
     shim: {
         Papa: {
-            exports: "Papa",
-            init: function () {
-                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
-            }
+            exports: "Papa"
         },
         jquery: {
             exports: "jquery"
@@ -50,6 +47,7 @@ require([
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
+    Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
 
 //    plotly.plot(document.getElementById("map"),[{x:[1,2,3,4,5],y:[1,2,4,8,16]}]);
 
@@ -110,11 +108,6 @@ require([
             }, throwError)
             .then(Function.prototype, throwError);
     });
-
-    function createSom(dataArray, codebookLength, dataTable) {
-
-
-    }
 
 
 });
