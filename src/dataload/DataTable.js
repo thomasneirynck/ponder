@@ -15,7 +15,7 @@ define(["type", "./util"], function (type, util) {
             this._uniques = [];
 
             this._selectedCategoryColumns = selectedCategoryColumns;
-            this._selectedCategoryColumnIndices = this._selectedCategoryColumns.map(getColumnsIndex.bind(null, columns))
+            this._selectedCategoryColumnIndices = this._selectedCategoryColumns.map(getColumnsIndex.bind(null, columns));
 
         },
 

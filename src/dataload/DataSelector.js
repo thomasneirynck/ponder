@@ -112,7 +112,7 @@ define([
 
                 var exampleColHead = document.createElement("th");
                 var divver = document.createElement("div");
-                var limit = Math.min(6, self._data.length)
+                var limit = Math.min(6, self._data.length);
                 for (var e = 1; e < limit; e += 1) {
                     var spanner = document.createElement("span");
                     spanner.innerHTML = "Sample: " + e;
@@ -144,9 +144,9 @@ define([
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
 
                     var example = document.createElement("td");
-                    var divver = document.createElement("div");
-                    for (var e = 1; e < limit; e += 1) {
-                        var spanner = document.createElement("span");
+                    divver = document.createElement("div");
+                    for (e = 1; e < limit; e += 1) {
+                        spanner = document.createElement("span");
                         spanner.innerHTML = self._data[e][i];
                         divver.appendChild(spanner);
                     }

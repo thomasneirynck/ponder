@@ -178,7 +178,7 @@ define([
 
         trainMap: function (sampleData) {
             this._trainingData = sampleData;
-            var iterationLimit = 24;
+            var iterationLimit = 16;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
