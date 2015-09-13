@@ -52,10 +52,18 @@ define([
                             })
                         });
 
-
                         //this is wrong! this should work with bmu values, not SOM map values
 //                        document.getElementById(summaryContainer).innerHTML = "";
 //                        new SummaryChart(summaryContainer, stats.getMins(), stats.getMaxs(), bmuLayer.getDataTable().getSelectedOrdinalColumns());
+
+
+                        //all ordinals should get box plot
+
+
+
+                        //all categories should get pie chart
+
+
 
 
                     }, function (e) {

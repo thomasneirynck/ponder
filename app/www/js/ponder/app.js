@@ -8,24 +8,32 @@ require.config({
         'Papa': /**{{PAPA_PARSE_MODULE_PATH}}*/"vendor/papaparse"/**{{PAPA_PARSE_MODULE_PATH}}*/,
         'jquery': "bower_components/jquery/dist/jquery",
         datatables: 'bower_components/datatables/media/js/jquery.dataTables',
-        datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis'
+        datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis',
+        Plotly: "vendor/plotly_20150812a_basic/plotly.min",
+        typedarray: "vendor/plotly_20150812a_basic/dependencies/typedarray",
+        d3: "vendor/plotly_20150812a_basic/dependencies/d3.v3.min"
     },
     shim: {
         Papa: {
             exports: "Papa",
             init: function () {
-
-                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js";
-                /**{{PAPA_PARSE_SCRIPT_PATH}}*/
-
+                Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
             }
         },
         jquery: {
             exports: "jquery"
+        },
+        Plotly: {
+            exports: "Plotly",
+            deps: ["d3", "jquery","typedarray"]
+        },
+        d3: {
+            export: "d3"
         }
     }
 });
 
+Plotly = {};//plotly makes baby-jesus cry by not being compatible with requirejs.(https://github.com/plotly/plotly.github.io/issues/74)
 require([
     "ponder/som/SOMFactory",
     "ponder/dataload/DataSelector",
@@ -35,11 +43,15 @@ require([
     "ponder/ui/areaselect/AreaSelectLayerController",
     "ponder/ui/bmu/BMUSelector",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery) {
+    //,
+//    "Plotly"
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery, plotly) {
 
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
+
+//    plotly.plot(document.getElementById("map"),[{x:[1,2,3,4,5],y:[1,2,4,8,16]}]);
 
     function throwError(error) {
         console.error(error);
@@ -53,7 +65,6 @@ require([
         dataSelector.destroy();
         jquery("#selector").hide();
         var somTrainingData = table.createSOMTrainingData();
-
 
 
         var map;

@@ -3,7 +3,6 @@ var async = require("async");
 var buildify = require('buildify');
 
 
-
 var releaseDir = "./release/";
 var wwwRelease = "www/";
 var wwwReleaseDir = releaseDir + wwwRelease;
@@ -55,7 +54,7 @@ module.exports = function (grunt) {
                     process: function (content, name) {
                         if (name === "app/www/index.html") {
                             content = content.replace(/\<\!\-\-CSS_FILES\-\-\>((.|[\r\n])*?)\<\!\-\-CSS_FILES\-\-\>/g, '<link rel="stylesheet" type="text/css" href="css/all.css"/>');
-                            content = content.replace(/\<\!\-\-REQUIRE_SOURCE\-\-\>((.|[\r\n])*?)\<\!\-\-REQUIRE_SOURCE\-\-\>/g, ' <script data-main="js/ponder/app.js" src="js/require.js" ></script>');
+                            content = content.replace(/\<\!\-\-REQUIRE_SOURCE\-\-\>((.|[\r\n])*?)\<\!\-\-REQUIRE_SOURCE\-\-\>/g, ' <script src="js/ponder/app.js"></script>');
                             return content;
                         } else {
                             return content;
@@ -79,23 +78,25 @@ module.exports = function (grunt) {
                 options: {
                     baseUrl: ".",
                     mainConfigFile: appModule + ".js",
-                    name: appModule,
+                    name: "bower_components/almond/almond.js",
+                    include: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
-                    optimize: "uglify2",
+                    optimize: "none",
                     uglify2: {
                         mangle: true
                     },
-                    exclude: ["Papa"],
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === appModule) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
-                            contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"" + somWorkerScriptDestination +"\"");
+                            contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"" + somWorkerScriptDestination + "\"");
+                        } else if (moduleName === "Plotly") {
+                            //plotly makes baby-jesus cry by not being compatible with requirejs.(https://github.com/plotly/plotly.github.io/issues/74)
+                            contents = "Plotly={};" + contents;
                         }
                         return contents;
-
                     }
                 }
             },
@@ -167,7 +168,17 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
+    grunt.registerTask("correct-AMD-shiat", function () {
+        buildify()
+            .load(wwwReleaseDir + "js/ponder/app.js")
+            .perform(function (content) {
+                console.log("replace da shit!");
+                return content.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"")
+            })
+            .save(wwwReleaseDir + "js/ponder/app.js");
+    });
+
+    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs","correct-AMD-shiat"]);
 
     grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision", "compress"]);
 
