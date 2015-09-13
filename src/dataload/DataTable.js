@@ -59,8 +59,7 @@ define(["type", "./util"], function (type, util) {
 
 
 
-            //ORDINAL
-            //compute min max
+            //ORDINAL PREP
             var mins = new Array(this._selectedOrdinalColumnsIndices.length);
             var maxs = new Array(this._selectedOrdinalColumnsIndices.length);
             var i, r, c;
@@ -79,18 +78,35 @@ define(["type", "./util"], function (type, util) {
                 }
             }
 
-            //
+            //CATEGORY PREP
+            var categories = new Array(this._selectedCategoryColumnIndices.length);
+            var totCategories = 0;
+            for (i = 0; i < this._selectedCategoryColumnIndices.length; i += 1) {
+                categories[i] = {
+                    indexInRow: this._selectedCategoryColumnIndices[i],
+                    uniqueValues: this.getUniqueValues(this._selectedCategoryColumnIndices[i])
+                };
+                totCategories += categories[i].uniqueValues.length;
+            }
+
+            //WEIGHTS
             var codebookWeights = [];
             for (i = 0; i < this._selectedOrdinalColumnsIndices.length; i += 1) {
-               codebookWeights.push(1);
+                codebookWeights.push(1);
+            }
+            for (c = 0; c < categories.length; c += 1) {
+                for (i = 0; i < categories[c].uniqueValues.length; i += 1) {
+                    codebookWeights.push(1 / categories[c].uniqueValues.length);
+                }
             }
 
             //FILL THE DATA
-            var dataArray = new Array(
-                    this._data.length * this._selectedOrdinalColumnsIndices.length
-            );
-            var value;
+            var dataArray = new Array(this._data.length * (this._selectedOrdinalColumnsIndices.length + totCategories));
+
+            var value,  v;
             for (i = 0, r = 0; r < this._data.length; r += 1) {
+
+                //ordinals
                 for (c = 0; c < this._selectedOrdinalColumnsIndices.length; c += 1, i += 1) {
                     value = util.toNumber(this._data[r][this._selectedOrdinalColumnsIndices[c]]);
                     if (isNaN(value)) {
@@ -99,9 +115,17 @@ define(["type", "./util"], function (type, util) {
                     }
                     dataArray[i] = (value - mins[c]) / (maxs[c] - mins[c]);
                 }
+
+                //categories
+                for (c = 0; c < categories.length; c += 1) {
+                    for (v = 0; v < categories[c].uniqueValues.length; v += 1) {
+                        dataArray[i] = (categories[c].uniqueValues[v] === this._data[r][categories[c].indexInRow]) ? 1 : 0;
+                        i += 1;
+                    }
+                }
             }
 
-            //categories
+            //WITH CATEGORIES
 
 
             return {
