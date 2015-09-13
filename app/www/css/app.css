@@ -33,6 +33,7 @@ img {
     height: 100%;
 }
 
+/*Data Selector*/
 .selector {
 
 }
@@ -58,6 +59,19 @@ img {
     margin: 0 auto;
 }
 
+.selector div {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.selector  div span {
+    display: table-cell;
+    text-align: center;
+}
+
+
+/*App*/
 #map {
     /*border: 1px solid blue;*/
     /*width: 100%;*/

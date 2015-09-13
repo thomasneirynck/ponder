@@ -23,9 +23,9 @@ define([
 
     function suggestType(name, sampleValue, position) {
         return  (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
-                                     isOrdinal(name, sampleValue) ? "ordinal" :
-                                 isCategorical(name, sampleValue) ? "category" :
-                                                                    "exclude";
+            isOrdinal(name, sampleValue) ? "ordinal" :
+                isCategorical(name, sampleValue) ? "category" :
+                    "exclude";
     }
 
     function addRadioColumn(parentRow, buttonsMap, radioName, checked, type) {
@@ -109,10 +109,23 @@ define([
                 categoryColHead.innerHTML = "Category";
                 var ignoreColHead = document.createElement("th");
                 ignoreColHead.innerHTML = "Exclude";
+
+                var exampleColHead = document.createElement("th");
+                var divver = document.createElement("div");
+                var limit = Math.min(6, self._data.length)
+                for (var e = 1; e < limit; e += 1) {
+                    var spanner = document.createElement("span");
+                    spanner.innerHTML = "Sample: " + e;
+                    divver.appendChild(spanner);
+                }
+                exampleColHead.appendChild(divver);
+
+
                 tableHeader.appendChild(nameColHead);
                 tableHeader.appendChild(ordinalColHead);
                 tableHeader.appendChild(categoryColHead);
                 tableHeader.appendChild(ignoreColHead);
+                tableHeader.appendChild(exampleColHead);
                 table.appendChild(tableHeader);
 
 
@@ -130,6 +143,15 @@ define([
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "category", "category");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
 
+                    var example = document.createElement("td");
+                    var divver = document.createElement("div");
+                    for (var e = 1; e < limit; e += 1) {
+                        var spanner = document.createElement("span");
+                        spanner.innerHTML = self._data[e][i];
+                        divver.appendChild(spanner);
+                    }
+                    example.appendChild(divver);
+                    row.appendChild(example);
                     table.appendChild(row);
                 }
 
