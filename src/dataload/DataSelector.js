@@ -113,8 +113,9 @@ define([
                 var exampleColHead = document.createElement("th");
                 var divver = document.createElement("div");
                 var limit = Math.min(6, self._data.length);
-                for (var e = 1; e < limit; e += 1) {
-                    var spanner = document.createElement("span");
+                var spanner, e;
+                for (e = 1; e < limit; e += 1) {
+                    spanner = document.createElement("span");
                     spanner.innerHTML = "Sample: " + e;
                     divver.appendChild(spanner);
                 }
