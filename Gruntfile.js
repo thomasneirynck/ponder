@@ -104,7 +104,6 @@ module.exports = function (grunt) {
                 options: {
                     baseUrl: ".",
                     mainConfigFile: somWorkerScript,
-//                    name: somWorkerScript,
                     name: "bower_components/almond/almond.js",
                     include: somWorkerScript,
                     out: wwwReleaseDir + somWorkerScriptDestination,
@@ -118,9 +117,6 @@ module.exports = function (grunt) {
                             contents = contents.replace(/\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\/(.*?)\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\//g, "");
                         }
                         return contents;
-                    },
-                    wrap: {
-                        start: "importScripts(\"../require.js\");"
                     }
                 }
             }
