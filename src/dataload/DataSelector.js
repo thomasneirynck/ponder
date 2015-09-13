@@ -140,7 +140,6 @@ define([
 
                     radioButtonsMap[self._data[0][i]] = {};
                     var suggestedType = suggestType(self._data[0][i], self._data[1] ? self._data[1][i] : null, i);
-                    console.log(nameCol.innerHTML, suggestedType);
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "ordinal", "ordinal");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "category", "category");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
