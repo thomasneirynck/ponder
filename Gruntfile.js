@@ -33,27 +33,17 @@ module.exports = function (grunt) {
                 releaseDir
             ]
         },
-        concat: {
-            css: {
-                options: {
-                    separator: '\n'
-                },
-                src: ['app/www/css/app.css', 'bower_components/datatables/media/css/jquery.dataTables.css'],
-                dest: wwwReleaseDir + "css/all.css"
-            }
-        },
         copy: {
             www_images: {
                 files: [
                     {expand: true, cwd: "app/www", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'},
-                    {expand: true, cwd: "bower_components/datatables/media", src: ['images/**'], dest: wwwReleaseDir, filter: 'isFile'}
+                    {expand: true, cwd: "bower_components/datatables/media/", src: ['images/**'], dest: wwwReleaseDir + "bower/datatables/", filter: 'isFile'}
                 ]
             },
             www_text: {
                 options: {
                     process: function (content, name) {
                         if (name === "app/www/index.html") {
-                            content = content.replace(/\<\!\-\-CSS_FILES\-\-\>((.|[\r\n])*?)\<\!\-\-CSS_FILES\-\-\>/g, '<link rel="stylesheet" type="text/css" href="css/all.css"/>');
                             content = content.replace(/\<\!\-\-REQUIRE_SOURCE\-\-\>((.|[\r\n])*?)\<\!\-\-REQUIRE_SOURCE\-\-\>/g, ' <script src="js/ponder/app.js"></script>');
                             return content;
                         } else {
@@ -82,10 +72,6 @@ module.exports = function (grunt) {
                     include: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
                     wrapShim: true,
-                    optimize: "uglify2",
-                    uglify2: {
-                        mangle: true
-                    },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === appModule) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
@@ -119,6 +105,14 @@ module.exports = function (grunt) {
                         return contents;
                     }
                 }
+            },
+
+            mainCss: {
+                options: {
+                    cssIn: "./app/www/css/main.css",
+                    out: wwwReleaseDir + "css/main.css",
+                    optimize: "uglify2"
+                }
             }
         },
 
@@ -136,6 +130,17 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.registerTask("correct-css", function(){
+
+        var file = wwwReleaseDir + "/css/main.css";
+        buildify()
+            .load(file)
+            .perform(function(contents){
+                return contents.replace(/\.\.\/\.\.\/\.\.\/bower_components\/datatables\/media\//g,"../bower/datatables/");
+            })
+            .save(file);
+
+    });
 
     grunt.registerTask("tag-with-revision", function (a, b) {
 
@@ -168,8 +173,8 @@ module.exports = function (grunt) {
 
 
 
-    grunt.registerTask("build-www", ["clean", "copy", "concat:css", "requirejs"]);
+    grunt.registerTask("build-www", ["clean", "copy", "requirejs"]);
 
-    grunt.registerTask("release", ["jshint", "build-www", "tag-with-revision", "compress"]);
+    grunt.registerTask("release", ["jshint", "build-www","correct-css", "tag-with-revision", "compress"]);
 
 };
