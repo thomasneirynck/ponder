@@ -75,6 +75,12 @@ require([
             map = null;
         }
 
+        var waitingDiv = document.createElement("div");
+        var spinnerIcon = document.createElement("img");
+        spinnerIcon.src = "images/ajax-loader.gif";
+        waitingDiv.appendChild(spinnerIcon);
+        waitingDiv.innerHTML += "<span>Creating Map</span>";
+        document.getElementById("map").appendChild(waitingDiv);
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
             .then(function (aSomHandle) {
@@ -86,6 +92,7 @@ require([
             }, throwError)
             .then(function (successData) {
 
+                document.getElementById("map").removeChild(waitingDiv);
                 map = new Map("map", somHandle.width, somHandle.height);
 
                 //u-matrix
