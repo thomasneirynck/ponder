@@ -2,7 +2,6 @@ var git = require("git-rev");
 var async = require("async");
 var buildify = require('buildify');
 
-
 var releaseDir = "./release/";
 var wwwRelease = "www/";
 var wwwReleaseDir = releaseDir + wwwRelease;
@@ -71,16 +70,16 @@ module.exports = function (grunt) {
                     name: "bower_components/almond/almond.js",
                     include: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
-                    wrapShim: true,
+                    optimize: "none",
+                    uglify2: {
+                        mangle: false
+                    },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === appModule) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
                             contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"" + somWorkerScriptDestination + "\"");
-                        } else if (moduleName === "Plotly") {
-                            //plotly makes baby-jesus cry by not being compatible with requirejs.(https://github.com/plotly/plotly.github.io/issues/74)
-                            contents = "Plotly={};" + contents;
                         }
                         return contents;
                     }
@@ -132,11 +131,22 @@ module.exports = function (grunt) {
 
     grunt.registerTask("correct-css", function(){
 
-        var file = wwwReleaseDir + "/css/main.css";
+        var file = wwwReleaseDir + "css/main.css";
         buildify()
             .load(file)
             .perform(function(contents){
                 return contents.replace(/\.\.\/\.\.\/\.\.\/bower_components\/datatables\/media\//g,"../bower/datatables/");
+            })
+            .save(file);
+
+    });
+    grunt.registerTask("correct-plotly", function(){
+
+        var file = wwwReleaseDir + "js/ponder/app.js";
+        buildify()
+            .load(file)
+            .perform(function(contents){
+                return "Plotly=this.Plotly||{}"+contents;
             })
             .save(file);
 
@@ -173,8 +183,8 @@ module.exports = function (grunt) {
 
 
 
-    grunt.registerTask("build-www", ["clean", "copy", "requirejs"]);
+    grunt.registerTask("build-www", ["clean", "copy", "requirejs","correct-css","correct-plotly"]);
 
-    grunt.registerTask("release", ["jshint", "build-www","correct-css", "tag-with-revision", "compress"]);
+    grunt.registerTask("release", ["jshint", "build-www","tag-with-revision", "compress"]);
 
 };
