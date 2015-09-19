@@ -70,9 +70,9 @@ module.exports = function (grunt) {
                     name: "bower_components/almond/almond.js",
                     include: appModule,
                     out: wwwReleaseDir + "js/ponder/app.js",
-                    optimize: "none",
-                    uglify2: {
-                        mangle: false
+                    optimize: "uglify2",
+                    options: {
+                        mangle:true
                     },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === appModule) {
@@ -94,8 +94,8 @@ module.exports = function (grunt) {
                     out: wwwReleaseDir + somWorkerScriptDestination,
                     wrapShim: true,
                     optimize: "uglify2",
-                    uglify2: {
-                        mangle: true
+                    options: {
+                        mangle:true
                     },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === somWorkerScript) {

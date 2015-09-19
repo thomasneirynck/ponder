@@ -39,19 +39,21 @@ require([
     "ponder/ui/bmu/BMULayer",
     "ponder/ui/areaselect/AreaSelectLayerController",
     "ponder/ui/bmu/BMUSelector",
-    "jquery",
-    "d3",
-    "plotly"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery, d3, plotly) {
+    "jquery"
+//    ,
+//    "plotly"
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, jquery
+             //plotly
+             ) {
 
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
     Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
 
-    plotly.plot(document.getElementById("map"), [
-        {x: [1, 2, 3, 4, 5], y: [1, 2, 4, 8, 16]}
-    ]);
+//    plotly.plot(document.getElementById("map"), [
+//        {x: [1, 2, 3, 4, 5], y: [1, 2, 4, 8, 16]}
+//    ]);
 
     function throwError(error) {
         console.error(error);
