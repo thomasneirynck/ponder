@@ -23,6 +23,14 @@ define(["type", "./util"], function (type, util) {
             return this._selectedOrdinalColumns;
         },
 
+        getSelectedCategoryColumns: function(){
+          return this._selectedCategoryColumns;
+        },
+
+        getValueByRowAndColumnName: function(row, columnName){
+          return this.getValueByRowAndColumnIndex(row,this.getColumnIndex(columnName));
+        },
+
         getColumns: function () {
             return this._columns;
         },
@@ -124,8 +132,6 @@ define(["type", "./util"], function (type, util) {
                     }
                 }
             }
-
-            //WITH CATEGORIES
 
 
             return {

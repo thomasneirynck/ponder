@@ -79,6 +79,19 @@ define(["type", "Evented"], function (type, Evented) {
         },
 
 
+        selectBmusFromController: function(areaSelectLayerController){
+
+            var selectedIndices = [];
+            for (var i = 0; i < this._bmus.length; i += 1) {
+                if (areaSelectLayerController.isInsideSelectedWorldArea(this._bmus[i].x, this._bmus[i].y)) {
+                    selectedIndices.push(i);
+                }
+            }
+
+            return selectedIndices;
+
+        },
+
         paint: function (context2d, map) {
 
             context2d.fillStyle = "rgb(255,255,255)";

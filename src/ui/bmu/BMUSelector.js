@@ -12,15 +12,9 @@ define([
             this._areaSelectLayerController = areaSelectLayerController;
 
 
-            var bmus = bmuLayer.getBmus();
             this._areaSelectLayerController.on("change", function () {
 
-                var selectedIndices = [];
-                for (var i = 0; i < bmus.length; i += 1) {
-                    if (areaSelectLayerController.isInsideSelectedWorldArea(bmus[i].x, bmus[i].y)) {
-                        selectedIndices.push(i);
-                    }
-                }
+                var selectedIndices = bmuLayer.selectBmusFromController(areaSelectLayerController);
 
                 somHandle
                     .statistics(selectedIndices)
@@ -53,8 +47,8 @@ define([
                         });
 
                         //this is wrong! this should work with bmu values, not SOM map values
-//                        document.getElementById(summaryContainer).innerHTML = "";
-//                        new SummaryChart(summaryContainer, stats.getMins(), stats.getMaxs(), bmuLayer.getDataTable().getSelectedOrdinalColumns());
+                        document.getElementById(summaryContainer).innerHTML = "";
+                        new SummaryChart(summaryContainer, selectedIndices, bmuLayer.getDataTable());
 
 
                         //all ordinals should get box plot
