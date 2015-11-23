@@ -1,7 +1,8 @@
 define([
     "type",
-    "jquery"
-], function (type, jquery) {
+    "jquery",
+    "../../dataload/util"
+], function (type, jquery,util) {
 
 
     return type({
@@ -20,8 +21,8 @@ define([
 
             for (i = 0; i < selectedBmuIndices.length; i += 1){
                 for (var c = 0; c <selectedOrdinals.length; c += 1) {
-                    allMins[c] = Math.min(allMins[c], datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c]));
-                    allMaxs[c] = Math.max(allMaxs[c], datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c]));
+                    allMins[c] = Math.min(allMins[c], util.toNumber(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c])));
+                    allMaxs[c] = Math.max(allMaxs[c], util.toNumber(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c])));
                 }
             }
 
