@@ -1,4 +1,4 @@
-define(["type", "Evented"], function (type, Evented) {
+define(["type", "Evented", "../EasingInput"], function (type, Evented, EasingInput) {
 
 
     var classColors = ["#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
@@ -44,7 +44,7 @@ define(["type", "Evented"], function (type, Evented) {
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function BMULayer(labelNode, classNode, sizeNode, dataTable, bmus) {
+        constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, dataTable, bmus) {
 
             Evented.call(this);
 
@@ -59,27 +59,34 @@ define(["type", "Evented"], function (type, Evented) {
             }
 
             labelSelectTag.appendTo("#" + labelNode);
-            labelSelectTag.css("width","100%");
+            labelSelectTag.css("width", "100%");
             labelSelectTag.on("change", this.invalidate.bind(this));
             this._selectElement = labelSelectTag[0];
 
             classSelectTag.appendTo("#" + classNode);
-            classSelectTag.css("width","100%");
+            classSelectTag.css("width", "100%");
             classSelectTag.on("change", this.invalidate.bind(this));
             this._classElement = classSelectTag[0];
 
             var sizeTag = $("<select />");
             for (index in dataTable.getSelectedOrdinalColumns()) {
-                $("<option />", {value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumns()[index]), text: dataTable.getSelectedOrdinalColumns()[index]}).appendTo(sizeTag);
+                $("<option />", {
+                    value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumns()[index]),
+                    text: dataTable.getSelectedOrdinalColumns()[index]
+                }).appendTo(sizeTag);
             }
-            sizeTag.css("width","100%");
+            sizeTag.css("width", "100%");
             sizeTag.appendTo("#" + sizeNode);
             sizeTag.on("change", this.invalidate.bind(this));
             this._sizeElement = sizeTag[0];
+
+            this._easingInput = new EasingInput(sizeEasingNode, document.createElement("div"));
+            this._easingInput.on("input", this.invalidate.bind(this));
+
         },
 
 
-        selectBmusFromController: function(areaSelectLayerController){
+        selectBmusFromController: function (areaSelectLayerController) {
 
             var selectedIndices = [];
             for (var i = 0; i < this._bmus.length; i += 1) {
@@ -94,27 +101,49 @@ define(["type", "Evented"], function (type, Evented) {
 
         paint: function (context2d, map) {
 
-            context2d.fillStyle = "rgb(255,255,255)";
-
             var minMax = this._dataTable.getMinMax(this._sizeElement.value);
             var minArea = Math.PI * Math.pow(5, 2);
             var maxArea = Math.PI * Math.pow(20, 2);
-
             var uniques = this._dataTable.getUniqueValues(this._classElement.value);
+
             var classAtt;
             var area;
             var size;
+            var ordinalPosition;
             for (var i = 0; i < this._bmus.length; i += 1) {
 
+                context2d.save();
+
                 classAtt = this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value);
-                area = minArea + (parseFloat(this._dataTable.getValueByRowAndColumnIndex(i, this._sizeElement.value)) - minMax[0]) / (minMax[1] - minMax[0]) * (maxArea - minArea);
+
+
+                ordinalPosition = (parseFloat(this._dataTable.getValueByRowAndColumnIndex(i, this._sizeElement.value)) - minMax[0]) / (minMax[1] - minMax[0]);
+
+                var alpha, thickness, color;
+                if (ordinalPosition > this._easingInput.getA()) {
+                    alpha = 1 - ordinalPosition + this._easingInput.getA();
+                    thickness = 1;
+                    color = "rgba(0,0,0,0.8)";
+                } else {
+                    alpha = 1;
+                    thickness = 1;
+                    color  = "rgba(255,255,255, 0.95)";
+                }
+
+                area = minArea + this._easingInput.getEasingFunction()(ordinalPosition) * (maxArea - minArea);
                 size = Math.round(Math.sqrt(area / (Math.PI)));
+
 
                 context2d.beginPath();
                 context2d.arc(map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y), size, 0, Math.PI * 2);
                 context2d.fillStyle = classColors[uniques.indexOf(classAtt) % classColors.length];
+
+                context2d.globalAlpha = alpha;
                 context2d.fill();
-                context2d.strokeStyle = "rgba(180,180,180,0.8)";
+
+
+                context2d.lineWidth = thickness;
+                context2d.strokeStyle = color;
                 context2d.stroke();
 
 
@@ -122,11 +151,16 @@ define(["type", "Evented"], function (type, Evented) {
                     this._dataTable.getValueByRowAndColumnIndex(i, this._selectElement.value),
                     map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y)
                 );
+
+                context2d.restore();
+
+
             }
+
         },
 
-        getDataTable: function(){
-          return this._dataTable;
+        getDataTable: function () {
+            return this._dataTable;
         },
 
         getBmus: function () {

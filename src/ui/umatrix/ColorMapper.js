@@ -4,18 +4,11 @@ define(["type", "./blueToWhite"], function (type, blueToWhite2) {
     return type({
 
         constructor: function ColorMapper() {
-            this._a = 0.5;
-            this._b = 0.5;
+            this._map = function(x){return x;};
         },
 
-        _map: function (value) {
-            var y = Math.log(this._a) / Math.log(this._b);
-            return Math.pow(value, 1 / y);
-        },
-
-        setEasingParameters: function (a, b) {
-            this._a = a;
-            this._b = b;
+        setEasingFunction: function (easingFunction) {
+            this._map = easingFunction;
         },
 
         /**

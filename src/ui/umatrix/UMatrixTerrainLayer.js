@@ -1,4 +1,4 @@
-define(["type", "Evented", "./EasingInput", "./ColorMapper"], function (type, Evented, EasingInput, ColorMapper) {
+define(["type", "Evented", "../EasingInput", "./ColorMapper"], function (type, Evented, EasingInput, ColorMapper) {
 
 
     return type(Object.prototype, Evented.prototype, {
@@ -28,7 +28,7 @@ define(["type", "Evented", "./EasingInput", "./ColorMapper"], function (type, Ev
                 return;
             }
 
-            this._colorMapper.setEasingParameters(this._easingInput.getA(), this._easingInput.getB());
+            this._colorMapper.setEasingFunction(this._easingInput.getEasingFunction());
             this._colorMapper.fillPixelBuffer(this._uMatrixData, this._bufferImageData);
             this._buffer.putImageData(this._bufferImageData, 0, 0);
             this.invalidate();

@@ -13,8 +13,8 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._worldHeight = worldHeight;
 
             this._context2d = document.createElement("canvas").getContext("2d");
-            this._container = (typeof node === "string") ? document.getElementById(node) : node;
-            this._container.appendChild(this._context2d.canvas);
+            var container = (typeof node === "string") ? document.getElementById(node) : node;
+            container.appendChild(this._context2d.canvas);
 
             var self = this;
             this._handleAnimationFrame = function handleAnimationFrame() {
@@ -40,7 +40,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
             var down = false;
             var out = false;
-            jquery(this._container)
+            jquery(this._context2d.canvas)
                 .mousedown(function (event) {
                     out = false;
                     down = true;
@@ -74,7 +74,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
 
             function updateRelativeXY(event) {
-                var offset = jquery(self._container).offset();
+                var offset = jquery(self._context2d.canvas).offset();
                 self._rx = event.pageX - offset.left;
                 self._ry = event.pageY - offset.top;
             }
@@ -97,7 +97,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
         },
 
         destroy: function () {
-            //do cleanup here
+            //todo: cleanup here
         },
         toViewX: function (x) {
             return x * this._context2d.canvas.width / this._worldWidth;

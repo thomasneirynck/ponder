@@ -22,8 +22,9 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.canvas.width = $(this._container).width();
             this._context2d.canvas.height = $(this._container).height();
 
+            var self = this;
             this._ease = function (i) {
-                var y = Math.log(this._a) / Math.log(this._b);
+                var y = Math.log(self._a) / Math.log(self._b);
                 return Math.pow(i, 1 / y);
             };
 
@@ -48,7 +49,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
                         x - self._handleWidth / 2 < event.offsetX &&
                         y + self._handleHeight / 2 > event.offsetY &&
                         y - self._handleHeight / 2 < event.offsetY
-                        ) {
+                    ) {
                         down = true;
                     }
                 })
@@ -78,8 +79,13 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
                 });
 
             window.addEventListener("resize", this.resize.bind(this));
+
             this.paint();
 
+        },
+
+        getEasingFunction: function(){
+          return this._ease;
         },
 
         getA: function () {
@@ -96,8 +102,8 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
 
         _drawLine: function (line, stroke, width) {
             this._context2d.beginPath();
-            this._context2d.moveTo(0, 0);
-            for (var i = 0; i < line.length; i += 2) {
+            this._context2d.moveTo(line[0], line[1]);
+            for (var i = 2; i < line.length; i += 2) {
                 this._context2d.lineTo(line[i], line[i + 1]);
             }
             this._context2d.strokeStyle = stroke;
@@ -127,10 +133,10 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.restore();
 
             this._readoutContainer.innerHTML =
-                    Math.abs(this.getA() - this.getB()) < 0.2 ? "balanced" :
+                Math.abs(this.getA() - this.getB()) < 0.2 ? "balanced" :
                     this.getA() > this.getB() ? "Muted" :
-                    this.getA() < this.getB() > 0.58 ? "Amplified" :
-                    "Balanced";
+                        this.getA() < this.getB() > 0.58 ? "Amplified" :
+                            "Balanced";
 
         }
 

@@ -105,6 +105,12 @@ img {
     /*z-index: 2;*/
 }
 
+#sizeEasing {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 4px;
+}
+
 #summary {
     width: 100%;
     /*display: inline-block;*/
