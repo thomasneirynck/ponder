@@ -105,7 +105,7 @@ require([
             .then(function (bmuResult) {
 
                 //bmus
-                var bmuLayer = new BMULayer("label", "class", "size","sizeEasing", table, bmuResult.locations);
+                var bmuLayer = new BMULayer("label", "class", "size","sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
 
                 var areaSelectLayerController = new AreaSelectLayerController();

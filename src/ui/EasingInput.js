@@ -38,8 +38,6 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
 
 
             var down = false;
-            var self = this;
-
             $(this._container)
                 .mousedown(function (event) {
                     var x = self._projectX(self._a);
