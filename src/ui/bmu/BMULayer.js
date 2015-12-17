@@ -180,7 +180,7 @@ define([
                 var minMax = this._dataTable.getMinMax(clazz);
                 var self = this;
                 return function (classValue) {
-                    return (self._getOrdinalPosition(minMax, classValue) >= 0.5) ? classColors[1] : classColors[0];
+                    return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
                 };
 
 
@@ -193,8 +193,9 @@ define([
                     return {
                         type: "ORDINAL",
                         classifier: this._getClassifier(),
-                        minMax: this._dataTable.getMinMax(clazz)
-
+                        minMax: this._dataTable.getMinMax(clazz),
+                        lower: classColors[0],
+                        higher: classColors[1]
                     };
                 } else {
                     return {

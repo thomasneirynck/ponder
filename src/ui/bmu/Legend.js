@@ -1,7 +1,8 @@
 define([
     "type",
-    "Evented"
-], function (type, Evented) {
+    "Evented",
+    "jquery"
+], function (type, Evented, $) {
 
 
     return type(Evented.prototype, {
@@ -18,16 +19,11 @@ define([
             });
             self._updateLegend();
 
+            this._break = 0.5;
+
         },
 
-        _updateLegend: function () {
-            var legend = this._bmuLayer.getLegend();
-            if (legend.type === "ORDINAL") {
-                this._legendDiv.innerHTML = "cant do ordinal yet";
-                return;
-            }
-
-
+        _updateCategoryLegend: function (legend) {
             var wrapperDiv = document.createElement("div");
             wrapperDiv.style.position = "relative";
             wrapperDiv.style.width = "100%";
@@ -55,10 +51,52 @@ define([
 
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(wrapperDiv);
+        },
 
+        _updateOrdinalLegend: function (legend) {
+
+            var context2d = document.createElement("canvas").getContext("2d");
+
+            function paint(){
+                context2d.canvas.width = $(this._legendDiv).width();
+                context2d.canvas.height = $(this._legendDiv).height();
+
+                context2d.fillStyle = legend.lower;
+                context2d.fillRect(0, 0, context2d.canvas.width * this._break, context2d.canvas.height);
+                context2d.fillStyle = legend.higher;
+                context2d.fillRect(context2d.canvas.width * this._break, 0, context2d.canvas.width * (1 - this._break), context2d.canvas.height);
+
+                context2d.moveTo(context2d.canvas.width * this._break, 0);
+                context2d.lineTo(context2d.canvas.width * this._break, context2d.canvas.height);
+                context2d.stroke();
+            }
+            this._legendDiv.innerHTML = "";
+            this._legendDiv.appendChild(context2d.canvas);
+
+            paint();
+
+            var self = this;
+            $(context2d.canvas)
+                .mouseover(function(event){
+                    self._break = event.offsetX/context2d.canvas.width;
+                    self.emit("invalidate");
+                });
+
+        },
+
+        getBreak: function(){
+          return this._break;
+        },
+
+        _updateLegend: function () {
+            var legend = this._bmuLayer.getLegend();
+            if (legend.type === "ORDINAL") {
+                this._updateOrdinalLegend(legend);
+            } else {
+                this._updateCategoryLegend(legend);
+            }
 
         }
-
 
     });
 
