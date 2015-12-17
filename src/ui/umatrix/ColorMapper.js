@@ -1,4 +1,4 @@
-define(["type", "./blueToWhite"], function (type, blueToWhite2) {
+define(["type", "./whiteToBrown"], function (type, colorRamp) {
 
 
     return type({
@@ -19,7 +19,7 @@ define(["type", "./blueToWhite"], function (type, blueToWhite2) {
             var weight, rgb;
             for (var i = 0, pixeli = 0; i < values.length; i += 1, pixeli += 4) {
                 weight = this._map(values[i]);
-                rgb = blueToWhite2[Math.max(Math.min(blueToWhite2.length - Math.round(weight * blueToWhite2.length), blueToWhite2.length - 1), 0)];
+                rgb = colorRamp[Math.max(Math.min(colorRamp.length - Math.round(weight * colorRamp.length), colorRamp.length - 1), 0)];
                 imageData.data[pixeli] = rgb[0];
                 imageData.data[pixeli + 1] = rgb[1];
                 imageData.data[pixeli + 2] = rgb[2];
