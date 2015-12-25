@@ -9,7 +9,10 @@ require.config({
         'jquery': "bower_components/jquery/dist/jquery",
         datatables: 'bower_components/datatables/media/js/jquery.dataTables',
         datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis',
-        plotly: "vendor/plotly_20150812a_basic/plotly.min",
+        //plotly: "vendor/plotly_20150812a_basic/plotly.min",
+        //plotly: "vendor/plotly/plotly-latest.min",
+        //plotly: "vendor/plotly/plotly.min",
+        plotly: "vendor/plotly/plotly",
         typedarray: "vendor/plotly_20150812a_basic/dependencies/typedarray",
         d3: "vendor/plotly_20150812a_basic/dependencies/d3.v3.min"
     },

@@ -72,7 +72,8 @@ module.exports = function (grunt) {
                     out: wwwReleaseDir + "js/ponder/app.js",
                     optimize: "uglify2",
                     options: {
-                        mangle:true
+                        mangle: true,
+                        compress: false
                     },
                     onBuildRead: function (moduleName, path, contents) {
                         if (moduleName === appModule) {
@@ -83,6 +84,10 @@ module.exports = function (grunt) {
                         }
                         return contents;
                     }
+                    //,
+                    //paths: {
+                    //    plotly: "empty:"
+                    //}
                 }
             },
             somWorker: {

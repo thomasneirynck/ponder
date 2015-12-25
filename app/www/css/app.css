@@ -111,7 +111,13 @@ img {
     margin-bottom: 4px;
 }
 
+#summary-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 #summary {
+    position: relative;
     width: 100%;
     /*display: inline-block;*/
     /*float: right;*/
