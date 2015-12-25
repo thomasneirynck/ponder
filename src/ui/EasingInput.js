@@ -21,6 +21,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             $(this._container).append(this._context2d.canvas);
             this._context2d.canvas.width = $(this._container).width();
             this._context2d.canvas.height = $(this._container).height();
+            this._context2d.canvas.style.cursor = "pointer";
 
             var self = this;
             this._ease = function (i) {
@@ -28,45 +29,32 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
                 return Math.pow(i, 1 / y);
             };
 
-            this._projectX = function (x) {
-                return x * this._context2d.canvas.width;
+            this._updatePosition = function(event){
+                if (valid(event.offsetX / self._context2d.canvas.width)) {
+                    self._a = event.offsetX / self._context2d.canvas.width;
+                }
+                if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)) {
+                    self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height;
+                }
+                self.paint();
+                self.emit("input", self);
             };
-
-            this._projectY = function (y) {
-                return this._context2d.canvas.height - y * this._context2d.canvas.height;
-            };
-
 
             var down = false;
             $(this._container)
                 .mousedown(function (event) {
-                    var x = self._projectX(self._a);
-                    var y = self._projectY(self._b);
-                    if (
-                        x + self._handleWidth / 2 > event.offsetX &&
-                        x - self._handleWidth / 2 < event.offsetX &&
-                        y + self._handleHeight / 2 > event.offsetY &&
-                        y - self._handleHeight / 2 < event.offsetY
-                    ) {
-                        down = true;
-                    }
+
+                    down = true;
+                    self._updatePosition(event);
+
                 })
                 .mousemove(function (event) {
 
                     if (!down) {
                         return;
-
                     }
 
-                    if (valid(event.offsetX / self._context2d.canvas.width)) {
-                        self._a = event.offsetX / self._context2d.canvas.width;
-                    }
-                    if (valid((self._context2d.canvas.height - event.offsetY) / self._context2d.canvas.height)) {
-                        self._b = -(event.offsetY - self._context2d.canvas.height) / self._context2d.canvas.height;
-                    }
-
-                    self.paint();
-                    self.emit("input", self);
+                   self._updatePosition(event);
 
                 })
                 .mouseup(function (event) {

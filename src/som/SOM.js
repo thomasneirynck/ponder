@@ -1,6 +1,11 @@
 define([
-    "type"
-], function (type) {
+    "type",
+    "../Random"
+], function (type, Random) {
+
+
+    //can be replaced with Math.random() if we don't want seeding
+    var random = Random(1);
 
     function between(x, s, e) {
         return x >= s && x < e;
@@ -53,7 +58,7 @@ define([
             this._neuralWeights = new Array(this._worldWidth * this._worldHeight * this._codeBookWeights.length);
 
             for (var i = 0; i < this._neuralWeights.length; i += 1) {
-                this._neuralWeights[i] = Math.random();
+                this._neuralWeights[i] = random();
             }
 
             this._mapRadius = Math.max(this._worldWidth, this._worldHeight) / 2;
