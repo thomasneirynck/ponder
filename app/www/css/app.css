@@ -137,3 +137,8 @@ img {
 #selectionHistory > div {
     border: 1px solid blue;
 }
+
+#selectionHistory > div:hover {
+    background: grey;
+    cursor: "pointer";
+}

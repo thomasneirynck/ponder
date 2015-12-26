@@ -71,7 +71,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                     x: self._map.toWorldX(event.getMapViewX()),
                     y: self._map.toWorldY(event.getMapViewY())
                 });
-                self.emit("input", self);
+                self.emit("input", self._linearRing.slice());
                 self.emit("invalidate");
             });
 
@@ -80,9 +80,20 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                     x: self._map.toWorldX(event.getMapViewX()),
                     y: self._map.toWorldY(event.getMapViewY())
                 });
-                self.emit("change", self);
+                self.emit("change", self._linearRing.slice());
                 self.emit("invalidate");
             });
+
+        },
+
+        select: function(selection){
+
+            if (JSON.stringify(selection) === JSON.stringify(this._linearRing)){
+                return;
+            }
+
+            this._linearRing = selection;
+            this.emit("invalidate");//redraw (should really fire new change event...)
 
         },
 
