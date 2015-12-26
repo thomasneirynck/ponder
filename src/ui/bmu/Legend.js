@@ -56,36 +56,45 @@ define([
         _updateOrdinalLegend: function (legend) {
 
             var context2d = document.createElement("canvas").getContext("2d");
+            context2d.canvas.style.cursor = "pointer";
 
-            function paint(){
-                context2d.canvas.width = $(this._legendDiv).width();
-                context2d.canvas.height = $(this._legendDiv).height();
+            var self = this;
+
+            function paint() {
+                context2d.canvas.width = $(self._legendDiv).width();
+                context2d.canvas.height = $(self._legendDiv).height();
 
                 context2d.fillStyle = legend.lower;
-                context2d.fillRect(0, 0, context2d.canvas.width * this._break, context2d.canvas.height);
+                context2d.fillRect(0, 0, context2d.canvas.width * self._break, context2d.canvas.height);
                 context2d.fillStyle = legend.higher;
-                context2d.fillRect(context2d.canvas.width * this._break, 0, context2d.canvas.width * (1 - this._break), context2d.canvas.height);
+                context2d.fillRect(context2d.canvas.width * self._break, 0, context2d.canvas.width * (1 - self._break), context2d.canvas.height);
 
-                context2d.moveTo(context2d.canvas.width * this._break, 0);
-                context2d.lineTo(context2d.canvas.width * this._break, context2d.canvas.height);
+                context2d.moveTo(context2d.canvas.width * self._break, 0);
+                context2d.lineTo(context2d.canvas.width * self._break, context2d.canvas.height);
                 context2d.stroke();
             }
+
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(context2d.canvas);
 
             paint();
 
-            var self = this;
+
             $(context2d.canvas)
-                .mouseover(function(event){
-                    self._break = event.offsetX/context2d.canvas.width;
+                .mousemove(function (event) {
+                    if (!event.which) {
+                        return;
+                    }
+                    self._break = event.offsetX / context2d.canvas.width;
                     self.emit("invalidate");
+                    paint();
+
                 });
 
         },
 
-        getBreak: function(){
-          return this._break;
+        getBreak: function () {
+            return this._break;
         },
 
         _updateLegend: function () {

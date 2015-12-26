@@ -37,7 +37,7 @@ define([
                     x: values[selectedOrdinals[c]],
                     x0: 0,
                     type: 'box',
-                    name: selectedOrdinals[0]
+                    name: selectedOrdinals[c]
                 };
 
                 var data = [trace1];

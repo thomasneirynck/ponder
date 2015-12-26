@@ -39,6 +39,8 @@ define([
 
                 this._legend = new Legend(legendOutputDiv, this);
 
+                this._legend.on("invalidate",this.invalidate.bind(this));
+
 
                 var sizeTag = $("<select />");
                 for (index in dataTable.getSelectedOrdinalColumns()) {
