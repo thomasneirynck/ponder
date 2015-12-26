@@ -21,6 +21,10 @@ define([
 
             this._break = 0.5;
 
+            window.addEventListener("resize", function(){
+                self.emit("invalidate");
+            });
+
         },
 
         _updateCategoryLegend: function (legend) {
@@ -45,12 +49,15 @@ define([
                 itemSpan.style.color = "rgb(255,255,255)";
                 itemSpan.style["background-color"] = legend.classifier(legend.values[i]);
                 itemSpan.innerHTML = legend.values[i];
+                itemSpan.title = legend.values[i];
 
                 wrapperDiv.appendChild(itemSpan);
             }
 
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(wrapperDiv);
+
+
         },
 
         _updateOrdinalLegend: function (legend) {
@@ -72,6 +79,25 @@ define([
                 context2d.moveTo(context2d.canvas.width * self._break, 0);
                 context2d.lineTo(context2d.canvas.width * self._break, context2d.canvas.height);
                 context2d.stroke();
+
+
+                var readOutValue = parseFloat((legend.minMax[0] + (self._break * (legend.minMax[1] - legend.minMax[0]))).toFixed(4)).toString();
+
+                context2d.textBaseline = "middle";
+                context2d.textAlign = "center";
+
+
+                context2d.shadowColor = 'rgb(23,23,23)';
+                context2d.shadowOffsetX = 0;
+                context2d.shadowOffsetY = 0;
+                context2d.shadowBlur = 5;
+                context2d.font = "12px sans serif";
+                context2d.fillStyle = "rgb(255,255,255)";
+                context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height/2);
+
+
+
+
             }
 
             this._legendDiv.innerHTML = "";

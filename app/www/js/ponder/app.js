@@ -58,6 +58,7 @@ require([
 
     function throwError(error) {
         console.error(error);
+        console.error(error.stack);
         throw error;
     }
 
