@@ -2,19 +2,24 @@ define([
     "type",
     "./SummaryChart",
     "jquery",
-    "datatables"], function (type, SummaryChart, jquery) {
+    "Evented",
+    "datatables"
+], function (type, SummaryChart, jquery, Evented) {
 
 
-    return type({
+    return type(Evented.prototype, {
 
         constructor: function BMUSelector(areaSelectLayerController, bmuLayer, somHandle, bmuContainer, summaryContainer) {
 
+            Evented.call(this);
+
             this._areaSelectLayerController = areaSelectLayerController;
 
-
-            this._areaSelectLayerController.on("change", function () {
+            var self = this;
+            this._areaSelectLayerController.on("change", function (areaSelectLayerController) {
 
                 var selectedIndices = bmuLayer.selectBmusFromController(areaSelectLayerController);
+
 
                 somHandle
                     .statistics(selectedIndices)
@@ -46,18 +51,13 @@ define([
                             })
                         });
 
-                        //this is wrong! this should work with bmu values, not SOM map values
                         document.getElementById(summaryContainer).innerHTML = "";
                         new SummaryChart(summaryContainer, selectedIndices, bmuLayer.getDataTable());
 
-
-                        //all ordinals should get box plot
-
-
-
-                        //all categories should get pie chart
-
-
+                        self.emit("change", {
+                            selectedIndices: selectedIndices,
+                            stats: stats
+                        });
 
 
                     }, function (e) {

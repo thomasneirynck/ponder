@@ -133,3 +133,7 @@ img {
 .selectedColumn {
     background-color: lightblue;
 }
+
+#selectionHistory > div {
+    border: 1px solid blue;
+}
