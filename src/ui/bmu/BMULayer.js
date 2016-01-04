@@ -1,9 +1,7 @@
 define([
-        "type", "Evented", "../EasingInput", "./Legend","./classColors"
+        "type", "Evented", "../EasingInput", "./Legend", "./classColors"
     ],
     function (type, Evented, EasingInput, Legend, classColors) {
-
-
 
 
         return type(Object.prototype, Evented.prototype, {
@@ -39,7 +37,7 @@ define([
 
                 this._legend = new Legend(legendOutputDiv, this);
 
-                this._legend.on("invalidate",this.invalidate.bind(this));
+                this._legend.on("invalidate", this.invalidate.bind(this));
 
 
                 var sizeTag = $("<select />");
@@ -109,23 +107,21 @@ define([
 
 
                     context2d.beginPath();
-                    context2d.arc(map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y), size, 0, Math.PI * 2);
+                    context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), size, 0, Math.PI * 2);
                     context2d.fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value));
-                    context2d.globalAlpha = alpha;
+                    //context2d.globalAlpha = alpha;
                     context2d.fill();
                     context2d.lineWidth = thickness;
                     context2d.strokeStyle = color;
                     context2d.stroke();
 
 
-                    context2d.fillText(this._dataTable.getValueByRowAndColumnIndex(i, this._labelElement.value), map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y));
+                    context2d.fillText(this._dataTable.getValueByRowAndColumnIndex(i, this._labelElement.value), map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d));
 
                     context2d.restore();
 
 
-                }
-
-            },
+                } },
 
 
             _getClassifier: function () {

@@ -18,7 +18,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             i += 1;
             if (((ring[i].y <= y && y < ring[j].y) || (ring[j].y <= y && y < ring[i].y)) &&
                 (x < (ring[j].x - ring[i].x) * (y - ring[i].y) / (ring[j].y - ring[i].y) + ring[i].x)
-                ) {
+            ) {
                 (contains = !contains);
             }
         }
@@ -86,9 +86,9 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
 
         },
 
-        select: function(selection){
+        select: function (selection) {
 
-            if (JSON.stringify(selection) === JSON.stringify(this._linearRing)){
+            if (JSON.stringify(selection) === JSON.stringify(this._linearRing)) {
                 return;
             }
 
@@ -116,9 +116,9 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             }
 
             context2d.beginPath();
-            context2d.moveTo(map.toViewX(this._linearRing[0].x), map.toViewY(this._linearRing[0].y));
+            context2d.moveTo(map.toViewX(this._linearRing[0].x, context2d), map.toViewY(this._linearRing[0].y, context2d));
             for (var i = 1; i < this._linearRing.length; i += 1) {
-                context2d.lineTo(map.toViewX(this._linearRing[i].x), map.toViewY(this._linearRing[i].y));
+                context2d.lineTo(map.toViewX(this._linearRing[i].x, context2d), map.toViewY(this._linearRing[i].y, context2d));
             }
             context2d.closePath();
             context2d.strokeStyle = "rgb(240,240,240)";

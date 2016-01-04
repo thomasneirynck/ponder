@@ -17,6 +17,10 @@ img {
     user-select: none;
 }
 
+#map {
+    cursor: "pointer";
+}
+
 #wrapper {
     position: relative;
     width: 100%;
@@ -50,7 +54,7 @@ img {
     position: relative;
 }
 
-.selector table tr tr{
+.selector table tr tr {
     position: relative;
 }
 
@@ -65,11 +69,10 @@ img {
     table-layout: fixed;
 }
 
-.selector  div span {
+.selector div span {
     display: table-cell;
     text-align: center;
 }
-
 
 /*App*/
 #map {
@@ -134,11 +137,12 @@ img {
     background-color: lightblue;
 }
 
-#selectionHistory > div {
-    border: 1px solid blue;
-}
-
 #selectionHistory > div:hover {
     background: grey;
     cursor: "pointer";
+}
+
+#selectionHistory > div > canvas {
+    width: 100%;
+    height: auto;
 }

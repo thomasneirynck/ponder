@@ -67,7 +67,7 @@ require([
         jquery("#selector").hide();
         var somTrainingData = table.createSOMTrainingData();
 
-        var map;
+        var map, uMatrixLayer;
         if (somHandle) {
             somHandle.kill();
             somHandle = null;
@@ -97,10 +97,10 @@ require([
                 document.getElementById("map").removeChild(waitingDiv);
                 map = new Map("map", somHandle.width, somHandle.height);
 
-                //u-matrix
-                var umatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
-                umatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
-                map.addLayer(umatrixLayer);
+
+                uMatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
+                uMatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
+                map.addLayer(uMatrixLayer);
                 return somHandle.bmus();
             }, throwError)
             .then(function (bmuResult) {
@@ -114,7 +114,7 @@ require([
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
 
-                new BMUSelectionHistory("selectionHistory", bmuSelector);
+                new BMUSelectionHistory("selectionHistory", bmuSelector, map, [uMatrixLayer, areaSelectLayerController]);
 
 
 

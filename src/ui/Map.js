@@ -19,6 +19,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             var self = this;
             this._handleAnimationFrame = function handleAnimationFrame() {
                 self._animationFrameHandle = 0;
+                self._context2d.clearRect(0, 0, self._context2d.width, self._context2d.height);
                 for (var i = 0; i < self._layers.length; i += 1) {
                     self._layers[i].paint(self._context2d, self);
                 }
@@ -96,15 +97,24 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
 
         },
 
+        screenshot: function (context2d, layers) {
+            for (var i = 0; i < this._layers.length; i += 1) {
+                if (layers.indexOf(this._layers[i]) < 0) {
+                    continue;
+                }
+                this._layers[i].paint(context2d, this);
+            }
+        },
+
         destroy: function () {
             //todo: cleanup here
         },
-        toViewX: function (x) {
-            return x * this._context2d.canvas.width / this._worldWidth;
+        toViewX: function (x, context2d) {
+            return x * context2d.canvas.width / this._worldWidth;
         },
 
-        toViewY: function (y) {
-            return y * this._context2d.canvas.height / this._worldHeight;
+        toViewY: function (y, context2d) {
+            return y * context2d.canvas.height / this._worldHeight;
         },
 
         toWorldX: function (x) {
