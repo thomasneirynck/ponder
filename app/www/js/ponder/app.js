@@ -14,7 +14,8 @@ require.config({
         //plotly: "vendor/plotly/plotly.min",
         plotly: "vendor/plotly/plotly",
         typedarray: "vendor/plotly_20150812a_basic/dependencies/typedarray",
-        d3: "vendor/plotly_20150812a_basic/dependencies/d3.v3.min"
+        d3: "vendor/plotly_20150812a_basic/dependencies/d3.v3.min",
+        jStat: "vendor/jstat"
     },
     shim: {
         Papa: {
@@ -29,6 +30,9 @@ require.config({
         },
         d3: {
             exports: "d3"
+        },
+        jStat: {
+            exports: "jStat"
         }
     }
 });

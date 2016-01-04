@@ -122,8 +122,22 @@ img {
 #summary {
     position: relative;
     width: 100%;
-    /*display: inline-block;*/
-    /*float: right;*/
+}
+
+#summary > div {
+    position: relative;
+}
+
+#summary > div > span {
+    position: relative;
+    width: 20%;
+    left: 0;
+}
+
+#summary > div > canvas {
+    position: relative;
+    width: 80%;
+    left: 20%;
 }
 
 #table {
