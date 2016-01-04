@@ -25,12 +25,13 @@ define([
 
                 map.screenshot(screenshotGraphics, layers);
                 areaSelectionNode.appendChild(screenshotGraphics.canvas);
-
                 self._node.insertBefore(areaSelectionNode, self._node.firstChild);
 
-                areaSelectionNode.addEventListener("click", function () {
+                areaSelectionNode.addEventListener("click", select);
+
+                function select() {
                     bmuSelector.select(selectionEvent);
-                });
+                }
 
             });
 

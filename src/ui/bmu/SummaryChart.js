@@ -33,18 +33,23 @@ define([
                 ordinalplot.style.width = "100%";
                 ordinalplot.style.position = "relative";
 
+                node.appendChild(ordinalplot);
+
                 var label = document.createElement("span");
                 label.innerHTML = selectedOrdinals[c];
 
                 ordinalplot.appendChild(label);
 
 
-                var minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
-                var box = new Boxplot(minmax[0],minmax[1]);
-                box.setData(values[selectedOrdinals[c]]);
-                box.addToNode(ordinalplot);
+                var container = document.createElement("div");
+                ordinalplot.appendChild(container);
 
-                node.appendChild(ordinalplot);
+                var minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
+                var box = new Boxplot(minmax[0],minmax[1], container);
+                box.setData(values[selectedOrdinals[c]]);
+
+
+
 
             }
 

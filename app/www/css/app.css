@@ -119,6 +119,7 @@ img {
     width: 100%;
 }
 
+/*Summary chart*/
 #summary {
     position: relative;
     width: 100%;
@@ -126,24 +127,31 @@ img {
 
 #summary > div {
     position: relative;
+    height: 30px;
 }
 
 #summary > div > span {
-    position: relative;
     width: 20%;
     left: 0;
+    position:absolute;
 }
 
-#summary > div > canvas {
+#summary > div > div {
     position: relative;
     width: 80%;
     left: 20%;
+    height: 100%;
 }
 
+#summary > div > div > canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/*table view*/
 #table {
     width: 100%;
-    /*display: inline-block;*/
-    /*float: left;*/
     overflow-x: scroll;
 }
 
@@ -151,6 +159,7 @@ img {
     background-color: lightblue;
 }
 
+/*selection history*/
 #selectionHistory > div:hover {
     background: grey;
     cursor: "pointer";
