@@ -19,6 +19,7 @@ define([
         return t;
     }
 
+
     function toIndex(x, y, width, size) {
         return ((width * y) + x) * size;
     }
@@ -68,7 +69,7 @@ define([
         uMatrixNormalized: function () {
 
             var xy = {x: 0, y: 0};
-            var distance , total, ni, i;
+            var distance, total, ni, i;
             var min = Infinity;
             var max = -Infinity;
             var uMatrix = new Array(this._worldWidth * this._worldHeight);
@@ -194,7 +195,27 @@ define([
             }
         },
 
+        dot: function (vector1, i1, vector2, i2) {
+            var sum = 0;
+            for (var i = 0; i < this._codeBookWeights.length; i += 1) {
+                sum += vector1[i1 + i] * vector2[i2 + i];
+            }
+            return sum;
+        },
+
+        magnitude: function (vector, i) {
+            return Math.sqrt(this.dot(vector, i, vector, i));
+        },
+
+        cosineSimilarity: function (vector1, i1, vector2, i2) {
+            return this.dot(vector1, i1, vector2, i2) / (this.magnitude(vector1, i1) * this.magnitude(vector2, i2));
+        },
+
         distance: function (vector1, i1, vector2, i2) {
+            return this.euclidianDistance(vector1, i1, vector2, i2);
+        },
+
+        euclidianDistance: function (vector1, i1, vector2, i2) {
             var sum = 0;
             for (var i = 0; i < this._codeBookWeights.length; i += 1) {
                 sum += (Math.pow(vector1[i1 + i] - vector2[i2 + i], 2)) * this._codeBookWeights[i];
@@ -218,6 +239,18 @@ define([
         toXY: function (index, out) {
             out.x = (index / this._codeBookWeights.length) % this._worldWidth;
             out.y = Math.floor(index / this._codeBookWeights.length / this._worldWidth);
+        },
+
+        cosineCompare: function (distance1, distance2) {
+            return distance2 < distance1;
+        },
+
+        euclidianDistanceCompare: function (distance1, distance2) {
+            return distance1 < distance2;
+        },
+
+        isLeftBetterThanRight: function (distance1, distance2) {
+            return this.euclidianDistanceCompare(distance1, distance2);
         },
 
 
@@ -296,7 +329,7 @@ define([
             var minI, dist;
             for (var i = 0; i < this._neuralWeights.length; i += this._codeBookWeights.length) {
                 dist = this.distance(this._neuralWeights, i, feature, fi, this._codeBookWeights.length);
-                if (dist < minDistance) {
+                if (this.isLeftBetterThanRight(dist, minDistance)) {
                     minDistance = dist;
                     minI = i;
                 }
