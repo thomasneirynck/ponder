@@ -30,6 +30,11 @@ define([
                 classSelectTag.css("width", "100%");
                 classSelectTag.on("change", function () {
                     self.invalidate();
+                    if (self._dataTable.isOrdinal(self._classElement.value)){
+                        self._easingInput.setEasingMode("log");
+                    }else{
+                        self._easingInput.setEasingMode("constant");
+                    }
                     self.emit("classChange", self._classElement.value);
                 });
                 this._classElement = classSelectTag[0];
@@ -77,7 +82,7 @@ define([
 
             paint: function (context2d, map) {
 
-                var minMaxForSize = this._dataTable.getMinMax(this._sizeElement.value);
+                var minMaxForSize = this._dataTable.getMinMax(this._classElement.value);
                 var minArea = Math.PI * Math.pow(5, 2);
                 var maxArea = Math.PI * Math.pow(20, 2);
 
@@ -85,19 +90,14 @@ define([
 
                 var colorClassifier = this._getClassifier();
 
+                var isOrdinal = this._dataTable.isOrdinal(this._classElement.value);
+
                 var value;
                 for (var i = 0; i < this._bmus.length; i += 1) {
 
                     context2d.save();
 
-                    ordinalPositionForSize = this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, this._sizeElement.value));
-
-                 
-                    alpha = 1 - ordinalPositionForSize + this._easingInput.getA();
-                    thickness = 1;
-                    color = "rgba(0,0,0,0.8)";
-
-
+                    ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value)) : -1;
                     area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
                     size = Math.round(Math.sqrt(area / (Math.PI)));
 
@@ -105,10 +105,9 @@ define([
                     context2d.beginPath();
                     context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), size, 0, Math.PI * 2);
                     context2d.fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value));
-                    //context2d.globalAlpha = alpha;
                     context2d.fill();
-                    context2d.lineWidth = thickness;
-                    context2d.strokeStyle = color;
+                    context2d.lineWidth = 1;
+                    context2d.strokeStyle = "rgba(255,255,255,0.8)";
                     context2d.stroke();
 
 
@@ -144,7 +143,7 @@ define([
 
             getLegend: function () {
 
-                var clazz = parseInt(this._classElement.value);
+                var clazz = this._classElement.value;
                 if (this._dataTable.isOrdinal(clazz)) {
                     return {
                         type: "ORDINAL",

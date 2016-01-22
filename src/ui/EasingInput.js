@@ -4,6 +4,15 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
         return (v > 0 && v < 1);
     }
 
+    function logEase(i) {
+        var y = Math.log(this._a) / Math.log(this._b);
+        return Math.pow(i, 1 / y);
+    }
+
+    function constantEase() {
+        return this._b;
+    }
+
     return type(Object.prototype, Evented.prototype, {
 
         constructor: function EasingInput(node, contrastReadout) {
@@ -21,10 +30,8 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.canvas.style.cursor = "pointer";
 
             var self = this;
-            this._ease = function (i) {
-                var y = Math.log(self._a) / Math.log(self._b);
-                return Math.pow(i, 1 / y);
-            };
+            this._mode = "log";
+            this._ease = logEase.bind(this);
 
             this._updatePosition = function (event) {
                 if (valid(event.offsetX / self._context2d.canvas.width)) {
@@ -40,10 +47,8 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             var down = false;
             $(this._container)
                 .mousedown(function (event) {
-
                     down = true;
                     self._updatePosition(event);
-
                 })
                 .mousemove(function (event) {
 
@@ -71,9 +76,17 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             return this._ease;
         },
 
-        setEasingFunction: function (ease) {
-            this._ease = ease;
-            this.paint();
+        setEasingMode: function (mode) {
+            if (mode === "log") {
+                this._mode = mode;
+                this._ease = logEase.bind(this);
+            } else if (mode === "constant") {
+                this._mode = mode;
+                this._ease = constantEase.bind(this);
+            } else {
+                throw new Error("don't know easing mode " + mode);
+            }
+            this.resize();
         },
 
         getA: function () {
@@ -102,6 +115,23 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
         paint: function () {
 
             this._context2d.clearRect(0, 0, this._context2d.canvas.width, this._context2d.canvas.height);
+
+            if (this._mode === "log") {
+                this._paintLogMode();
+            } else {
+                this._paintConstantMode();
+            }
+
+            //this._readoutContainer.innerHTML =
+            //    Math.abs(this.getA() - this.getB()) < 0.2 ? "balanced" :
+            //        this.getA() > this.getB() ? "Muted" :
+            //            this.getA() < this.getB() > 0.58 ? "Amplified" :
+            //                "Balanced";
+
+
+        },
+
+        _paintLogMode: function () {
             var map;
             var steps = 100;
             var line = new Array(steps * 2);
@@ -119,15 +149,13 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._context2d.translate(-this._handleWidth / 2, -this._handleHeight / 2);
             this._context2d.fillRect(this._a * this._context2d.canvas.width, this._context2d.canvas.height - this._b * this._context2d.canvas.height, this._handleWidth, this._handleHeight);
             this._context2d.restore();
+        },
 
-            if (this._readoutContainer) {
+        _paintConstantMode: function () {
 
-                this._readoutContainer.innerHTML =
-                    Math.abs(this.getA() - this.getB()) < 0.2 ? "balanced" :
-                        this.getA() > this.getB() ? "Muted" :
-                            this.getA() < this.getB() > 0.58 ? "Amplified" :
-                                "Balanced";
-            }
+            this._context2d.fillStyle = "rgba(12,12,12,0.7)";
+            this._context2d.fillRect(0, this._context2d.canvas.height, this._context2d.canvas.width, - this._b * this._context2d.canvas.height);
+
         }
 
 

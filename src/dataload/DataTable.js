@@ -51,15 +51,15 @@ define(["type", "./util"], function (type, util) {
         },
 
         isOrdinal: function(columnIndex){
-            return this._selectedOrdinalColumnsIndices.indexOf(columnIndex) > -1;
+            return this._selectedOrdinalColumnsIndices.indexOf(parseInt(columnIndex)) > -1;
         },
 
         isExcluded: function(columnIndex){
-          return !this.isOrdinal(columnIndex) && !this.isCategory(columnIndex);
+          return !this.isOrdinal(parseInt(columnIndex)) && !this.isCategory(parseInt(columnIndex));
         },
 
         isCategory: function(columnIndex){
-            return this._selectedCategoryColumnIndices.indexOf(columnIndex) > -1;
+            return this._selectedCategoryColumnIndices.indexOf(parseInt(columnIndex)) > -1;
         },
 
         getUniqueValues: function (columnIndex) {

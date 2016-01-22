@@ -84,7 +84,7 @@ define([
                 context2d.shadowColor = 'rgb(23,23,23)';
                 context2d.shadowOffsetX = 0;
                 context2d.shadowOffsetY = 0;
-                context2d.shadowBlur = 5;
+                context2d.shadowBlur = 1;
                 context2d.font = "'Gudea', sans-serif";
                 context2d.fillStyle = "#5b3b31";
                 context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height/2);
