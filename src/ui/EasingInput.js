@@ -78,7 +78,6 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             return this._b;
         },
         resize: function () {
-            console.log("calculationg height", $(this._container).width(),$(this._container).height());
             this._context2d.canvas.width = $(this._container).width();
             this._context2d.canvas.height = $(this._container).height();
             this.paint();

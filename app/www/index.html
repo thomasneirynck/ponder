@@ -24,7 +24,8 @@
         }
 
         body {
-            height: 100%
+            height: 100%;
+            overflow: hidden;
         }
 
         #left {
@@ -94,20 +95,31 @@
 
         /***************************************************************************/
 
-        #mapContainer {
+
+        #map {
+            position: absolute;
+            top:0;
+            left: 0;
             width: 100%;
             height: 100%;
         }
 
-        #map {
+        #map > canvas {
             width: 100%;
             height: 100%;
+        }
+
+        #selector {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
         }
 
         #tableContainer {
             display: none;
         }
-        
+
         #selectionHistoryContainer {
             width: 100%;
             height: 100%;
@@ -206,10 +218,8 @@
     </div>
 
     <div id="center">
-        <div id="mapContainer">
-            <div id="selector" class="selector"></div>
+            <div id="selector"></div>
             <div id="map">
-            </div>
         </div>
         <div id="tableContainer">
             <div id="table"></div>
