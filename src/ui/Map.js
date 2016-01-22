@@ -135,7 +135,6 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
         },
 
         resize: function () {
-            console.log("sizing map: ",jquery(this._context2d.canvas).parent().width(),jquery(this._context2d.canvas).parent().height());
             this._context2d.canvas.width = jquery(this._context2d.canvas).parent().width();
             this._context2d.canvas.height = jquery(this._context2d.canvas).parent().height();
             this.invalidate();

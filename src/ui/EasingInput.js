@@ -71,6 +71,11 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             return this._ease;
         },
 
+        setEasingFunction: function (ease) {
+            this._ease = ease;
+            this.paint();
+        },
+
         getA: function () {
             return this._a;
         },
@@ -111,7 +116,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, $) {
             this._drawLine(line, "rgb(0,0,0)", 2);
 
             this._context2d.save();
-            this._context2d.translate(-this._handleWidth/2, -this._handleHeight/2);
+            this._context2d.translate(-this._handleWidth / 2, -this._handleHeight / 2);
             this._context2d.fillRect(this._a * this._context2d.canvas.width, this._context2d.canvas.height - this._b * this._context2d.canvas.height, this._handleWidth, this._handleHeight);
             this._context2d.restore();
 

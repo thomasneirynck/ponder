@@ -41,12 +41,6 @@ define([
                 itemSpan.style.height = "100%";
                 itemSpan.style.width = (100 / legend.values.length) + "%";
                 itemSpan.style.left = (100 / legend.values.length) * i + "%";
-                itemSpan.style.padding = 2;
-                itemSpan.style["text-align"] = "center";
-                itemSpan.style["text-shadow"] = "-1px -1px 0 #000,                1px -1px 0 #000, -1px  1px 0 #000,1px  1px 0 #000";
-
-                itemSpan.style["vertical-align"] = "middle";
-                itemSpan.style.color = "rgb(255,255,255)";
                 itemSpan.style["background-color"] = legend.classifier(legend.values[i]);
                 itemSpan.innerHTML = legend.values[i];
                 itemSpan.title = legend.values[i];
@@ -91,12 +85,9 @@ define([
                 context2d.shadowOffsetX = 0;
                 context2d.shadowOffsetY = 0;
                 context2d.shadowBlur = 5;
-                context2d.font = "12px sans serif";
-                context2d.fillStyle = "rgb(255,255,255)";
+                context2d.font = "'Gudea', sans-serif";
+                context2d.fillStyle = "#5b3b31";
                 context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height/2);
-
-
-
 
             }
 

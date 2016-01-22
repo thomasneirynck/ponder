@@ -92,15 +92,11 @@ define([
 
                     ordinalPositionForSize = this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, this._sizeElement.value));
 
-                    if (ordinalPositionForSize > this._easingInput.getA()) {
-                        alpha = 1 - ordinalPositionForSize + this._easingInput.getA();
-                        thickness = 1;
-                        color = "rgba(0,0,0,0.8)";
-                    } else {
-                        alpha = 1;
-                        thickness = 1;
-                        color = "rgba(255,255,255, 0.95)";
-                    }
+                 
+                    alpha = 1 - ordinalPositionForSize + this._easingInput.getA();
+                    thickness = 1;
+                    color = "rgba(0,0,0,0.8)";
+
 
                     area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
                     size = Math.round(Math.sqrt(area / (Math.PI)));
@@ -121,7 +117,8 @@ define([
                     context2d.restore();
 
 
-                } },
+                }
+            },
 
 
             _getClassifier: function () {
