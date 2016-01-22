@@ -19,11 +19,11 @@ define([
                     $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(labelSelectTag);
                     $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(classSelectTag);
                 }
-
-                labelSelectTag.appendTo("#" + labelNode);
-                labelSelectTag.css("width", "100%");
-                labelSelectTag.on("change", this.invalidate.bind(this));
-                this._labelElement = labelSelectTag[0];
+                //
+                //labelSelectTag.appendTo("#" + labelNode);
+                //labelSelectTag.css("width", "100%");
+                //labelSelectTag.on("change", this.invalidate.bind(this));
+                //this._labelElement = labelSelectTag[0];
 
                 var self = this;
                 classSelectTag.appendTo("#" + classNode);
@@ -116,7 +116,7 @@ define([
                     context2d.stroke();
 
 
-                    context2d.fillText(this._dataTable.getValueByRowAndColumnIndex(i, this._labelElement.value), map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d));
+                    //context2d.fillText(this._dataTable.getValueByRowAndColumnIndex(i, this._labelElement.value), map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d));
 
                     context2d.restore();
 
