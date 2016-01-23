@@ -22,6 +22,7 @@ define([
             this._break = 0.5;
 
             window.addEventListener("resize", function () {
+                self._updateLegend();
                 self.emit("invalidate");
             });
 
@@ -106,7 +107,7 @@ define([
 
             $(context2d.canvas)
                 .mousemove(update)
-                .mouseclick(update);
+                .click(update);
 
         },
 

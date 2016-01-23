@@ -35,7 +35,7 @@ define([
 
                 node.appendChild(ordinalplot);
 
-                var label = document.createElement("span");
+                var label = document.createElement("div");
                 label.innerHTML = selectedOrdinals[c];
 
                 ordinalplot.appendChild(label);

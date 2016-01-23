@@ -14,9 +14,14 @@ define(["../../Random"], function (Random) {
 
     }
 
-    return colors.map(function (color) {
+    var colors = colors.map(function (color) {
         return "rgb(" + color.r + "," + color.g + "," + color.b + ")";
     });
+
+
+    colors.unshift("rgb(255, 247, 229)","rgb(223,114,62)");
+
+    return colors;
 
 
     //return ["#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",

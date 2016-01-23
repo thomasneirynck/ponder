@@ -22,7 +22,7 @@ define([
     }
 
     function suggestType(name, sampleValue, position) {
-        return  (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
+        return (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
             isOrdinal(name, sampleValue) ? "ordinal" :
                 isCategorical(name, sampleValue) ? "category" :
                     "exclude";
@@ -88,17 +88,17 @@ define([
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
-                header.innerHTML = "Select the columns with independent variables";
+                header.innerHTML = "<div>Select the columns with the independent variables: </div>"
+                    + "<div>"
+                    + "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance"
+                    + "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis"
+                    + "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map."
+                    + "</div>";
                 headerWrapper.appendChild(header);
-
-                var doneButton = document.createElement("input");
-                doneButton.type = "button";
-                doneButton.value = "Continue";
-                headerWrapper.appendChild(doneButton);
                 self._wrapperNode.appendChild(headerWrapper);
 
+
                 var table = document.createElement("table");
-                table.border = "1px solid red";
 
                 var tableHeader = document.createElement("tr");
                 var nameColHead = document.createElement("th");
@@ -110,54 +110,79 @@ define([
                 var ignoreColHead = document.createElement("th");
                 ignoreColHead.innerHTML = "Exclude";
 
-                var exampleColHead = document.createElement("th");
-                var divver = document.createElement("div");
-                var limit = Math.min(6, self._data.length);
-                var spanner, e;
-                for (e = 1; e < limit; e += 1) {
-                    spanner = document.createElement("span");
-                    spanner.innerHTML = "Sample: " + e;
-                    divver.appendChild(spanner);
-                }
-                exampleColHead.appendChild(divver);
-
-
                 tableHeader.appendChild(nameColHead);
                 tableHeader.appendChild(ordinalColHead);
                 tableHeader.appendChild(categoryColHead);
                 tableHeader.appendChild(ignoreColHead);
-                tableHeader.appendChild(exampleColHead);
+
+                var limit = Math.min(6, self._data.length);
+                var exampleColHead, spanner, e;
+                for (e = 1; e < limit; e += 1) {
+                    exampleColHead = document.createElement("th");
+                    spanner = document.createElement("span");
+                    spanner.innerHTML = "";
+                    exampleColHead.appendChild(spanner);
+                    tableHeader.appendChild(exampleColHead)
+                }
+
+                if (e === limit) {
+                    exampleColHead = document.createElement("th");
+                    spanner = document.createElement("span");
+                    spanner.innerHTML = " + " + (self._data.length - e) + " more. ";
+                    exampleColHead.appendChild(spanner);
+                    tableHeader.appendChild(exampleColHead);
+                }
+
+
                 table.appendChild(tableHeader);
 
 
                 var radioButtonsMap = {};
-                for (var i = 0; i < self._data[0].length; i += 1) {
-                    var row = document.createElement("tr");
 
-                    var nameCol = document.createElement("td");
+                var row, nameCol, suggestedType, example;
+                for (var i = 0; i < self._data[0].length; i += 1) {
+                    row = document.createElement("tr");
+
+                    nameCol = document.createElement("td");
                     nameCol.innerHTML = self._data[0][i];
                     row.appendChild(nameCol);
 
                     radioButtonsMap[self._data[0][i]] = {};
-                    var suggestedType = suggestType(self._data[0][i], self._data[1] ? self._data[1][i] : null, i);
+                    suggestedType = suggestType(self._data[0][i], self._data[1] ? self._data[1][i] : null, i);
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "ordinal", "ordinal");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "category", "category");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
 
-                    var example = document.createElement("td");
-                    divver = document.createElement("div");
+
                     for (e = 1; e < limit; e += 1) {
+                        example = document.createElement("td");
                         spanner = document.createElement("span");
                         spanner.innerHTML = self._data[e][i];
-                        divver.appendChild(spanner);
+                        example.appendChild(spanner);
+                        row.appendChild(example);
                     }
-                    example.appendChild(divver);
-                    row.appendChild(example);
+                    if (e === limit){
+                        example = document.createElement("td");
+                        spanner = document.createElement("span");
+                        spanner.innerHTML = "...";
+                        example.appendChild(spanner);
+                        row.appendChild(example);
+                    }
+
+
                     table.appendChild(row);
                 }
 
-                self._wrapperNode.appendChild(table);
+                var divver = document.createElement("div");
+                divver.appendChild(table);
+                self._wrapperNode.appendChild(divver);
 
+
+                var doneButton = document.createElement("input");
+                doneButton.type = "button";
+                doneButton.value = "Make Map";
+
+                self._wrapperNode.appendChild(doneButton);
                 jquery(doneButton).on("click", function () {
 
                     for (var key in radioButtonsMap) {

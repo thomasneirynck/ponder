@@ -65,6 +65,7 @@ require([
 
 
     var dataSelector = new DataSelector("selector", "selectorStyle");
+    jquery("#map").hide();
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
@@ -85,7 +86,7 @@ require([
         var spinnerIcon = document.createElement("img");
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
-        waitingDiv.innerHTML += "<span>Creating Map</span>";
+        waitingDiv.innerHTML += "<span>Thinking ...</span>";
         document.getElementById("map").appendChild(waitingDiv);
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
@@ -98,6 +99,7 @@ require([
             }, throwError)
             .then(function (successData) {
 
+                jquery("#map").show();
                 document.getElementById("map").removeChild(waitingDiv);
                 map = new Map("map", somHandle.width, somHandle.height);
 
