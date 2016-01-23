@@ -36,9 +36,64 @@
         }
 
         #header {
-            text-transform: uppercase;
-            padding: 0 0 2em 2em;
+
         }
+
+        #header > div:nth-child(1){
+            padding-top:0.1em;
+            font-size: 1.6em;
+            text-transform: uppercase;
+        }
+
+        #header > div:nth-child(2){
+            font-size: 0.4em;
+            padding-left:0.2em;
+        }
+
+
+        #mapToolContainer > div {
+            border-radius: 8px;
+            margin: 2px;
+            border: 1px solid #808284;
+            overflow: hidden;
+        }
+        #center {
+            box-sizing: border-box;
+            padding-top: 4px;
+            padding-left: 2px;
+            padding-right: 2px;
+            padding-bottom: 2px;
+        }
+
+        #mapContainer {
+            box-sizing: border-box;
+        }
+
+        #map {
+            box-sizing: border-box;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #selectionHistoryContainer > div {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        #selectionHistoryContainer > div > div {
+            box-sizing: border-box;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-left: 2px;
+            margin-right: 2px;
+            cursor: pointer;
+        }
+
+        #selectionHistoryContainer > div > div:hover {
+            border: 1px solid white;
+        }
+
+
 
 
 
@@ -54,13 +109,13 @@
 
         #left {
             float: left;
-            width: 120px;
+            width: 160px;
             height: 100%;
         }
 
         #right {
             position: relative;
-            margin-left: 120px;
+            margin-left: 160px;
             height: 100%;
         }
 
@@ -90,6 +145,8 @@
         }
 
         #mapToolContainer {
+            box-sizing: border-box;
+            padding: 3px;
             display: flex;
             flex-direction: row;
             flex-wrap: nowrap;
@@ -98,11 +155,11 @@
         }
 
         #mapToolContainer > div {
+            box-sizing: border-box;
             top: 0;
             width: 10%;
             height: 100%;
             position: relative;
-
         }
 
         #mapToolContainer > div:nth-child(4) {
@@ -119,6 +176,11 @@
 
         /***************************************************************************/
 
+        #mapContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
 
         #map {
             position: absolute;
@@ -155,10 +217,16 @@
             flex-wrap: nowrap;
         }
 
+        #selectionHistoryContainer > div {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
         #selectionHistoryContainer > div > div {
             position: relative;
             width: 60px;
-            height: 100%;
+            height: 48px;
         }
 
         #selectionHistoryContainer > div > div > canvas {
@@ -207,9 +275,9 @@
 
 <div id="left">
     <div id="header">
-        Ponder
+        <div>Ponder</div>
+        <div>by <a href="hepburnave.com">Hepburn Ave LLC</a></div>
     </div>
-
 
     <!--<div id="summary-wrapper">-->
     <div id="summary"></div>
@@ -242,9 +310,11 @@
     </div>
 
     <div id="center">
-            <div id="selector"></div>
+<div id="mapContainer">
             <div id="map">
+                <div id="selector"></div>
         </div>
+</div>
         <div id="tableContainer">
             <div id="table"></div>
         </div>

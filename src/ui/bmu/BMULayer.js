@@ -26,9 +26,7 @@ define([
                 //this._labelElement = labelSelectTag[0];
 
                 var self = this;
-                classSelectTag.appendTo("#" + classNode);
-                classSelectTag.css("width", "100%");
-                classSelectTag.on("change", function () {
+                function onClassChange() {
                     self.invalidate();
                     if (self._dataTable.isOrdinal(self._classElement.value)){
                         self._easingInput.setEasingMode("log");
@@ -36,7 +34,10 @@ define([
                         self._easingInput.setEasingMode("constant");
                     }
                     self.emit("classChange", self._classElement.value);
-                });
+                }
+                classSelectTag.appendTo("#" + classNode);
+                classSelectTag.css("width", "100%");
+                classSelectTag.on("change", onClassChange);
                 this._classElement = classSelectTag[0];
 
 
@@ -59,6 +60,8 @@ define([
 
                 this._easingInput = new EasingInput(sizeEasingNode, document.createElement("div"));
                 this._easingInput.on("input", this.invalidate.bind(this));
+
+                onClassChange();
 
             },
 

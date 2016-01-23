@@ -21,7 +21,7 @@ define([
 
             this._break = 0.5;
 
-            window.addEventListener("resize", function(){
+            window.addEventListener("resize", function () {
                 self.emit("invalidate");
             });
 
@@ -82,12 +82,9 @@ define([
 
 
                 context2d.shadowColor = 'rgb(23,23,23)';
-                context2d.shadowOffsetX = 0;
-                context2d.shadowOffsetY = 0;
-                context2d.shadowBlur = 1;
                 context2d.font = "'Gudea', sans-serif";
                 context2d.fillStyle = "#5b3b31";
-                context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height/2);
+                context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height / 2);
 
             }
 
@@ -96,17 +93,20 @@ define([
 
             paint();
 
+            function update(event) {
+                if (!event.which) {
+                    return;
+                }
+                self._break = event.offsetX / context2d.canvas.width;
+                self.emit("invalidate");
+                paint();
+
+            }
+
 
             $(context2d.canvas)
-                .mousemove(function (event) {
-                    if (!event.which) {
-                        return;
-                    }
-                    self._break = event.offsetX / context2d.canvas.width;
-                    self.emit("invalidate");
-                    paint();
-
-                });
+                .mousemove(update)
+                .mouseclick(update);
 
         },
 
