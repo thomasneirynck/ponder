@@ -16,6 +16,10 @@ define([
             var self = this;
             bmuSelector.on("change", function (selectionEvent) {
 
+                if (selectionEvent.stats.getIndices().length === 0){
+                    return;
+                }
+
                 self._selections.push(selectionEvent);
 
                 var areaSelectionNode = document.createElement("div");

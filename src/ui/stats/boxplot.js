@@ -36,6 +36,9 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
 
             var halfHeight = this._context2d.canvas.height / 2;
 
+
+            this._context2d.strokeStyle = "#DF723E";
+
             this._context2d.beginPath();
             this._context2d.moveTo(this.toViewX(this._mi), halfHeight - halfHeight / 2);
             this._context2d.lineTo(this.toViewX(this._mi), halfHeight + halfHeight / 2);

@@ -53,11 +53,20 @@ define([
         select: function(selectionEvent){
 
             var self = this;
+
+
+            document.getElementById(this._bmuContainer).innerHTML = "";
+            if (selectionEvent.stats.getIndices().length === 0){
+                return;
+            }
+
+
             var data = selectionEvent.stats.getIndices().map(function (index) {
                 return self._bmuLayer.getDataTable().getFeatureData(index);
             });
 
-            document.getElementById(this._bmuContainer).innerHTML = "";
+
+
 
             var table = document.createElement("table");
             table.cellpadding = 0;

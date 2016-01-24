@@ -36,7 +36,6 @@ define([
                     self.emit("classChange", self._classElement.value);
                 }
                 classSelectTag.appendTo("#" + classNode);
-                classSelectTag.css("width", "100%");
                 classSelectTag.on("change", onClassChange);
                 this._classElement = classSelectTag[0];
 

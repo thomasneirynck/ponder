@@ -89,8 +89,10 @@ define([
 
             }
 
+            context2d.canvas.title = "drag to adjust classifier cutoff";
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(context2d.canvas);
+
 
             paint();
 
