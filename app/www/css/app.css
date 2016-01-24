@@ -83,6 +83,7 @@ input {
 }
 
 #mapToolContainer > div:nth-child(4) span {
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,12 +328,36 @@ body {
     justify-content: flex-end;
 }
 
+#tutorial  {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#tutorial > div {
+
+    min-width: 300px;
+}
+
+#toollist {
+    display: flex;
+    flex-flow: column wrap;
+}
+
+#toollist > div  {
+    border: 1px solid blue;
+    display: flex;
+    flex-flow: row;
+}
+
+#toollist > div > div  {
+    border: 1px solid red;
+}
+
 #toggle {
     height: 30px;
     width: 100%;
     display: flex;
     flex-flow: row;
-
 }
 
 
