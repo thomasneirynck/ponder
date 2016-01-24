@@ -52,7 +52,8 @@ require([
 
 
     jquery("#map").hide();
-    jquery("#mapToolContainer").hide();
+    var oldDisplay = document.getElementById("mapToolContainer").style.display;
+    document.getElementById("mapToolContainer").style.display = "none";
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
@@ -68,7 +69,7 @@ require([
 
     var dataSelector = new DataSelector("selector", "selectorStyle");
     jquery("#map").hide();
-    jquery("#mapToolContainer").hide();
+    document.getElementById("mapToolContainer").style.display = "none";
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
@@ -104,7 +105,7 @@ require([
             .then(function (successData) {
 
                 jquery("#map").show();
-                jquery("#mapToolContainer").show();
+                document.getElementById("mapToolContainer").style.display = oldDisplay;
 
                 waitingDiv.parentNode.removeChild(waitingDiv);
                 map = new Map("map", somHandle.width, somHandle.height);
