@@ -40,20 +40,28 @@ define(
                     labelDiv.innerHTML = categoryLabel;
 
 
-
                     bardiv.appendChild(labelDiv);
 
 
                     var bar = document.createElement("div");
                     bar.style.height = "100%";
+                    //bar.style.width = (100 * this._counts[categoryLabel] / this._maxCount) + "%";
                     bardiv.appendChild(bar);
+
+
+                    var outline = document.createElement("div");
+                    outline.style.width = (100 * this._counts[categoryLabel] / this._maxCount) + "%";
+                    outline.style.height = "100%";
+                    bar.appendChild(outline);
+
 
                     var filler = document.createElement("div");
 
-                    filler.style.width = (100 * countsForSelection[categoryLabel] / this._maxCount) + "%";
+                    filler.style.width = (100 * countsForSelection[categoryLabel] / this._counts[categoryLabel] ) + "%";
                     filler.style.height = "100%";
+                    outline.appendChild(filler);
 
-                    bar.appendChild(filler);
+
                     bar.title = countsForSelection[categoryLabel] + " out of a total of " + " " + this._counts[categoryLabel];
 
 

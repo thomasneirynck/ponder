@@ -12,9 +12,24 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
             this._context2d.canvas.height = jquery(node).height();
             node.appendChild(this._context2d.canvas);
 
+
+            
+
         },
 
         setData: function (data) {
+
+            console.log(data);
+
+            data = data.filter(function (item) {
+                return !isNaN(item);
+            });
+
+            if (!data.length){
+                this._context2d.clearRect(0, 0, this._context2d.canvas.width, this._context2d.canvas.height);
+                return;
+            }
+
 
             var quartiles = jStat.quartiles(data);
             this._lq = quartiles[0];
@@ -33,6 +48,7 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
 
         paint: function () {
 
+            this._context2d.clearRect(0, 0, this._context2d.canvas.width, this._context2d.canvas.height);
 
             var halfHeight = this._context2d.canvas.height / 2;
 
@@ -61,8 +77,6 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
             this._context2d.moveTo(this.toViewX(this._ma), halfHeight - halfHeight / 2);
             this._context2d.lineTo(this.toViewX(this._ma), halfHeight + halfHeight / 2);
             this._context2d.stroke();
-
-
 
 
         }

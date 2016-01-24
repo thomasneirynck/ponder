@@ -128,7 +128,7 @@ input {
 }
 
 #selector tr:nth-child(even) {
-    background-color: #f2f2f2
+    background-color: #f2f2f2;
 }
 
 #selector > div > div:nth-child(1) > div:nth-child(1) {
@@ -173,6 +173,10 @@ input {
 }
 
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div > div:nth-child(2) > div {
+    background-color: #f2f2f2;
+}
+
+#summary > div[data-plot-type="histogram"] > div:nth-child(2) > div > div:nth-child(2) > div > div {
     background-color: #df723e;
 }
 
