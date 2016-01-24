@@ -124,7 +124,7 @@ module.exports = function (grunt) {
             main: {
                 options: {
                     archive: function () {
-                        return releaseDir + "ha.ponder" + ((versionSlug) ? "_" + versionSlug : "") + ".zip"
+                        return releaseDir + "ha.ponder.zip"
                     }
                 },
                 files: [

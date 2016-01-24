@@ -71,21 +71,35 @@ define([
                 context2d.fillStyle = legend.higher;
                 context2d.fillRect(context2d.canvas.width * self._break, 0, context2d.canvas.width * (1 - self._break), context2d.canvas.height);
 
+                context2d.beginPath();
                 context2d.moveTo(context2d.canvas.width * self._break, 0);
                 context2d.lineTo(context2d.canvas.width * self._break, context2d.canvas.height);
                 context2d.stroke();
 
+                //arrow
+                context2d.beginPath();
+                context2d.moveTo(context2d.canvas.width * self._break - 20,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break - 40,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break - 30,context2d.canvas.height/3);
+                context2d.moveTo(context2d.canvas.width * self._break - 40,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break - 30,context2d.canvas.height*2/3);
+                context2d.moveTo(context2d.canvas.width * self._break + 20,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break + 40,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break + 30,context2d.canvas.height/3);
+                context2d.moveTo(context2d.canvas.width * self._break + 40,context2d.canvas.height/2);
+                context2d.lineTo(context2d.canvas.width * self._break + 30,context2d.canvas.height*2/3);
+                context2d.strokeStyle = "rgb(122,122,122)";
+                context2d.stroke();
+
+
 
                 var readOutValue = parseFloat((legend.minMax[0] + (self._break * (legend.minMax[1] - legend.minMax[0]))).toFixed(4)).toString();
-
                 context2d.textBaseline = "middle";
-                context2d.textAlign = "center";
-
-
+                context2d.textAlign = "left";
                 context2d.shadowColor = 'rgb(23,23,23)';
                 context2d.font = "'Gudea', sans-serif";
                 context2d.fillStyle = "#5b3b31";
-                context2d.fillText(readOutValue, context2d.canvas.width * self._break, context2d.canvas.height / 2);
+                context2d.fillText(readOutValue, context2d.canvas.width * self._break + 2, context2d.canvas.height / 5);
 
             }
 

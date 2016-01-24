@@ -87,7 +87,7 @@ define([
 
             jquery(table).dataTable({
                 //searching: true,
-                ordering: true,
+                //ordering: true,
                 //paging: true,
                 "data": data,
                 "columns": this._bmuLayer.getDataTable().getColumns().map(function (e) {

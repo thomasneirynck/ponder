@@ -221,6 +221,9 @@ input {
     justify-content: flex-end;
 }
 
+#toggle {
+    padding-bottom: 4px;
+}
 
 #toggle > div {
     width: 50%;
