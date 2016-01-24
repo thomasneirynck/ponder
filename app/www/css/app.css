@@ -116,6 +116,10 @@ input {
     border: 3px solid #df723e;
 }
 
+#selectionHistoryContainer > div > div:last-child:hover {
+    border: 3px solid #df723e;
+}
+
 #selectionHistoryContainer > div > div:last-child {
     opacity: 0.4;
     border: 2px solid  #5b3b31;
