@@ -86,9 +86,9 @@ define([
             document.getElementById(this._bmuContainer).appendChild(table);
 
             jquery(table).dataTable({
-                searching: true,
+                //searching: true,
                 ordering: true,
-                paging: true,
+                //paging: true,
                 "data": data,
                 "columns": this._bmuLayer.getDataTable().getColumns().map(function (e) {
                     return {

@@ -70,6 +70,39 @@ require([
     var dataSelector = new DataSelector("selector", "selectorStyle");
     jquery("#map").hide();
     document.getElementById("mapToolContainer").style.display = "none";
+
+
+
+
+    var tableContainer = document.getElementById("tableContainer");
+    var mapContainer = document.getElementById("map");
+    tableContainer.style.display = "none";
+
+    var mapToggleButton = document.getElementById("toggle-to-map");
+    var tableToggleButton = document.getElementById("toggle-to-table");
+
+
+
+    function selectMapOrTable (event) {
+        if (event.target === mapToggleButton){
+            tableToggleButton.classList.remove("selectedToggle");
+            tableContainer.style.display = "none";
+            mapToggleButton.classList.add("selectedToggle");
+            mapContainer.style.display = "block";
+            mapContainer.style.height = "100%";
+
+        }else {
+            mapToggleButton.classList.remove("selectedToggle");
+            mapContainer.style.display = "none";
+            mapContainer.style.height = "auto";
+            tableToggleButton.classList.add("selectedToggle");
+            tableContainer.style.display = "block";
+        }
+    }
+
+    mapToggleButton.addEventListener("click", selectMapOrTable);
+    tableToggleButton.addEventListener("click", selectMapOrTable);
+
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
