@@ -3,8 +3,8 @@ define([
     "jquery",
     "../../dataload/util",
     "../stats/Boxplot",
-    "plotly"
-], function (type, jquery, util,Boxplot, plotly) {
+    "../stats/Histogram"
+], function (type, jquery, util, Boxplot,Histogram) {
 
 
     return type({
@@ -13,43 +13,74 @@ define([
 
             node = typeof node === "string" ? document.getElementById(node) : node;
             var selectedOrdinals = datatable.getSelectedOrdinalColumns();
+            var selectedCategories = datatable.getSelectedCategoryColumns();
 
-            var values = {};
+            var ordinalValues = {};
 
 
             var i;
 
             for (var c = 0; c < selectedOrdinals.length; c += 1) {
-                values[selectedOrdinals[c]] = [];
+                ordinalValues[selectedOrdinals[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
-                    values[selectedOrdinals[c]].push(util.toNumber(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c])));
+                    ordinalValues[selectedOrdinals[c]].push(util.toNumber(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c])));
                 }
             }
 
 
-
+            var plot, label, container, minmax, box;
             for (c = 0; c < selectedOrdinals.length; c += 1) {
-                var ordinalplot = document.createElement("div");
-                ordinalplot.style.width = "100%";
-                ordinalplot.style.position = "relative";
+                plot = document.createElement("div");
+                plot.style.width = "100%";
+                plot.style.position = "relative";
+                plot.setAttribute("data-plot-type","boxplot");
 
-                node.appendChild(ordinalplot);
+                node.appendChild(plot);//need to add so it gets width/height
+
+
+                label = document.createElement("div");
+                label.innerHTML = selectedOrdinals[c];
+                plot.appendChild(label);
+
+                container = document.createElement("div");
+                plot.appendChild(container);
+
+                minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
+                box = new Boxplot(minmax[0], minmax[1], container);
+                box.setData(ordinalValues[selectedOrdinals[c]]);
+
+
+            }
+
+
+            var categoryValues = [];
+            for (c = 0; c < selectedCategories.length; c += 1) {
+                categoryValues[selectedCategories[c]] = [];
+                for (i = 0; i < selectedBmuIndices.length; i += 1) {
+                    categoryValues[selectedCategories[c]].push(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedCategories[c]));
+                }
+            }
+
+
+            for (c = 0; c < selectedCategories.length; c += 1) {
+                plot = document.createElement("div");
+                plot.setAttribute("data-plot-type","histogram");
 
                 var label = document.createElement("div");
-                label.innerHTML = selectedOrdinals[c];
-
-                ordinalplot.appendChild(label);
+                label.innerHTML = selectedCategories[c];
 
 
-                var container = document.createElement("div");
-                ordinalplot.appendChild(container);
-
-                var minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
-                var box = new Boxplot(minmax[0],minmax[1], container);
-                box.setData(values[selectedOrdinals[c]]);
+                var bars = document.createElement("div");
+                var counts = datatable.getCounts(datatable.getColumnIndex(selectedCategories[c]));
+                var hist = new Histogram(bars, counts);
+                hist.setData(categoryValues[selectedCategories[c]]);
 
 
+                plot.appendChild(label);
+                plot.appendChild(bars);
 
+
+                node.appendChild(plot);
 
             }
 

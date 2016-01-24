@@ -50,6 +50,9 @@ require([
     "jquery"
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, BMUSelectionHistory, jquery) {
 
+
+    jquery("#map").hide();
+    jquery("#mapToolContainer").hide();
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
@@ -66,10 +69,12 @@ require([
 
     var dataSelector = new DataSelector("selector", "selectorStyle");
     jquery("#map").hide();
+    jquery("#mapToolContainer").hide();
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
         jquery("#selector").hide();
+
         var somTrainingData = table.createSOMTrainingData();
 
         var map, uMatrixLayer;
@@ -87,7 +92,7 @@ require([
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
         waitingDiv.innerHTML += "<span>Thinking ...</span>";
-        document.getElementById("map").appendChild(waitingDiv);
+        document.getElementById("center").appendChild(waitingDiv);
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
             .then(function (aSomHandle) {
@@ -100,7 +105,9 @@ require([
             .then(function (successData) {
 
                 jquery("#map").show();
-                document.getElementById("map").removeChild(waitingDiv);
+                jquery("#mapToolContainer").show();
+
+                waitingDiv.parentNode.removeChild(waitingDiv);
                 map = new Map("map", somHandle.width, somHandle.height);
 
 
@@ -120,10 +127,7 @@ require([
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
 
-                new BMUSelectionHistory("selectionHistory", bmuSelector, map, [uMatrixLayer, areaSelectLayerController]);
-
-
-
+                new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController),[uMatrixLayer, areaSelectLayerController]);
 
 
             }, throwError)

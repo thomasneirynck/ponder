@@ -128,7 +128,7 @@ define([
                 if (e === limit) {
                     exampleColHead = document.createElement("th");
                     spanner = document.createElement("span");
-                    spanner.innerHTML = " + " + (self._data.length - e) + " more. ";
+                    spanner.innerHTML = " + " + (self._data.length - e) + " more";
                     exampleColHead.appendChild(spanner);
                     tableHeader.appendChild(exampleColHead);
                 }

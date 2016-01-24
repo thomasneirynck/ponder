@@ -9,13 +9,18 @@ define(["type", "./util"], function (type, util) {
 
         constructor: function DataTable(data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
             this._data = data;
-            this._columns = columns;
+            this._columnNames = columns;
             this._selectedOrdinalColumns = selectedOrdinalColumns;
             this._selectedOrdinalColumnsIndices = this._selectedOrdinalColumns.map(getColumnsIndex.bind(null, columns));
-            this._uniques = [];
+
 
             this._selectedCategoryColumns = selectedCategoryColumns;
             this._selectedCategoryColumnIndices = this._selectedCategoryColumns.map(getColumnsIndex.bind(null, columns));
+
+            //caches
+            this._uniques = {};
+            this._minMax = {};
+            this._counts = {};
 
         },
 
@@ -23,42 +28,70 @@ define(["type", "./util"], function (type, util) {
             return this._selectedOrdinalColumns;
         },
 
-        getSelectedCategoryColumns: function(){
-          return this._selectedCategoryColumns;
+        getSelectedCategoryColumns: function () {
+            return this._selectedCategoryColumns;
         },
 
-        getValueByRowAndColumnName: function(row, columnName){
-          return this.getValueByRowAndColumnIndex(row,this.getColumnIndex(columnName));
+        getValueByRowAndColumnName: function (row, columnName) {
+            return this.getValueByRowAndColumnIndex(row, this.getColumnIndex(columnName));
         },
 
         getColumns: function () {
-            return this._columns;
+            return this._columnNames;
         },
 
-        getMinMax: function (columnIndex) {
+        getMinMax: function (columnIndexForOdinal) {
+
+            if (this._minMax[columnIndexForOdinal]) {
+                return this._minMax[columnIndexForOdinal];
+            }
+
 
             var min = Infinity;
             var max = -Infinity;
             for (var i = 0; i < this._data.length; i += 1) {
-                if (isNaN(util.toNumber(this._data[i][columnIndex]))) {
+                if (isNaN(util.toNumber(this._data[i][columnIndexForOdinal]))) {
                     continue;
                 }
-                min = Math.min(min, util.toNumber(this._data[i][columnIndex]));
-                max = Math.max(max, util.toNumber(this._data[i][columnIndex]));
+                min = Math.min(min, util.toNumber(this._data[i][columnIndexForOdinal]));
+                max = Math.max(max, util.toNumber(this._data[i][columnIndexForOdinal]));
             }
-            return [min, max];
+
+            this._minMax[columnIndexForOdinal] = [min, max];
+            return this._minMax[columnIndexForOdinal];
 
         },
 
-        isOrdinal: function(columnIndex){
+        getCounts: function (columnIndexForCategory) {
+
+            if (this._counts[columnIndexForCategory]){
+                return this._counts[columnIndexForCategory];
+            }
+
+            var uniques = this.getUniqueValues(columnIndexForCategory);
+
+            this._counts[columnIndexForCategory] = {};
+            for (var u = 0; u <  uniques.length; u += 1) {
+                this._counts[columnIndexForCategory][uniques[u]] = 0;
+            }
+
+            for (var i = 0; i < this._data.length; i += 1) {
+                this._counts[columnIndexForCategory][this._data[i][columnIndexForCategory]] += 1;
+            }
+            return this._counts[columnIndexForCategory];
+
+
+        },
+
+        isOrdinal: function (columnIndex) {
             return this._selectedOrdinalColumnsIndices.indexOf(parseInt(columnIndex)) > -1;
         },
 
-        isExcluded: function(columnIndex){
-          return !this.isOrdinal(parseInt(columnIndex)) && !this.isCategory(parseInt(columnIndex));
+        isExcluded: function (columnIndex) {
+            return !this.isOrdinal(parseInt(columnIndex)) && !this.isCategory(parseInt(columnIndex));
         },
 
-        isCategory: function(columnIndex){
+        isCategory: function (columnIndex) {
             return this._selectedCategoryColumnIndices.indexOf(parseInt(columnIndex)) > -1;
         },
 
@@ -123,7 +156,7 @@ define(["type", "./util"], function (type, util) {
             //FILL THE DATA
             var dataArray = new Array(this._data.length * (this._selectedOrdinalColumnsIndices.length + totCategories));
 
-            var value,  v;
+            var value, v;
             for (i = 0, r = 0; r < this._data.length; r += 1) {
 
                 //ordinals
@@ -153,8 +186,8 @@ define(["type", "./util"], function (type, util) {
 
         },
 
-        getColumnIndex: function (column) {
-            return this._columns.indexOf(column);
+        getColumnIndex: function (columnName) {
+            return this._columnNames.indexOf(columnName);
         },
 
         getValueByRowAndColumnIndex: function (index, columnIndex) {

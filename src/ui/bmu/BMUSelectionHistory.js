@@ -7,7 +7,7 @@ define([
     return type({
 
 
-        constructor: function BMUSelectionHistory(node, bmuSelector, map, layers) {
+        constructor: function BMUSelectionHistory(node, bmuSelector, map, isActive, layers) {
 
 
             this._selections = [];
@@ -31,6 +31,9 @@ define([
                 areaSelectionNode.addEventListener("click", select);
 
                 function select() {
+                    if (isActive()) {
+                        return;
+                    }
                     bmuSelector.select(selectionEvent);
                 }
 

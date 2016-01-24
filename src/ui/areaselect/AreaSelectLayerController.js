@@ -30,6 +30,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
 
         constructor: function AreaSelectLayerController() {
             this._linearRing = [];
+            this._active = false;
         },
 
         _mbr: function (out) {
@@ -58,6 +59,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             var self = this;
 
             this._downListener = this._map.on("dragstart", function (event) {
+                self._active = true;
                 self._linearRing.length = 0;
                 self._linearRing.push({
                     x: self._map.toWorldX(event.getMapViewX()),
@@ -82,6 +84,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                 });
                 self.emit("change", self._linearRing.slice());
                 self.emit("invalidate");
+                self._active = false;
             });
 
         },
@@ -95,6 +98,10 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             this._linearRing = selection;
             this.emit("invalidate");//redraw (should really fire new change event...)
 
+        },
+
+        isActive: function(){
+            return this._active;
         },
 
         removeFromMap: function () {
