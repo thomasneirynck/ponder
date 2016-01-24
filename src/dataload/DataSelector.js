@@ -88,12 +88,12 @@ define([
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
-                header.innerHTML = "<div>Select the columns with the independent variables: </div>"
-                    + "<div>"
-                    + "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance"
-                    + "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis"
-                    + "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map."
-                    + "</div>";
+                header.innerHTML = "<div>Select the columns with the independent variables: </div>" +
+                    "<div>" +
+                    "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance"  +
+                    "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis"  +
+                    "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map." +
+                    "</div>";
                 headerWrapper.appendChild(header);
                 self._wrapperNode.appendChild(headerWrapper);
 
@@ -122,7 +122,7 @@ define([
                     spanner = document.createElement("span");
                     spanner.innerHTML = "";
                     exampleColHead.appendChild(spanner);
-                    tableHeader.appendChild(exampleColHead)
+                    tableHeader.appendChild(exampleColHead);
                 }
 
                 if (e === limit) {

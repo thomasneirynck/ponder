@@ -4,7 +4,7 @@ define([
     "../../dataload/util",
     "../stats/Boxplot",
     "../stats/Histogram"
-], function (type, jquery, util, Boxplot,Histogram) {
+], function (type, jquery, util, Boxplot, Histogram) {
 
 
     return type({
@@ -33,7 +33,7 @@ define([
                 plot = document.createElement("div");
                 plot.style.width = "100%";
                 plot.style.position = "relative";
-                plot.setAttribute("data-plot-type","boxplot");
+                plot.setAttribute("data-plot-type", "boxplot");
 
                 node.appendChild(plot);//need to add so it gets width/height
 
@@ -62,17 +62,18 @@ define([
             }
 
 
+            var bars, counts, hist;
             for (c = 0; c < selectedCategories.length; c += 1) {
                 plot = document.createElement("div");
-                plot.setAttribute("data-plot-type","histogram");
+                plot.setAttribute("data-plot-type", "histogram");
 
-                var label = document.createElement("div");
+                label = document.createElement("div");
                 label.innerHTML = selectedCategories[c];
 
 
-                var bars = document.createElement("div");
-                var counts = datatable.getCounts(datatable.getColumnIndex(selectedCategories[c]));
-                var hist = new Histogram(bars, counts);
+                bars = document.createElement("div");
+                counts = datatable.getCounts(datatable.getColumnIndex(selectedCategories[c]));
+                hist = new Histogram(bars, counts);
                 hist.setData(categoryValues[selectedCategories[c]]);
 
 

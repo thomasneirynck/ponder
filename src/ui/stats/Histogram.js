@@ -2,8 +2,7 @@ define(
     [
         "type",
         "jquery"
-    ]
-    , function (type, jquery) {
+    ], function (type, jquery) {
 
 
         return type({
