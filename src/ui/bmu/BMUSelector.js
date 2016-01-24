@@ -45,7 +45,11 @@ define([
 
 
                     self.select(selectionEvent);
-                    self.emit("change", selectionEvent);
+                    if (selectionEvent.stats.getIndices().length === 0) {
+                        self.emit("clear", selectionEvent);
+                    } else {
+                        self.emit("change", selectionEvent);
+                    }
 
 
                 }, function (e) {
@@ -68,10 +72,6 @@ define([
 
 
             document.getElementById(this._bmuContainer).innerHTML = "";
-            if (selectionEvent.stats.getIndices().length === 0) {
-                return;
-            }
-
 
             var data = selectionEvent.stats.getIndices().map(function (index) {
                 return self._bmuLayer.getDataTable().getFeatureData(index);

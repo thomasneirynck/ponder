@@ -61,7 +61,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
 
             this._downListener = this._map.on("dragstart", function (event) {
                 self._active = true;
-                self._linearRing.length = 0;
+                self._linearRing = [];
                 self._linearRing.push({
                     x: self._map.toWorldX(event.getMapViewX()),
                     y: self._map.toWorldY(event.getMapViewY())
@@ -87,7 +87,6 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                 self.emit("invalidate");
                 self._active = false;
             });
-
         },
 
         select: function (selection) {

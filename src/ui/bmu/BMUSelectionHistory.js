@@ -14,12 +14,17 @@ define([
             this._node = typeof node === "string" ? document.getElementById(node) : node;
 
             var self = this;
-            bmuSelector.on("change", function (selectionEvent) {
 
-                if (selectionEvent.stats.getIndices().length === 0){
-                    return;
+            function removeSelectionCSSClass(){
+                for (var i = 0; i < self._selections.length; i += 1) {
+                    self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
                 }
+            }
 
+            bmuSelector.on("clear", removeSelectionCSSClass);
+
+
+            bmuSelector.on("change", function (selectionEvent) {
 
 
                 var areaSelectionNode = document.createElement("div");
@@ -34,9 +39,7 @@ define([
                 areaSelectionNode.addEventListener("mouseenter", select);
                 areaSelectionNode.addEventListener("click", select);
 
-                for (var i = 0; i < self._selections.length; i += 1){
-                    self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
-                }
+                removeSelectionCSSClass();
                 areaSelectionNode.classList.add(selectionCssClass);
 
 
@@ -44,12 +47,7 @@ define([
                     if (isActive()) {
                         return;
                     }
-
-                    for (var i = 0; i < self._selections.length; i += 1){
-                        self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
-                    }
-
-
+                    removeSelectionCSSClass();
                     bmuSelector.select(selectionEvent);
                     areaSelectionNode.classList.add(selectionCssClass);
                 }
