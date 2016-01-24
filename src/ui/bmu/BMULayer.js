@@ -26,15 +26,17 @@ define([
                 //this._labelElement = labelSelectTag[0];
 
                 var self = this;
+
                 function onClassChange() {
                     self.invalidate();
-                    if (self._dataTable.isOrdinal(self._classElement.value)){
+                    if (self._dataTable.isOrdinal(self._classElement.value)) {
                         self._easingInput.setEasingMode("log");
-                    }else{
+                    } else {
                         self._easingInput.setEasingMode("constant");
                     }
                     self.emit("classChange", self._classElement.value);
                 }
+
                 classSelectTag.appendTo("#" + classNode);
                 classSelectTag.on("change", onClassChange);
                 this._classElement = classSelectTag[0];
@@ -77,6 +79,7 @@ define([
                 return selectedIndices;
 
             },
+
 
             _getOrdinalPosition: function (minMax, value) {
                 return (parseFloat(value) - minMax[0]) / (minMax[1] - minMax[0]);
@@ -165,6 +168,14 @@ define([
 
             getDataTable: function () {
                 return this._dataTable;
+            },
+
+            getBmuIndices: function () {
+                var inds = [];
+                for (var i = 0; i < this._bmus.length; i++){
+                    inds.push(i);
+                }
+                return inds;
             },
 
             getBmus: function () {

@@ -17,46 +17,58 @@ define([
             this._bmuContainer = bmuContainer;
             this._bmuLayer = bmuLayer;
             this._summaryContainer = summaryContainer;
+            this._somHandle = somHandle;
 
             var self = this;
             this._areaSelectLayerController.on("change", function (mapSelection) {
 
                 var selectedIndices = bmuLayer.selectBmusFromController(areaSelectLayerController);
-
-                somHandle
-                    .statistics(selectedIndices)
-                    .then(function (stats) {
-
-
-                        var selectionEvent = {
-                            selectedIndices: selectedIndices,
-                            stats: stats,
-                            mapSelection: mapSelection
-                        };
-
-
-                        self.select(selectionEvent);
-                        self.emit("change", selectionEvent);
-
-
-                    }, function (e) {
-                        throw e;
-                    }).then(Function.prototype, function (e) {
-                        throw e;
-                    });
+                self.selectFromIndices(selectedIndices, mapSelection);
 
 
             });
 
         },
 
-        select: function(selectionEvent){
+        selectFromIndices: function (selectedIndices, mapSelection) {
+            var self = this;
+            this._somHandle
+                .statistics(selectedIndices)
+                .then(function (stats) {
+
+
+                    var selectionEvent = {
+                        selectedIndices: selectedIndices,
+                        stats: stats,
+                        mapSelection: mapSelection
+                    };
+
+
+                    self.select(selectionEvent);
+                    self.emit("change", selectionEvent);
+
+
+                }, function (e) {
+                    throw e;
+                }).then(Function.prototype, function (e) {
+                    throw e;
+                });
+        },
+
+        selectAll: function () {
+
+            var selectedIndices = this._bmuLayer.getBmuIndices();
+            this.selectFromIndices(selectedIndices);
+
+        },
+
+        select: function (selectionEvent) {
 
             var self = this;
 
 
             document.getElementById(this._bmuContainer).innerHTML = "";
-            if (selectionEvent.stats.getIndices().length === 0){
+            if (selectionEvent.stats.getIndices().length === 0) {
                 return;
             }
 
@@ -64,8 +76,6 @@ define([
             var data = selectionEvent.stats.getIndices().map(function (index) {
                 return self._bmuLayer.getDataTable().getFeatureData(index);
             });
-
-
 
 
             var table = document.createElement("table");
@@ -89,6 +99,7 @@ define([
 
             document.getElementById(this._summaryContainer).innerHTML = "";
             new SummaryChart(this._summaryContainer, selectionEvent.selectedIndices, this._bmuLayer.getDataTable());
+
 
             this._areaSelectLayerController.select(selectionEvent.mapSelection);
 

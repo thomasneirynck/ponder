@@ -48,6 +48,7 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             }
         },
 
+
         setOnMap: function (map) {
 
             if (this._map) {
@@ -95,7 +96,8 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                 return;
             }
 
-            this._linearRing = selection;
+
+            this._linearRing = typeof selection === "undefined" ? [] : selection;
             this.emit("invalidate");//redraw (should really fire new change event...)
 
         },
@@ -109,7 +111,6 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
             this._moveListener.remove();
             this._downListener.remove();
             this._outListener.remove();
-            this._upListener.remove();
         },
 
 

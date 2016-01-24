@@ -126,7 +126,11 @@ require([
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
 
+
                 new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
+
+
+                bmuSelector.selectAll();
 
 
             }, throwError)
