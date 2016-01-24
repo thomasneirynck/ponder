@@ -106,7 +106,7 @@ require([
     dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
-        jquery("#selector").hide();
+        jquery("#welcome").hide();
 
         var somTrainingData = table.createSOMTrainingData();
 

@@ -31,6 +31,27 @@ input {
     border-radius: 8px;
 }
 
+.header {
+    height: 60px;
+    text-align: center;
+}
+
+.header h1 {
+    font-weight: bold;
+}
+
+.header > div:nth-child(1) {
+    padding-top: 0em;
+    font-size: 2em;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.header > div:nth-child(2) {
+    font-size: 0.4em;
+    padding-left: 0.2em;
+}
+
 
 #header > div:nth-child(1) {
     padding-top: 0em;
@@ -239,7 +260,7 @@ input {
 }
 
 .selectedToggle {
-    background-color: #df723e;;
+    background-color: #df723e;
 }
 
 /***PAGE LAYOUT****************************************************/
@@ -250,6 +271,60 @@ html {
 body {
     height: 100%;
     overflow: hidden;
+}
+
+#welcome {
+    position: fixed;
+    /*width: 100%;*/
+    height: 100%;
+    background-color: rgb(255,255,255);
+    z-index:1;
+    display: flex;
+    flex-flow: column;
+    align-content: space-around;
+    overflow: auto;
+    padding-left:50px;
+    padding-right:50px;
+}
+
+#welcome > div:nth-child(1) {
+    background-color: rgb(255, 247, 229);
+    border-radius: 24px;
+}
+#welcome > div {
+    padding: 0.3em;
+}
+
+#welcome img {
+    width: 256px;
+    height: auto;
+}
+
+#welcome img:hover {
+    transform: scale(0.95);
+    border: 1px solid #df723e;
+
+}
+
+#examples {
+    display: flex;
+    flex-flow: row;
+}
+#examples > div{
+    display: flex;
+    flex-flow: column;
+}
+
+#examples > div > div{
+    display: flex;
+    flex-flow: row;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#examples > div > div > div:nth-child(1) {
+    padding-right: 1em;
+    justify-content: flex-end;
 }
 
 #toggle {
