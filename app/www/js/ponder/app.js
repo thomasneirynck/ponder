@@ -67,11 +67,8 @@ require([
     }
 
 
-    var dataSelector = new DataSelector("selector", "selectorStyle");
     jquery("#map").hide();
     document.getElementById("mapToolContainer").style.display = "none";
-
-
 
 
     var tableContainer = document.getElementById("tableContainer");
@@ -82,16 +79,15 @@ require([
     var tableToggleButton = document.getElementById("toggle-to-table");
 
 
-
-    function selectMapOrTable (event) {
-        if (event.target === mapToggleButton){
+    function selectMapOrTable(event) {
+        if (event.target === mapToggleButton) {
             tableToggleButton.classList.remove("selectedToggle");
             tableContainer.style.display = "none";
             mapToggleButton.classList.add("selectedToggle");
             mapContainer.style.display = "block";
             mapContainer.style.height = "100%";
 
-        }else {
+        } else {
             mapToggleButton.classList.remove("selectedToggle");
             mapContainer.style.display = "none";
             mapContainer.style.height = "auto";
@@ -102,6 +98,12 @@ require([
 
     mapToggleButton.addEventListener("click", selectMapOrTable);
     tableToggleButton.addEventListener("click", selectMapOrTable);
+
+    var dataSelector = new DataSelector("selector", "selectorStyle");
+    dataSelector.on("error", function () {
+        alert("Cannot read table");
+    });
+
 
     dataSelector.on("change", function (table) {
 

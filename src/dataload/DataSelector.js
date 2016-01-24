@@ -5,8 +5,17 @@ define([
     "jquery",
     "./DataTable",
     "./util",
+    "require",
     "datatables"
-], function (Papa, type, Evented, jquery, DataTable, util) {
+], function (Papa, type, Evented, jquery, DataTable, util, require) {
+
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
 
     function isOrdinal(name, sampleValue) {
@@ -58,28 +67,45 @@ define([
 
             this._wrapperNode.appendChild(fileSelector);
 
-            function listen(event) {
-                self._file = event.target.files[0];
-                if (!self._file) {
+            function listenToFileSelector(event) {
+                var file = event.target.files[0];
+                if (!file) {
                     return;
                 }
-                Papa.parse(self._file, {
+                loadWidthPapa(file);
+            }
+
+            function loadWidthPapa(resource, download) {
+                Papa.parse(resource, {
                     worker: true,
+                    download: download,
                     complete: showPreview,
                     skipEmptyLines: true,
-                    error: function () {
-                        alert("Cannot read file.");
+                    error: function (e) {
+                        self.emit("error", e);
                     }
                 });
             }
 
-            fileSelector.addEventListener("change", listen);
+            fileSelector.addEventListener("change", listenToFileSelector);
+
+
+            var tableUrl = getParameterByName("table");
+            if (typeof tableUrl === "string" && tableUrl.length > 0) {
+                loadWidthPapa(tableUrl, true);
+            }
+
 
             var self = this;
 
             function showPreview(event) {
 
-                fileSelector.removeEventListener("change", listen);
+                if (!event) {
+                    self.emit("error");
+                    return;
+                }
+
+                fileSelector.removeEventListener("change", listenToFileSelector);
                 self._wrapperNode.removeChild(fileSelector);
                 self._data = event.data;
 
@@ -90,8 +116,8 @@ define([
                 var header = document.createElement("div");
                 header.innerHTML = "<div>Select the columns with the independent variables: </div>" +
                     "<div>" +
-                    "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance"  +
-                    "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis"  +
+                    "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance" +
+                    "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis" +
                     "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map." +
                     "</div>";
                 headerWrapper.appendChild(header);
@@ -140,6 +166,11 @@ define([
                 var radioButtonsMap = {};
 
                 var row, nameCol, suggestedType, example;
+
+                if (self._data.length === 0) {
+                    self.emit("error");
+                    return;
+                }
                 for (var i = 0; i < self._data[0].length; i += 1) {
                     row = document.createElement("tr");
 
@@ -161,7 +192,7 @@ define([
                         example.appendChild(spanner);
                         row.appendChild(example);
                     }
-                    if (e === limit){
+                    if (e === limit) {
                         example = document.createElement("td");
                         spanner = document.createElement("span");
                         spanner.innerHTML = "...";
