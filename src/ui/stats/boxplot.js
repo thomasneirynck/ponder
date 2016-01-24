@@ -13,13 +13,12 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
             node.appendChild(this._context2d.canvas);
 
 
-            
+
 
         },
 
         setData: function (data) {
 
-            console.log(data);
 
             data = data.filter(function (item) {
                 return !isNaN(item);

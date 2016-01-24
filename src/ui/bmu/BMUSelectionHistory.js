@@ -7,7 +7,7 @@ define([
     return type({
 
 
-        constructor: function BMUSelectionHistory(node, bmuSelector, map, isActive, layers) {
+        constructor: function BMUSelectionHistory(node, bmuSelector, map, isActive, layers, selectionCssClass) {
 
 
             this._selections = [];
@@ -20,7 +20,7 @@ define([
                     return;
                 }
 
-                self._selections.push(selectionEvent);
+
 
                 var areaSelectionNode = document.createElement("div");
 
@@ -34,12 +34,31 @@ define([
                 areaSelectionNode.addEventListener("mouseenter", select);
                 areaSelectionNode.addEventListener("click", select);
 
+                for (var i = 0; i < self._selections.length; i += 1){
+                    self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
+                }
+                areaSelectionNode.classList.add(selectionCssClass);
+
+
                 function select() {
                     if (isActive()) {
                         return;
                     }
+
+                    for (var i = 0; i < self._selections.length; i += 1){
+                        self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
+                    }
+
+
                     bmuSelector.select(selectionEvent);
+                    areaSelectionNode.classList.add(selectionCssClass);
                 }
+
+
+                self._selections.push({
+                    selectionEvent: selectionEvent,
+                    areaSelectionNode: areaSelectionNode
+                });
 
             });
 

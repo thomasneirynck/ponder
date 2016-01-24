@@ -59,7 +59,6 @@ require([
     Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
 
 
-
     function throwError(error) {
         console.error(error);
         console.error(error.stack);
@@ -119,7 +118,7 @@ require([
             .then(function (bmuResult) {
 
                 //bmus
-                var bmuLayer = new BMULayer("label", "class", "size","sizeEasing", "legend", table, bmuResult.locations);
+                var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
 
                 var areaSelectLayerController = new AreaSelectLayerController();
@@ -127,7 +126,7 @@ require([
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
 
-                new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController),[uMatrixLayer, areaSelectLayerController]);
+                new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
 
 
             }, throwError)

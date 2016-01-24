@@ -12,6 +12,10 @@ a {
     color: #df723e;
 }
 
+.stripSelected {
+    border: 2px solid #df723e;
+}
+
 a:hover {
     color: #DF723E;
 }
@@ -102,7 +106,7 @@ input {
 }
 
 #selectionHistoryContainer > div > div:hover {
-    border: 1px solid white;
+    border: 3px solid #df723e;
 }
 
 #selector {
