@@ -60,6 +60,8 @@ define(["type", "jStat", "jquery"], function (type, jStat, jquery) {
             this._context2d.stroke();
 
 
+
+
         }
 
     });

@@ -132,9 +132,12 @@
         }
 
         #summary > div[data-plot-type="boxplot"] > div:nth-child(1) {
-            text-align: right;
+            font-weight: bold;
             font-size: 0.6em;
             padding-right: 0.2em;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
         }
 
         #summary > div[data-plot-type="histogram"]  {
@@ -147,6 +150,10 @@
             text-align: right;
             padding-bottom: 0.3em;
             font-weight: bold;
+            width: 40%;
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
         }
 
         #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div  {
@@ -162,6 +169,9 @@
             font-size: 0.6em;
             text-align: right;
             padding-right: 0.2em;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
         }
 
 
@@ -179,6 +189,7 @@
             float: left;
             width: 160px;
             height: 100%;
+            overflow: auto;
         }
 
         #right {

@@ -11,7 +11,6 @@ define(
             constructor: function Histogram(node, counts) {
                 this._node = node;
                 this._counts = counts;
-                console.log("hist for", counts);
 
                 this._maxCount = -Infinity;
                 for (var i in this._counts) {//we'll map everything to the maximum count
@@ -21,7 +20,6 @@ define(
             },
 
             setData: function (selectionValues) {
-                console.log("hist cut for ", selectionValues);
 
                 var countsForSelection = {};
                 for (var category in this._counts) {
@@ -58,6 +56,7 @@ define(
                     filler.style.height = "100%";
 
                     bar.appendChild(filler);
+                    bar.title = countsForSelection[categoryLabel] + " out of a total of " + " " + this._counts[categoryLabel];
 
 
                 }
