@@ -51,7 +51,6 @@ define(
                     var filler = document.createElement("div");
 
                     filler.style.width = (100 * countsForSelection[categoryLabel] / this._maxCount) + "%";
-                    console.log("for " +categoryLabel + " we have " + countsForSelection[categoryLabel] + " samples " + 100 * countsForSelection[categoryLabel] / this._maxCount +"%");
                     filler.style.height = "100%";
 
                     bar.appendChild(filler);
