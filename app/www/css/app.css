@@ -1,8 +1,4 @@
-
-<style>
-
-
-    /*****colors and niceties**************************************************/
+/*****colors and niceties**************************************************/
 body {
     background-color: white;
     font-family: 'Gudea', sans-serif;
@@ -40,7 +36,8 @@ input {
 }
 
 #mapToolContainer > div {
-    border-radius: 8px; margin: 2px;
+    border-radius: 8px;
+    margin: 2px;
     overflow: hidden;
     background-color: rgb(255, 247, 229);
 
@@ -62,7 +59,7 @@ input {
     justify-content: center;
 }
 
-#mapToolContainer > div  select {
+#mapToolContainer > div select {
     border-radius: 8px;
     position: relative;
     margin: 0 auto;
@@ -155,7 +152,7 @@ input {
     justify-content: flex-end;
 }
 
-#summary > div[data-plot-type="histogram"]  {
+#summary > div[data-plot-type="histogram"] {
     text-align: center;
     padding-top: 0.3em;
 }
@@ -171,10 +168,9 @@ input {
     justify-content: flex-end;
 }
 
-#summary > div[data-plot-type="histogram"] > div:nth-child(2) > div  {
+#summary > div[data-plot-type="histogram"] > div:nth-child(2) > div {
     padding-top: 0.1em;
 }
-
 
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div > div:nth-child(2) > div {
     background-color: #df723e;
@@ -188,7 +184,6 @@ input {
     align-items: center;
     justify-content: flex-end;
 }
-
 
 /***PAGE LAYOUT****************************************************/
 html {
@@ -266,7 +261,6 @@ body {
     top: 0;
     left: 0;
 }
-
 
 #mapContainer {
     position: relative;
@@ -356,9 +350,6 @@ body {
     width: 100%;
 }
 
-
-
-
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div {
     display: flex;
     flex-flow: row;
@@ -379,6 +370,3 @@ body {
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div > div:nth-child(2) > div {
     height: 100%;
 }
-
-
-</style>
