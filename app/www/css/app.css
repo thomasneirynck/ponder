@@ -167,21 +167,21 @@ input {
     overflow: auto;
 }
 
-#selector table tr td:nth-child(4) {
+.previewTable table tr td:nth-child(4) {
     border-right: 1px solid #5b3b31;
 }
 
-#selector table {
+.previewTable table {
     border-collapse: collapse;
     width: 100%;
 }
 
-#selector th, td {
+.previewTable th, td {
     text-align: left;
     padding: 8px;
 }
 
-#selector tr:nth-child(even) {
+.previewTable tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 

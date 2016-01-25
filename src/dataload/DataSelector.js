@@ -17,7 +17,6 @@ define([
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-
     function isOrdinal(name, sampleValue) {
         return !isNaN(util.toNumber(sampleValue));
     }
@@ -55,17 +54,18 @@ define([
 
     return type(Object.prototype, Evented.prototype, {
 
-        constructor: function DataSelector(node) {
+        constructor: function DataSelector(fileSelectorNode, tablePreviewNode) {
 
             Evented.call(this);
 
-            this._wrapperNode = typeof node === "string" ? document.getElementById(node) : node;
+            this._fileSelectorNode = typeof fileSelectorNode === "string" ? document.getElementById(fileSelectorNode) : fileSelectorNode;
+            tablePreviewNode = typeof tablePreviewNode === "string" ? document.getElementById(tablePreviewNode) : tablePreviewNode;
 
             var fileSelector = document.createElement("input");
             fileSelector.type = "file";
             fileSelector.name = "files[]";
 
-            this._wrapperNode.appendChild(fileSelector);
+            this._fileSelectorNode.appendChild(fileSelector);
 
             function listenToFileSelector(event) {
                 var file = event.target.files[0];
@@ -106,7 +106,7 @@ define([
                 }
 
                 fileSelector.removeEventListener("change", listenToFileSelector);
-                self._wrapperNode.removeChild(fileSelector);
+                self._fileSelectorNode.removeChild(fileSelector);
                 self._data = event.data;
 
                 self._selectedOrdinalColumns = [];
@@ -121,7 +121,7 @@ define([
                     "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map." +
                     "</div>";
                 headerWrapper.appendChild(header);
-                self._wrapperNode.appendChild(headerWrapper);
+                tablePreviewNode.appendChild(headerWrapper);
 
 
                 var table = document.createElement("table");
@@ -206,14 +206,18 @@ define([
 
                 var divver = document.createElement("div");
                 divver.appendChild(table);
-                self._wrapperNode.appendChild(divver);
+                //self._fileSelectorNode.appendChild(divver);
+                tablePreviewNode.appendChild(divver);
 
 
                 var doneButton = document.createElement("input");
                 doneButton.type = "button";
                 doneButton.value = "Make Map";
 
-                self._wrapperNode.appendChild(doneButton);
+                //self._fileSelectorNode.appendChild(doneButton);
+
+                tablePreviewNode.appendChild(doneButton);
+
                 jquery(doneButton).on("click", function () {
 
                     for (var key in radioButtonsMap) {
@@ -233,7 +237,7 @@ define([
         },
 
         destroy: function () {
-            this._wrapperNode.innerHTML = "";
+            this._fileSelectorNode.innerHTML = "";
         }
 
 

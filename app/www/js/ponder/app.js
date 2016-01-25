@@ -99,7 +99,7 @@ require([
     mapToggleButton.addEventListener("click", selectMapOrTable);
     tableToggleButton.addEventListener("click", selectMapOrTable);
 
-    var dataSelector = new DataSelector("selector", "selectorStyle");
+    var dataSelector = new DataSelector("selector", "tablePreview");
     dataSelector.on("error", function () {
         alert("Cannot read table");
     });
