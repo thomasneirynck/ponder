@@ -27,9 +27,7 @@ a:hover {
     color: #DF723E;
 }
 
-input {
-    border-radius: 8px;
-}
+
 
 .header {
     height: 60px;
@@ -167,6 +165,25 @@ input {
     overflow: auto;
 }
 
+
+.previewTable {
+}
+
+.previewTable input {
+    border-radius: 8px;
+    background-color: #df723e;
+    border-color: #df723e;
+    margin-left: 50%;
+    margin-right: 50%;
+    margin-top: 50px;
+    font-weight: bold;
+    color: #5b3b31;
+}
+
+.previewTable input:hover {
+    margin-top: 52px;
+}
+
 .previewTable table tr td:nth-child(4) {
     border-right: 1px solid #5b3b31;
 }
@@ -274,9 +291,103 @@ body {
     overflow: hidden;
 }
 
+#left {
+    float: left;
+    width: 160px;
+    height: 100%;
+    overflow: auto;
+}
+
+#right {
+    position: relative;
+    margin-left: 160px;
+    height: 100%;
+}
+
+#top {
+    height: 60px;
+}
+
+#center {
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+}
+
+#bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 60px;
+}
+
+/*****POSITIONING*************************************************************************************************************************/
+
+#header {
+    height: 60px;
+}
+
+#mapToolContainer {
+    box-sizing: border-box;
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+}
+
+#mapToolContainer > div {
+    box-sizing: border-box;
+    top: 0;
+    width: 10%;
+    height: 100%;
+    position: relative;
+}
+
+#mapToolContainer > div:nth-child(4) {
+    width: 70%;
+}
+
+#mapToolContainer > div > canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#mapContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#map > canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+#selector {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 1;
+}
+
+
 #welcome {
-    position: fixed;
-    /*width: 100%;*/
+    position: relative;
     height: 100%;
     background-color: rgb(255,255,255);
     z-index:1;
@@ -385,101 +496,6 @@ body {
     width: 100%;
     display: flex;
     flex-flow: row;
-}
-
-
-#left {
-    float: left;
-    width: 160px;
-    height: 100%;
-    overflow: auto;
-}
-
-#right {
-    position: relative;
-    margin-left: 160px;
-    height: 100%;
-}
-
-#top {
-    height: 60px;
-}
-
-#center {
-    position: absolute;
-    top: 60px;
-    bottom: 60px;
-    left: 0;
-    right: 0;
-}
-
-#bottom {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    height: 60px;
-}
-
-/*****POSITIONING*************************************************************************************************************************/
-
-#header {
-    height: 60px;
-}
-
-#mapToolContainer {
-    box-sizing: border-box;
-    padding: 3px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    width: 100%;
-    height: 100%;
-}
-
-#mapToolContainer > div {
-    box-sizing: border-box;
-    top: 0;
-    width: 10%;
-    height: 100%;
-    position: relative;
-}
-
-#mapToolContainer > div:nth-child(4) {
-    width: 70%;
-}
-
-#mapToolContainer > div > canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#mapContainer {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-#map {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#map > canvas {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-}
-
-#selector {
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-    z-index: 1;
 }
 
 

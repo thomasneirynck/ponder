@@ -104,6 +104,10 @@ require([
         alert("Cannot read table");
     });
 
+    dataSelector.on("tableLoaded", function(){
+       document.getElementById("info").style.display = "none";
+    });
+
 
     dataSelector.on("change", function (table) {
 

@@ -218,6 +218,8 @@ define([
 
                 tablePreviewNode.appendChild(doneButton);
 
+                self.emit("tableLoaded");
+
                 jquery(doneButton).on("click", function () {
 
                     for (var key in radioButtonsMap) {
