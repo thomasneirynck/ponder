@@ -30,6 +30,30 @@ define([
     }
 
     function suggestType(name, sampleValue, position) {
+
+        var categories = getParameterByName("category");
+        var ordinals = getParameterByName("ordinal");
+        var excludes = getParameterByName("exclude");
+
+        if (typeof categories === "string"){
+            if (categories.split(",").indexOf(name) > -1){
+                return "category";
+            }
+        }
+
+        if (typeof ordinals === "string"){
+            if (ordinals.split(",").indexOf(name) > -1){
+                return "ordinal";
+            }
+        }
+
+        if (typeof excludes === "string"){
+            if (excludes.split(",").indexOf(name) > -1){
+                return "exclude";
+            }
+        }
+
+
         return (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
             isOrdinal(name, sampleValue) ? "ordinal" :
                 isCategorical(name, sampleValue) ? "category" :
