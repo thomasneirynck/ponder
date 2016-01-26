@@ -165,6 +165,52 @@ a:hover {
     overflow: auto;
 }
 
+#blurb {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
+#workflow {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+
+    padding: 0.6em;
+}
+#workflow img {
+    width: 60px;
+    height: auto;
+}
+
+#workflow h2 {
+    font-size: 1.5em;
+}
+
+#workflow table {
+    border-radius: 24px;
+    background-color:  rgba(255, 247, 229,0.4);
+    width:80%;
+}
+
+#workflow table td {
+    text-align:center;
+    font-weight:bold;
+}
+
+#uploadblurb {
+    background-color:  rgb(255, 247, 229);
+    border-radius:24px;
+}
+
+#uploadblurb input{
+    padding-left:80px;
+}
+
+#uploadblurb >div:nth-child(1){
+    display: flex;
+    justify-content: flex-end;
+}
 
 .previewTable {
 }
@@ -439,6 +485,7 @@ body {
 #examples > div > div > div:nth-child(1) {
     padding-right: 1em;
     justify-content: flex-end;
+max-width: 500px;
 }
 
 #tutorial  {
