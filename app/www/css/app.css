@@ -85,6 +85,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 #mapToolContainer > div select {
