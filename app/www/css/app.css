@@ -337,6 +337,12 @@ body {
     overflow: hidden;
 }
 
+
+#dashboard {
+    height: 100%;
+    width: 100%;
+}
+
 #left {
     float: left;
     width: 160px;
@@ -361,6 +367,7 @@ body {
     left: 0;
     right: 0;
 }
+
 
 #bottom {
     position: absolute;

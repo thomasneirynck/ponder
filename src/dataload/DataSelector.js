@@ -113,13 +113,6 @@ define([
 
             fileSelector.addEventListener("change", listenToFileSelector);
 
-
-            var tableUrl = getParameterByName("table");
-            if (typeof tableUrl === "string" && tableUrl.length > 0) {
-                loadWidthPapa(tableUrl, true);
-            }
-
-
             var self = this;
 
             function showPreview(event) {
@@ -259,6 +252,15 @@ define([
                 });
 
             }
+
+            var tableUrl = getParameterByName("table");
+            if (typeof tableUrl === "string" && tableUrl.length > 0) {
+                tableUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1) + tableUrl;
+                loadWidthPapa(tableUrl, true);
+            }
+
+
+
 
         },
 
