@@ -144,7 +144,7 @@ require([
                 return somHandle.uMatrixNormalized();
             }, throwError, function(payload){
                 //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
-                waitingDivText.innerHTML = "Thinking ..." + payload.progress.toFixed(2) + "%";
+                waitingDivText.innerHTML = "Thinking ..." + Math.round(payload.progress * 100) + "%";
             })
             .then(function (successData) {
 
