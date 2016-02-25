@@ -31,12 +31,27 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
 
             var self = this;
             this._pendingCommand = this._queue.pop();
-            this._somWorker.addEventListener("message", function handleMessage(event) {
-                self._pendingCommand.promise.resolve(event.data);
+
+            function handleMessage(event) {
+                if (self._pendingCommand.progress === event.data.type) {
+                    console.log("pushing progress event!", event.data);
+                    self._pendingCommand.promise.progress(event.data);
+                } else if (typeof self._pendingCommand.success === "undefined" || self._pendingCommand.success === event.data.type) {
+                    self._pendingCommand.promise.resolve(event.data);
+                    stopListeningAndScheduleNext();
+                } else if (self._pendingCommand.error === event.data.type) {
+                    self._pendingCommand.promise.reject(event.data);
+                    stopListeningAndScheduleNext();
+                }
+            }
+
+            function stopListeningAndScheduleNext(){
                 self._somWorker.removeEventListener("message", handleMessage);
                 self._pendingCommand = null;
                 self._schedule();
-            });
+            }
+
+            this._somWorker.addEventListener("message", handleMessage);
             this._somWorker.postMessage(this._pendingCommand.message);
         },
 
@@ -47,7 +62,7 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
             return this._doCommand({
                     type: "trainMap",
                     data: this._dataArray
-                }
+                }, "trainMapSuccess", "trainMapProgress", undefined
             );
         },
         uMatrixNormalized: function () {
@@ -80,10 +95,13 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
             });
         },
 
-        _doCommand: function (message) {
+        _doCommand: function (message, successMessageName, progressMessageName, errorMessageName) {
             this._queue.unshift({
                 message: message,
-                promise: new Promise()
+                promise: new Promise(),
+                success: successMessageName,
+                progress: progressMessageName,
+                error: errorMessageName
             });
             this._schedule();
             return this._queue[0].promise;

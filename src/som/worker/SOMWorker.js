@@ -5,7 +5,8 @@ require.config({
     paths: {
         'ponder': 'src',
         'type': "bower_components/type/type",
-        'Promise': "bower_components/Promise/Promise"
+        'Promise': "bower_components/Promise/Promise",
+        'Evented': "bower_components/Evented/Evented"
     }
 });
 
@@ -26,9 +27,16 @@ require(["ponder/som/SOM"], function (SOM) {
                 });
                 break;
             case "trainMap":
+                var handle = som.on("TrainMapProgress", function(percentage){
+                    postMessage({
+                        type: "trainMapProgress",
+                        progress: percentage
+                    });
+                });
                 som.trainMap(event.data.data);
+                handle.remove();
                 postMessage({
-                    type: "trainMapSucces"
+                    type: "trainMapSuccess"
                 });
                 break;
             case "uMatrixNormalized":

@@ -1,7 +1,8 @@
 define([
     "type",
-    "../Random"
-], function (type, Random) {
+    "../Random",
+    "Evented"
+], function (type, Random, Evented) {
 
 
     //can be replaced with Math.random() if we don't want seeding
@@ -48,9 +49,11 @@ define([
         return (ans1 + ans2 + ans3 + ans4);
     }
 
-    return type({
+    return type(Evented.prototype, {
 
         constructor: function SOM(options) {
+
+            Evented.call(this);
 
             this._worldWidth = options.width;
             this._worldHeight = options.height;
@@ -186,12 +189,14 @@ define([
             var iterationLimit = 16;
             var bmu = {i: 0, x: 0, y: 0};
             var learningRate, neighbourhoodDistance, s, t;
+
             for (s = 0; s < iterationLimit; s += 1) {//timesteps
                 learningRate = this.learningRate(s, iterationLimit);
                 neighbourhoodDistance = this.neighbourhoodDistance(s, iterationLimit);
                 for (t = 0; t < sampleData.length; t += this._codeBookWeights.length) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
+                this.emit("TrainMapProgress", s / iterationLimit);
             }
         },
 

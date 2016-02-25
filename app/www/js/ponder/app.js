@@ -130,7 +130,9 @@ require([
         var spinnerIcon = document.createElement("img");
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
-        waitingDiv.innerHTML += "<span>Thinking ...</span>";
+        var waitingDivText = document.createElement("span");
+        waitingDivText.innerHTML  = "Thinking ... 0%";
+        waitingDiv.appendChild(waitingDivText);
         document.getElementById("center").appendChild(waitingDiv);
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
@@ -140,7 +142,10 @@ require([
             }, throwError)
             .then(function () {
                 return somHandle.uMatrixNormalized();
-            }, throwError)
+            }, throwError, function(payload){
+                //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
+                waitingDivText.innerHTML = "Thinking ..." + payload.progress.toFixed(2) + "%";
+            })
             .then(function (successData) {
 
                 jquery("#map").show();
