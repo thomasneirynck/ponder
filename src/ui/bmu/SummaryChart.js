@@ -43,11 +43,16 @@ define([
                 plot.appendChild(label);
 
                 container = document.createElement("div");
+                container.style.position = "relative";
                 plot.appendChild(container);
 
                 minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
                 box = new Boxplot(minmax[0], minmax[1], container);
                 box.setData(ordinalValues[selectedOrdinals[c]]);
+
+                box.on("Highlight", function () {
+
+                });
 
 
             }

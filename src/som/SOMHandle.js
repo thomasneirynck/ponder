@@ -34,7 +34,6 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
 
             function handleMessage(event) {
                 if (self._pendingCommand.progress === event.data.type) {
-                    console.log("pushing progress event!", event.data);
                     self._pendingCommand.promise.progress(event.data);
                 } else if (typeof self._pendingCommand.success === "undefined" || self._pendingCommand.success === event.data.type) {
                     self._pendingCommand.promise.resolve(event.data);

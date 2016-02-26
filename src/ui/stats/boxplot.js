@@ -1,9 +1,9 @@
-define(["type", "jStat","Evented", "jquery"], function (type, jStat, Evented,jquery) {
+define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, jquery) {
 
 
-    return type(Evented.prototype,{
+    return type(Evented.prototype, {
 
-        constructor: function (min, max, node) {
+        constructor: function Boxplot(min, max, node) {
             Evented.call(this);
             this._context2d = document.createElement("canvas").getContext("2d");
             this._min = min;
@@ -13,22 +13,34 @@ define(["type", "jStat","Evented", "jquery"], function (type, jStat, Evented,jqu
             this._context2d.canvas.height = jquery(node).height();
             node.appendChild(this._context2d.canvas);
 
+            var valueRead = document.createElement("div");
+            valueRead.style.display = "none";
+            valueRead.style.position = "absolute";
+            valueRead.style.color = "rgb(255,0,0)";
+            valueRead["data-ponder"] = "boxplotvalueread";
+            document.body.appendChild(valueRead);
+
             var self = this;
             this._context2d.canvas.addEventListener("mousemove", function (event) {
 
                 self.paint();
-
                 var offset = jquery(self._context2d.canvas).offset();
-                var rx = event.pageX - offset.left;
-                var ry = event.pageY - offset.top;
-
                 self._context2d.strokeStyle = "rgb(255,0,0)";
+
+                var rx = event.pageX - offset.left;
                 self._context2d.strokeRect(rx, 0, 0, self._context2d.canvas.height);
-                self.emit("highlight");
+
+                valueRead.style.display = "block";
+                valueRead.innerHTML = "blah";
+                valueRead.style.left = event.pageX + "px";
+                valueRead.style.top = offset.top + "px";
+                valueRead.innerHTML = self.toWorldX(rx).toFixed(2);
+
 
             });
 
             this._context2d.canvas.addEventListener("mouseout", function (event) {
+                valueRead.style.display = "none";
                 self.paint();
             });
         },
@@ -57,6 +69,10 @@ define(["type", "jStat","Evented", "jquery"], function (type, jStat, Evented,jqu
 
         },
 
+        toWorldX: function(x){
+            return x + (this._max - this._min) / this._context2d.canvas.width;
+        },
+
         toViewX: function (x) {
             return this._context2d.canvas.width * (x - this._min) / (this._max - this._min);
         },
@@ -66,7 +82,6 @@ define(["type", "jStat","Evented", "jquery"], function (type, jStat, Evented,jqu
             this._context2d.clearRect(0, 0, this._context2d.canvas.width, this._context2d.canvas.height);
 
             var halfHeight = this._context2d.canvas.height / 2;
-
 
             this._context2d.strokeStyle = "#DF723E";
 
