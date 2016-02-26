@@ -49,10 +49,12 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 })
                 .mousemove(function (event) {
                     out = false;
+                    self._rx = event.offsetX;
+                    self._ry = event.offsetY;
                     if (down) {
-                        self._rx = event.offsetX;
-                        self._ry = event.offsetY;
                         self.emit("drag", mapEvent);
+                    } else {
+                        self.emit("move", mapEvent);
                     }
                 })
                 .mouseout(function (event) {
@@ -94,7 +96,6 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 });
 
 
-
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
 
@@ -109,15 +110,32 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             }
         },
 
+        pick: function (x, y) {
+
+            var self = this;
+            return this._layers.reduce(function (accumulator, layer) {
+                if (typeof layer.find !== "function") {
+                    return accumulator;
+                }
+                var items = layer.find(x, y, self);
+                accumulator.push({
+                    layer: layer,
+                    items: items
+                });
+                return accumulator;
+            }, []);
+
+        },
+
         destroy: function () {
             //todo: cleanup here
         },
         toViewX: function (x, context2d) {
-            return x * context2d.canvas.width / this._worldWidth;
+            return x * this._context2d.canvas.width / this._worldWidth;
         },
 
         toViewY: function (y, context2d) {
-            return y * context2d.canvas.height / this._worldHeight;
+            return y * this._context2d.canvas.height / this._worldHeight;
         },
 
         toWorldX: function (x) {

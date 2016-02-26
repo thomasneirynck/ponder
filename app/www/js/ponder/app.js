@@ -45,10 +45,11 @@ require([
     "ponder/ui/umatrix/UMatrixTerrainLayer",
     "ponder/ui/bmu/BMULayer",
     "ponder/ui/areaselect/AreaSelectLayerController",
+    "ponder/ui/highlight/HoverController",
     "ponder/ui/bmu/BMUSelector",
     "ponder/ui/bmu/BMUSelectionHistory",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, BMUSelector, BMUSelectionHistory, jquery) {
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController,BMUSelector, BMUSelectionHistory, jquery) {
 
 
     jquery("#map").hide();
@@ -174,8 +175,11 @@ require([
 
                 new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
 
-
                 bmuSelector.selectAll();
+
+                var hoverController = new HoverController();
+                hoverController.setOnMap(map);
+
 
 
             }, throwError)

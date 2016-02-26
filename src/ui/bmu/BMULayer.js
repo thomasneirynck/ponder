@@ -4,6 +4,10 @@ define([
     function (type, Evented, EasingInput, Legend, classColors) {
 
 
+        function squareDistance(x1, y1, x2, y2) {
+            return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2);
+        }
+
         return type(Object.prototype, Evented.prototype, {
 
             constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus) {
@@ -11,7 +15,12 @@ define([
                 Evented.call(this);
 
                 this._dataTable = dataTable;
-                this._bmus = bmus;
+                this._bmus = bmus.map(function (bmu) {
+                    var bmuView = Object.create(bmu);
+                    bmuView.size = -1;
+                    return bmuView;
+                });
+                this._highlights = [];
 
                 var labelSelectTag = $("<select />");
                 var classSelectTag = $("<select />");
@@ -106,12 +115,13 @@ define([
                     area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
                     size = Math.round(Math.sqrt(area / (Math.PI)));
 
+                    this._bmus[i].size = size;
 
                     context2d.beginPath();
                     context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), size, 0, Math.PI * 2);
                     context2d.fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value));
                     context2d.fill();
-                    context2d.lineWidth = 1;
+                    context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
                     context2d.strokeStyle = "rgba(255,255,255,0.8)";
                     context2d.stroke();
 
@@ -146,6 +156,33 @@ define([
 
             },
 
+            find: function (x, y, map) {
+                var bx, by;
+                var items = [];
+                for (var i = 0; i < this._bmus.length; i += 1) {
+                    bx = map.toViewX(this._bmus[i].x);
+                    by = map.toViewY(this._bmus[i].y);
+                    if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].size, 2)) {
+                        items.push(i);
+                    }
+                }
+                return items;
+            },
+
+            highlight: function (items) {
+
+                var i;
+                for (i = 0; i < this._highlights.length; i += 1) {
+                    this._bmus[this._highlights[i]].highlight = false;
+                }
+
+                for (i = 0; i < items.length; i += 1) {
+                    this._bmus[items[i]].highlight = true;
+                }
+                this._highlights = items;
+                this.invalidate();
+            },
+
             getLegend: function () {
 
                 var clazz = this._classElement.value;
@@ -172,14 +209,10 @@ define([
 
             getBmuIndices: function () {
                 var inds = [];
-                for (var i = 0; i < this._bmus.length; i++){
+                for (var i = 0; i < this._bmus.length; i++) {
                     inds.push(i);
                 }
                 return inds;
-            },
-
-            getBmus: function () {
-                return this._bmus;
             },
 
             invalidate: function () {
