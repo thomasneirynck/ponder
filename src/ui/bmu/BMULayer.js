@@ -28,15 +28,10 @@ define([
                     $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(labelSelectTag);
                     $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(classSelectTag);
                 }
-                //
-                //labelSelectTag.appendTo("#" + labelNode);
-                //labelSelectTag.css("width", "100%");
-                //labelSelectTag.on("change", this.invalidate.bind(this));
-                //this._labelElement = labelSelectTag[0];
 
                 var self = this;
 
-                function onClassChange() {
+                function setEasingInputMode() {
                     self.invalidate();
                     if (self._dataTable.isOrdinal(self._classElement.value)) {
                         self._easingInput.setEasingMode("log");
@@ -47,13 +42,20 @@ define([
                 }
 
                 classSelectTag.appendTo("#" + classNode);
-                classSelectTag.on("change", onClassChange);
+                classSelectTag.on("change", setEasingInputMode);
                 this._classElement = classSelectTag[0];
+
+                self._dirty = true;
+                function flagDirt() {
+                    self._dirty = true;
+                }
+
+                this._classElement.addEventListener("change", flagDirt);
 
 
                 this._legend = new Legend(legendOutputDiv, this);
-
                 this._legend.on("invalidate", this.invalidate.bind(this));
+                this._legend.on("invalidate", flagDirt);
 
 
                 var sizeTag = $("<select />");
@@ -67,11 +69,13 @@ define([
                 sizeTag.appendTo("#" + sizeNode);
                 sizeTag.on("change", this.invalidate.bind(this));
                 this._sizeElement = sizeTag[0];
+                this._sizeElement.addEventListener("change", flagDirt);
 
                 this._easingInput = new EasingInput(sizeEasingNode, document.createElement("div"));
                 this._easingInput.on("input", this.invalidate.bind(this));
+                this._easingInput.on("input", flagDirt);
 
-                onClassChange();
+                setEasingInputMode();
 
             },
 
@@ -94,43 +98,45 @@ define([
                 return (parseFloat(value) - minMax[0]) / (minMax[1] - minMax[0]);
             },
 
-            paint: function (context2d, map) {
+            _recomputeSizeColor: function () {
 
-                var minMaxForSize = this._dataTable.getMinMax(this._classElement.value);
+                if (!this._dirty) {
+                    return;
+                }
+
+                var classValue = this._classElement.value;
+                var minMaxForSize = this._dataTable.getMinMax(classValue);
                 var minArea = Math.PI * Math.pow(5, 2);
                 var maxArea = Math.PI * Math.pow(20, 2);
 
-                var area, size, ordinalPositionForSize, alpha, thickness, color;
+                var area, size, ordinalPositionForSize;
 
                 var colorClassifier = this._getClassifier();
 
-                var isOrdinal = this._dataTable.isOrdinal(this._classElement.value);
-
-                var value;
+                var isOrdinal = this._dataTable.isOrdinal(classValue);
                 for (var i = 0; i < this._bmus.length; i += 1) {
 
-                    context2d.save();
-
-                    ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value)) : -1;
+                    ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, classValue)) : -1;
                     area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
                     size = Math.round(Math.sqrt(area / (Math.PI)));
 
                     this._bmus[i].size = size;
+                    this._bmus[i].fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue))
+                }
 
+                this._dirty = false;
+            },
+
+            paint: function (context2d, map) {
+                this._recomputeSizeColor();
+                for (var i = 0; i < this._bmus.length; i += 1) {
                     context2d.beginPath();
-                    context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), size, 0, Math.PI * 2);
-                    context2d.fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, this._classElement.value));
+                    context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), this._bmus[i].size, 0, Math.PI * 2);
+                    context2d.fillStyle = this._bmus[i].fillStyle;
                     context2d.fill();
                     context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
                     context2d.strokeStyle = "rgba(255,255,255,0.8)";
                     context2d.stroke();
-
-
-                    //context2d.fillText(this._dataTable.getValueByRowAndColumnIndex(i, this._labelElement.value), map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d));
-
-                    context2d.restore();
-
-
                 }
             },
 
