@@ -15,6 +15,9 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._context2d = document.createElement("canvas").getContext("2d");
             var container = (typeof node === "string") ? document.getElementById(node) : node;
             container.appendChild(this._context2d.canvas);
+            this._context2d.canvas.addEventListener("contextmenu",function (e) {
+                e.preventDefault();
+            });
 
             var self = this;
             this._handleAnimationFrame = function handleAnimationFrame() {

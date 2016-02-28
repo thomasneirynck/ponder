@@ -51,6 +51,9 @@ require([
     "jquery"
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController,BMUSelector, BMUSelectionHistory, jquery) {
 
+    document.body.addEventListener("contextmenu",function (e) {
+        e.preventDefault();
+    });
 
     jquery("#map").hide();
     var oldDisplay = document.getElementById("mapToolContainer").style.display;
