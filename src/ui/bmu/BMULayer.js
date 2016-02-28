@@ -112,16 +112,13 @@ define([
                 var area, size, ordinalPositionForSize;
 
                 var colorClassifier = this._getClassifier();
-
                 var isOrdinal = this._dataTable.isOrdinal(classValue);
                 for (var i = 0; i < this._bmus.length; i += 1) {
-
                     ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, classValue)) : -1;
                     area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
                     size = Math.round(Math.sqrt(area / (Math.PI)));
-
                     this._bmus[i].size = size;
-                    this._bmus[i].fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue))
+                    this._bmus[i].fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
                 }
 
                 this._dirty = false;
@@ -137,6 +134,11 @@ define([
                     context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
                     context2d.strokeStyle = "rgba(255,255,255,0.8)";
                     context2d.stroke();
+                    //context2d.fillStyle = this._bmus[i].fillStyle;
+                    //context2d.fillRect(map.toViewX(this._bmus[i].x, context2d),map.toViewY(this._bmus[i].y, context2d),this._bmus[i].size,this._bmus[i].size);
+                    //context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
+                    //context2d.strokeStyle = "rgba(255,255,255,0.8)";
+                    //context2d.strokeRect(map.toViewX(this._bmus[i].x, context2d),map.toViewY(this._bmus[i].y, context2d),this._bmus[i].size,this._bmus[i].size);
                 }
             },
 
@@ -159,7 +161,6 @@ define([
                     return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
                 };
 
-
             },
 
             find: function (x, y, map) {
@@ -181,7 +182,6 @@ define([
                 for (i = 0; i < this._highlights.length; i += 1) {
                     this._bmus[this._highlights[i]].highlight = false;
                 }
-
                 for (i = 0; i < items.length; i += 1) {
                     this._bmus[items[i]].highlight = true;
                 }

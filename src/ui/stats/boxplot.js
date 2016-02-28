@@ -17,7 +17,8 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
             valueRead.style.display = "none";
             valueRead.style.position = "absolute";
             valueRead.style.color = "rgb(255,0,0)";
-            valueRead["data-ponder"] = "boxplotvalueread";
+            valueRead.setAttribute("data-boxplot-readout", "1");
+            valueRead.style["pointer-events"] = "none";
             document.body.appendChild(valueRead);
 
             var self = this;

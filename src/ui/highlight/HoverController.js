@@ -11,8 +11,8 @@ define([
 
         setOnMap: function (map) {
             this._handle = map.on("move", function (mapEvent) {
-                var res = map.pick(mapEvent.getMapViewX(), mapEvent.getMapViewY());
-                res.forEach(function (result) {
+                var itemsPerLayer = map.pick(mapEvent.getMapViewX(), mapEvent.getMapViewY());
+                itemsPerLayer.forEach(function (result) {
                     if (typeof result.layer.highlight === "function") {
                         result.layer.highlight(result.items);
                     }
