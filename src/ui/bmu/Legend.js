@@ -35,6 +35,17 @@ define([
             wrapperDiv.style.height = "100%";
 
 
+            var self = this;
+
+            function highlight(event) {
+                var selection = self._bmuLayer.filterBmus(self._bmuLayer.getClass(), event.target.title);
+                self._bmuLayer.highlight(selection);
+            }
+
+            function removeHighlight() {
+                self._bmuLayer.highlight(Array.prototype);
+            }
+
             var itemSpan;
             for (var i = 0; i < legend.values.length; i += 1) {
                 itemSpan = document.createElement("span");
@@ -47,6 +58,9 @@ define([
                 itemSpan.title = legend.values[i];
 
                 wrapperDiv.appendChild(itemSpan);
+
+                itemSpan.addEventListener("mouseenter", highlight)
+
             }
 
             this._legendDiv.innerHTML = "";
@@ -78,19 +92,18 @@ define([
 
                 //arrow
                 context2d.beginPath();
-                context2d.moveTo(context2d.canvas.width * self._break - 20,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break - 40,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break - 30,context2d.canvas.height/3);
-                context2d.moveTo(context2d.canvas.width * self._break - 40,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break - 30,context2d.canvas.height*2/3);
-                context2d.moveTo(context2d.canvas.width * self._break + 20,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break + 40,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break + 30,context2d.canvas.height/3);
-                context2d.moveTo(context2d.canvas.width * self._break + 40,context2d.canvas.height/2);
-                context2d.lineTo(context2d.canvas.width * self._break + 30,context2d.canvas.height*2/3);
+                context2d.moveTo(context2d.canvas.width * self._break - 20, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break - 40, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break - 30, context2d.canvas.height / 3);
+                context2d.moveTo(context2d.canvas.width * self._break - 40, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break - 30, context2d.canvas.height * 2 / 3);
+                context2d.moveTo(context2d.canvas.width * self._break + 20, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break + 40, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break + 30, context2d.canvas.height / 3);
+                context2d.moveTo(context2d.canvas.width * self._break + 40, context2d.canvas.height / 2);
+                context2d.lineTo(context2d.canvas.width * self._break + 30, context2d.canvas.height * 2 / 3);
                 context2d.strokeStyle = "rgb(122,122,122)";
                 context2d.stroke();
-
 
 
                 var readOutValue = parseFloat((legend.minMax[0] + (self._break * (legend.minMax[1] - legend.minMax[0]))).toFixed(4)).toString();

@@ -62,16 +62,27 @@ define(["type", "./util"], function (type, util) {
 
         },
 
+        filterItems: function (columnIndex, value) {
+            var results = [];
+            for (var i = 0; i < this._data.length; i += 1) {
+                if (this._data[i][columnIndex] === value) {
+                    results.push(i);
+                }
+            }
+            return results;
+
+        },
+
         getCounts: function (columnIndexForCategory) {
 
-            if (this._counts[columnIndexForCategory]){
+            if (this._counts[columnIndexForCategory]) {
                 return this._counts[columnIndexForCategory];
             }
 
             var uniques = this.getUniqueValues(columnIndexForCategory);
 
             this._counts[columnIndexForCategory] = {};
-            for (var u = 0; u <  uniques.length; u += 1) {
+            for (var u = 0; u < uniques.length; u += 1) {
                 this._counts[columnIndexForCategory][uniques[u]] = 0;
             }
 

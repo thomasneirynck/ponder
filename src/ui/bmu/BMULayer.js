@@ -15,9 +15,10 @@ define([
                 Evented.call(this);
 
                 this._dataTable = dataTable;
-                this._bmus = bmus.map(function (bmu) {
+                this._bmus = bmus.map(function (bmu, index) {
                     var bmuView = Object.create(bmu);
                     bmuView.size = -1;
+                    bmuView.index = index;
                     return bmuView;
                 });
                 this._highlights = [];
@@ -174,6 +175,15 @@ define([
                     }
                 }
                 return items;
+            },
+
+
+            filterBmus: function(clazz, value){
+              return this._dataTable.filterItems(clazz, value);
+            },
+
+            getClass: function(){
+                return this._classElement.value;
             },
 
             highlight: function (items) {
