@@ -59,9 +59,10 @@ define([
 
                 wrapperDiv.appendChild(itemSpan);
 
-                itemSpan.addEventListener("mouseenter", highlight)
+                itemSpan.addEventListener("mouseenter", highlight);
 
             }
+            wrapperDiv.addEventListener("mouseout", removeHighlight);
 
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(wrapperDiv);
