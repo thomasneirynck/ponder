@@ -438,9 +438,9 @@ body {
     height: 100%;
     background-color: rgb(255, 255, 255);
     z-index: 1;
-    display: flex;
-    flex-flow: column;
-    align-content: space-around;
+    /*display: flex;*/
+    /*flex-flow: column;*/
+    /*align-content: space-around;*/
     overflow: auto;
     padding-left: 50px;
     padding-right: 50px;
