@@ -109,6 +109,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 if (layers.indexOf(this._layers[i]) < 0) {
                     continue;
                 }
+                console.log("paint", this._layers[i]);
                 this._layers[i].paint(context2d, this);
             }
         },
@@ -134,11 +135,11 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             //todo: cleanup here
         },
         toViewX: function (x, context2d) {
-            return x * this._context2d.canvas.width / this._worldWidth;
+            return x * context2d.canvas.width / this._worldWidth;
         },
 
         toViewY: function (y, context2d) {
-            return y * this._context2d.canvas.height / this._worldHeight;
+            return y * context2d.canvas.height / this._worldHeight;
         },
 
         toWorldX: function (x) {
