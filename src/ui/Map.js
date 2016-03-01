@@ -15,7 +15,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._context2d = document.createElement("canvas").getContext("2d");
             var container = (typeof node === "string") ? document.getElementById(node) : node;
             container.appendChild(this._context2d.canvas);
-            this._context2d.canvas.addEventListener("contextmenu",function (e) {
+            this._context2d.canvas.addEventListener("contextmenu", function (e) {
                 e.preventDefault();
             });
 
@@ -105,13 +105,15 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
         },
 
         screenshot: function (context2d, layers) {
+            var oldContext2d = this._context2d;
+            this._context2d = context2d;
             for (var i = 0; i < this._layers.length; i += 1) {
                 if (layers.indexOf(this._layers[i]) < 0) {
                     continue;
                 }
-                console.log("paint", this._layers[i]);
                 this._layers[i].paint(context2d, this);
             }
+            this._context2d = oldContext2d;
         },
 
         pick: function (x, y) {
@@ -121,7 +123,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 if (typeof layer.find !== "function") {
                     return accumulator;
                 }
-                var items = layer.find(x, y, self);
+                var items = layer.find(x, y, self, self._context2d);
                 accumulator.push({
                     layer: layer,
                     items: items
@@ -134,12 +136,14 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
         destroy: function () {
             //todo: cleanup here
         },
-        toViewX: function (x, context2d) {
-            return x * context2d.canvas.width / this._worldWidth;
+
+
+        toViewX: function (x) {
+            return x * this._context2d.canvas.width / this._worldWidth;
         },
 
-        toViewY: function (y, context2d) {
-            return y * context2d.canvas.height / this._worldHeight;
+        toViewY: function (y) {
+            return y * this._context2d.canvas.height / this._worldHeight;
         },
 
         toWorldX: function (x) {

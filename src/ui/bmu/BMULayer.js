@@ -129,7 +129,7 @@ define([
                 this._recomputeSizeColor();
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     context2d.beginPath();
-                    context2d.arc(map.toViewX(this._bmus[i].x, context2d), map.toViewY(this._bmus[i].y, context2d), this._bmus[i].size, 0, Math.PI * 2);
+                    context2d.arc(map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y), this._bmus[i].size, 0, Math.PI * 2);
                     context2d.fillStyle = this._bmus[i].fillStyle;
                     context2d.fill();
                     context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
