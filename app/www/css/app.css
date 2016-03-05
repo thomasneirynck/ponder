@@ -484,7 +484,7 @@ body {
 }
 
 #examples > div > div > div:nth-child(1) {
-    padding-right: 1em;
+    margin: 1em;
     justify-content: flex-end;
     max-width: 500px;
 }

@@ -125,21 +125,35 @@ define([
                 this._dirty = false;
             },
 
+            _getOutlineWidth: function(bmu){
+                if (!bmu.highlight){
+                    return 1;
+                }
+                var offset = Date.now() % 1000;
+
+                if (offset > 500){
+                    offset = 1000 - offset;
+                }
+
+                return 1 + (4 * offset/500);
+
+            },
+
             paint: function (context2d, map) {
                 this._recomputeSizeColor();
+                var atLeastOneHighlight = false;
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     context2d.beginPath();
                     context2d.arc(map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y), this._bmus[i].size, 0, Math.PI * 2);
                     context2d.fillStyle = this._bmus[i].fillStyle;
                     context2d.fill();
-                    context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
+                    context2d.lineWidth =  this._getOutlineWidth(this._bmus[i]);
                     context2d.strokeStyle = "rgba(255,255,255,0.8)";
                     context2d.stroke();
-                    //context2d.fillStyle = this._bmus[i].fillStyle;
-                    //context2d.fillRect(map.toViewX(this._bmus[i].x, context2d),map.toViewY(this._bmus[i].y, context2d),this._bmus[i].size,this._bmus[i].size);
-                    //context2d.lineWidth = this._bmus[i].highlight ? 4 : 1;
-                    //context2d.strokeStyle = "rgba(255,255,255,0.8)";
-                    //context2d.strokeRect(map.toViewX(this._bmus[i].x, context2d),map.toViewY(this._bmus[i].y, context2d),this._bmus[i].size,this._bmus[i].size);
+                    atLeastOneHighlight = atLeastOneHighlight || this._bmus[i].highlight;
+                }
+                if (atLeastOneHighlight){
+                    this.invalidate();
                 }
             },
 
