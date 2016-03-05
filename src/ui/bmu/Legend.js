@@ -50,6 +50,7 @@ define([
             for (var i = 0; i < legend.values.length; i += 1) {
                 itemSpan = document.createElement("span");
                 itemSpan.style.position = "absolute";
+                itemSpan.style.top = 0;
                 itemSpan.style.height = "100%";
                 itemSpan.style.width = (100 / legend.values.length) + "%";
                 itemSpan.style.left = (100 / legend.values.length) * i + "%";
