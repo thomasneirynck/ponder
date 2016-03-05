@@ -28,7 +28,6 @@ define([
 
 
                 if (hasItems) {
-                    console.log(all);
                     map.showBalloon(mapEvent.getMapViewX(), mapEvent.getMapViewY(), all);
                 }else{
                     map.hideBalloon();
@@ -46,6 +45,7 @@ define([
 
             this._outHandle = map.on("mouseout", function(){
                 map.forEachLayer(turnOff);
+                map.hideBalloon();
             });
 
         },

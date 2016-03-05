@@ -31,11 +31,9 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
                 var rx = event.pageX - offset.left;
                 self._context2d.strokeRect(rx, 0, 0, self._context2d.canvas.height);
 
-                valueRead.style.display = "block";
-                valueRead.innerHTML = "blah";
-                valueRead.style.left = event.pageX + "px";
+                valueRead.style.display = "block"; valueRead.style.left = event.pageX + "px";
                 valueRead.style.top = offset.top + "px";
-                valueRead.innerHTML = self.toWorldX(rx).toFixed(2);
+                valueRead.innerHTML = Math.round(self.toWorldX(rx) * 100) / 100;
 
 
             });
@@ -71,7 +69,8 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
         },
 
         toWorldX: function(x){
-            return x + (this._max - this._min) / this._context2d.canvas.width;
+            console.log(this._min, this._max);
+            return x * (this._max - this._min) / this._context2d.canvas.width;
         },
 
         toViewX: function (x) {
