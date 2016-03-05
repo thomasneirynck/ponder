@@ -116,6 +116,10 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._context2d = oldContext2d;
         },
 
+        forEachLayer: function(callback){
+            this._layers.forEach(callback);
+        },
+
         pick: function (x, y) {
 
             var self = this;

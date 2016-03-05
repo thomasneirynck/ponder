@@ -129,13 +129,14 @@ define([
                 if (!bmu.highlight){
                     return 1;
                 }
-                var offset = Date.now() % 1000;
+                var pulseTime = 1000;
+                var offset = Date.now() % pulseTime;
 
-                if (offset > 500){
-                    offset = 1000 - offset;
+                if (offset > pulseTime/2){
+                    offset = pulseTime - offset;
                 }
 
-                return 1 + (4 * offset/500);
+                return 1 + (4 * offset/(pulseTime/2));
 
             },
 
