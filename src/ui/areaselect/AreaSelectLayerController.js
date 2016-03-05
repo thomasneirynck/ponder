@@ -128,9 +128,10 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
                 context2d.lineTo(map.toViewX(this._linearRing[i].x, context2d), map.toViewY(this._linearRing[i].y, context2d));
             }
             context2d.closePath();
-            context2d.strokeStyle = "rgb(240,240,240)";
+            context2d.strokeStyle = "rgb(223,114,62)";
+            context2d.lineWidth = 1;
             context2d.stroke();
-            context2d.fillStyle = "rgba(210,210,210,0.8)";
+            context2d.fillStyle = "rgba(223,114,62,0.4)";
             context2d.fill();
 
         }

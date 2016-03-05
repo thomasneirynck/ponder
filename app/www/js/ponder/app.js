@@ -46,12 +46,13 @@ require([
     "ponder/ui/bmu/BMULayer",
     "ponder/ui/areaselect/AreaSelectLayerController",
     "ponder/ui/highlight/HoverController",
+    "ponder/ui/highlight/SelectController",
     "ponder/ui/bmu/BMUSelector",
     "ponder/ui/bmu/BMUSelectionHistory",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController,BMUSelector, BMUSelectionHistory, jquery) {
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, jquery) {
 
-    document.body.addEventListener("contextmenu",function (e) {
+    document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
     });
 
@@ -108,8 +109,8 @@ require([
         alert("Cannot read table");
     });
 
-    dataSelector.on("tableLoaded", function(){
-       document.getElementById("blurb").style.display = "none";
+    dataSelector.on("tableLoaded", function () {
+        document.getElementById("blurb").style.display = "none";
     });
 
 
@@ -135,7 +136,7 @@ require([
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
         var waitingDivText = document.createElement("span");
-        waitingDivText.innerHTML  = "Thinking ... 0%";
+        waitingDivText.innerHTML = "Thinking ... 0%";
         waitingDiv.appendChild(waitingDivText);
         document.getElementById("center").appendChild(waitingDiv);
         SOMFactory
@@ -146,7 +147,7 @@ require([
             }, throwError)
             .then(function () {
                 return somHandle.uMatrixNormalized();
-            }, throwError, function(payload){
+            }, throwError, function (payload) {
                 //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
                 waitingDivText.innerHTML = "Thinking ..." + Math.round(payload.progress * 100) + "%";
             })
@@ -183,6 +184,8 @@ require([
                 var hoverController = new HoverController();
                 hoverController.setOnMap(map);
 
+                var selectController = new SelectController();
+                selectController.setOnMap(map);
 
 
             }, throwError)

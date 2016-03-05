@@ -80,6 +80,34 @@ define([
 
             },
 
+            formatForItem: function(itemId){
+                var featureData = this._dataTable.getFeatureData(itemId);
+
+                var wrap = document.createElement("div");
+                var elem, name, value;
+                for (var i = 0; i < featureData.length; i += 1){
+                    elem = document.createElement("div");
+
+                    name = document.createElement("span");
+                    name.innerHTML = this._dataTable.getColumnName(i);
+                    elem.appendChild(name);
+
+                    value = document.createElement("span");
+                    value.innerHTML = featureData[i];
+                    elem.appendChild(value);
+
+                    wrap.appendChild(elem);
+                }
+
+                return wrap;
+
+
+
+            },
+
+            getHighlightCount: function(){
+              return this._highlights.length;
+            },
 
             selectBmusFromController: function (areaSelectLayerController) {
 
@@ -98,6 +126,8 @@ define([
             _getOrdinalPosition: function (minMax, value) {
                 return (parseFloat(value) - minMax[0]) / (minMax[1] - minMax[0]);
             },
+
+
 
             _recomputeSizeColor: function () {
 

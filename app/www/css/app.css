@@ -631,3 +631,40 @@ body div[data-boxplot-readout="1"] {
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div > div:nth-child(2) > div {
     height: 100%;
 }
+
+
+div[data-ponder-type="balloon"] {
+    background-color: #FFFFFF;
+    opacity: 0.7;
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid #df723e
+}
+
+div[data-ponder-type="balloon"]  > div > div{
+    margin-bottom: 1em;
+}
+
+div[data-ponder-type="balloon"]  > div > div >  div {
+    display: flex;
+    flex-flow: row;
+    position: relative;
+    justify-content: space-between;
+}
+
+div[data-ponder-type="balloon"]  > div > div >  div > span {
+    position: relative;
+}
+
+div[data-ponder-type="balloon"]  > div > div >  div > span:nth-child(1){
+    font-weight: bold;
+    padding-right: 0.4em;
+}
+
+div[data-ponder-type="balloon"]  > div > div >  div > span:nth-child(2){
+    text-align: right;
+}
+
+
+
+

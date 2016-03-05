@@ -12,12 +12,27 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._worldWidth = worldWidth;
             this._worldHeight = worldHeight;
 
+
+            this._balloonDiv = document.createElement("div");
+            this._balloonDiv.style.display = "none";
+            this._balloonDiv.style.position = "absolute";
+            this._balloonDiv.style.top = 0;
+            this._balloonDiv.style["pointer-events"] = "none";
+            this._balloonDiv.setAttribute("data-ponder-type","balloon");
+
+
+
+
             this._context2d = document.createElement("canvas").getContext("2d");
-            var container = (typeof node === "string") ? document.getElementById(node) : node;
-            container.appendChild(this._context2d.canvas);
             this._context2d.canvas.addEventListener("contextmenu", function (e) {
                 e.preventDefault();
             });
+
+
+            var container = (typeof node === "string") ? document.getElementById(node) : node;
+            container.appendChild(this._balloonDiv);
+            container.appendChild(this._context2d.canvas);
+
 
             var self = this;
             this._handleAnimationFrame = function handleAnimationFrame() {
@@ -27,6 +42,8 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                     self._layers[i].paint(self._context2d, self);
                 }
             };
+
+
 
 
             this._rx = 0;
@@ -74,6 +91,9 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                         self._ry = event.offsetY;
                         self.emit("dragend", mapEvent);
                     }
+                })
+                .click(function(event){
+                    self.emit("click", mapEvent);
                 });
 
 
@@ -99,10 +119,24 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 });
 
 
+
+
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
 
         },
+
+
+        hideBalloon: function(){
+            this._balloonDiv.style.display = "none";
+        },
+
+        showBalloon: function(x, y, content){
+            this._balloonDiv.innerHTML = "";
+            this._balloonDiv.appendChild(content);
+            this._balloonDiv.style.display = "block";
+        },
+
 
         screenshot: function (context2d, layers) {
             var oldContext2d = this._context2d;

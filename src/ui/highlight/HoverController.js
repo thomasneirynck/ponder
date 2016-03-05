@@ -13,11 +13,27 @@ define([
 
             function select (mapEvent) {
                 var itemsPerLayer = map.pick(mapEvent.getMapViewX(), mapEvent.getMapViewY());
+                var all = document.createElement("div");
+                var hasItems = false;
                 itemsPerLayer.forEach(function (result) {
                     if (typeof result.layer.highlight === "function") {
                         result.layer.highlight(result.items);
+                        result.items.map(function(itemId){
+                            var html = result.layer.formatForItem(itemId);
+                            all.appendChild(html);
+                            hasItems = true;
+                        });
                     }
                 });
+
+
+                if (hasItems) {
+                    console.log(all);
+                    map.showBalloon(mapEvent.getMapViewX(), mapEvent.getMapViewY(), all);
+                }else{
+                    map.hideBalloon();
+                }
+
             }
 
             this._handle = map.on("move",select);

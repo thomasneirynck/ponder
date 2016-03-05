@@ -36,6 +36,10 @@ define(["type", "./util"], function (type, util) {
             return this.getValueByRowAndColumnIndex(row, this.getColumnIndex(columnName));
         },
 
+        getColumnName: function(index){
+          return this._columnNames[index];
+        },
+
         getColumns: function () {
             return this._columnNames;
         },
