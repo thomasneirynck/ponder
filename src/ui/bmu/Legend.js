@@ -124,8 +124,10 @@ define([
 
             paint();
 
+            var down = false;
+
             function update(event) {
-                if (!event.which) {
+                if (!down) {
                     return;
                 }
                 self._break = event.offsetX / context2d.canvas.width;
@@ -134,8 +136,17 @@ define([
 
             }
 
+            function cancel(){
+                down = false;
+            }
+
 
             $(context2d.canvas)
+                .mousedown(function(){
+                    down = true;
+                })
+                .mouseout(cancel)
+                .mouseup(cancel)
                 .mousemove(update)
                 .click(update);
 
