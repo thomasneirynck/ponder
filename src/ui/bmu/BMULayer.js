@@ -3,12 +3,12 @@ define([
     ],
     function (type, Evented, EasingInput, Legend, classColors) {
 
-
+        var PADDING = 1;
         function generateIcon(color, halfSize) {
             var context2d = document.createElement("canvas").getContext("2d");
             context2d.canvas.width = context2d.canvas.height = halfSize * 2;
             context2d.beginPath();
-            context2d.arc(context2d.canvas.width / 2, context2d.canvas.height / 2, halfSize - 1, 0, Math.PI * 2);
+            context2d.arc(context2d.canvas.width / 2, context2d.canvas.height / 2, halfSize - PADDING, 0, Math.PI * 2);
             context2d.fillStyle = color;
             context2d.fill();
             return context2d.canvas;
@@ -28,7 +28,9 @@ define([
             return Math.round(Math.sqrt(area / (Math.PI)));
         }
 
-        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXSIZE + GLOWMAXSIZE + 1);
+        var HALOWIDTH = 2 + PADDING;
+        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXSIZE + GLOWMAXSIZE + HALOWIDTH);
+
 
         var ICONCACHE = {};
 
@@ -194,7 +196,7 @@ define([
 
             _getOutlineWidth: function (bmu) {
                 if (!bmu.highlight) {
-                    return 1;
+                    return HALOWIDTH;
                 }
                 var pulseTime = 1000;
                 var offset = Date.now() % pulseTime;
@@ -203,7 +205,7 @@ define([
                     offset = pulseTime - offset;
                 }
 
-                return 1.5 + (4 * offset / (pulseTime / 2));
+                return HALOWIDTH + (4 * offset / (pulseTime / 2));
 
             },
 
@@ -216,8 +218,8 @@ define([
                     x = jigger(map.toViewX(this._bmus[i].x));
                     y = jigger(map.toViewY(this._bmus[i].y));
 
-
                     haloSize = this._bmus[i].size + this._getOutlineWidth(this._bmus[i]);
+
 
                     context2d.drawImage(HALOICON, x - haloSize / 2, y - haloSize / 2, haloSize, haloSize);
                     context2d.drawImage(this._bmus[i].icon, x - this._bmus[i].size / 2, y - this._bmus[i].size / 2, this._bmus[i].size, this._bmus[i].size);
