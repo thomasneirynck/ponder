@@ -4,7 +4,33 @@ define([
     function (type, Evented, EasingInput, Legend, classColors) {
 
 
+        function generateIcon(color, halfSize) {
+            var context2d = document.createElement("canvas").getContext("2d");
+            context2d.canvas.width = context2d.canvas.height = halfSize * 2;
+            context2d.beginPath();
+            context2d.arc(context2d.canvas.width / 2, context2d.canvas.height / 2, halfSize - 1, 0, Math.PI * 2);
+            context2d.fillStyle = color;
+            context2d.fill();
+            return context2d.canvas;
+        }
 
+
+        var GLOWMAXSIZE = 4;
+        var MINAREA = Math.PI * Math.pow(5, 2);
+        var MAXAREA = Math.PI * Math.pow(20, 2);
+        var MAXSIZE = areaToSize(MAXAREA);
+
+        function jigger(float) {
+            return Math.floor(float) + 0.5;
+        }
+
+        function areaToSize(area) {
+            return Math.round(Math.sqrt(area / (Math.PI)));
+        }
+
+        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXSIZE + GLOWMAXSIZE + 1);
+
+        var ICONCACHE = {};
 
 
         function squareDistance(x1, y1, x2, y2) {
@@ -22,6 +48,7 @@ define([
                     var bmuView = Object.create(bmu);
                     bmuView.size = -1;
                     bmuView.index = index;
+                    bmuView.icon = null;
                     return bmuView;
                 });
                 this._highlights = [];
@@ -54,6 +81,7 @@ define([
                     self._dirty = true;
                 }
 
+
                 this._classElement.addEventListener("change", flagDirt);
 
 
@@ -83,12 +111,12 @@ define([
 
             },
 
-            formatForItem: function(itemId){
+            formatForItem: function (itemId) {
                 var featureData = this._dataTable.getFeatureData(itemId);
 
                 var wrap = document.createElement("div");
                 var elem, name, value;
-                for (var i = 0; i < featureData.length; i += 1){
+                for (var i = 0; i < featureData.length; i += 1) {
                     elem = document.createElement("div");
 
                     name = document.createElement("span");
@@ -105,11 +133,10 @@ define([
                 return wrap;
 
 
-
             },
 
-            getHighlightCount: function(){
-              return this._highlights.length;
+            getHighlightCount: function () {
+                return this._highlights.length;
             },
 
             selectBmusFromController: function (areaSelectLayerController) {
@@ -131,7 +158,6 @@ define([
             },
 
 
-
             _recomputeSizeColor: function () {
 
                 if (!this._dirty) {
@@ -140,54 +166,66 @@ define([
 
                 var classValue = this._classElement.value;
                 var minMaxForSize = this._dataTable.getMinMax(classValue);
-                var minArea = Math.PI * Math.pow(5, 2);
-                var maxArea = Math.PI * Math.pow(20, 2);
 
                 var area, size, ordinalPositionForSize;
 
                 var colorClassifier = this._getClassifier();
                 var isOrdinal = this._dataTable.isOrdinal(classValue);
+                var fillStyle;
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, classValue)) : -1;
-                    area = minArea + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (maxArea - minArea);
-                    size = Math.round(Math.sqrt(area / (Math.PI)));
+
+                    area = MINAREA + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (MAXAREA - MINAREA);
+                    size = areaToSize(area);
                     this._bmus[i].size = size;
-                    this._bmus[i].fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
+
+                    fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
+                    if (!ICONCACHE[fillStyle]) {
+                        ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXSIZE);
+                    }
+                    this._bmus[i].icon = ICONCACHE[fillStyle];
+
                 }
 
+                this._iconDirty = false;
                 this._dirty = false;
             },
 
-            _getOutlineWidth: function(bmu){
-                if (!bmu.highlight){
+
+            _getOutlineWidth: function (bmu) {
+                if (!bmu.highlight) {
                     return 1;
                 }
                 var pulseTime = 1000;
                 var offset = Date.now() % pulseTime;
 
-                if (offset > pulseTime/2){
+                if (offset > pulseTime / 2) {
                     offset = pulseTime - offset;
                 }
 
-                return 1 + (4 * offset/(pulseTime/2));
+                return 1.5 + (4 * offset / (pulseTime / 2));
 
             },
 
             paint: function (context2d, map) {
-                console.log("paint!");
                 this._recomputeSizeColor();
                 var atLeastOneHighlight = false;
+                var x, y, haloSize;
                 for (var i = 0; i < this._bmus.length; i += 1) {
-                    context2d.beginPath();
-                    context2d.arc(map.toViewX(this._bmus[i].x), map.toViewY(this._bmus[i].y), this._bmus[i].size, 0, Math.PI * 2);
-                    context2d.fillStyle = this._bmus[i].fillStyle;
-                    context2d.fill();
-                    context2d.lineWidth =  this._getOutlineWidth(this._bmus[i]);
-                    context2d.strokeStyle = "rgba(255,255,255,0.8)";
-                    context2d.stroke();
+
+                    x = jigger(map.toViewX(this._bmus[i].x));
+                    y = jigger(map.toViewY(this._bmus[i].y));
+
+
+                    haloSize = this._bmus[i].size + this._getOutlineWidth(this._bmus[i]);
+
+                    context2d.drawImage(HALOICON, x - haloSize / 2, y - haloSize / 2, haloSize, haloSize);
+                    context2d.drawImage(this._bmus[i].icon, x - this._bmus[i].size / 2, y - this._bmus[i].size / 2, this._bmus[i].size, this._bmus[i].size);
+
+
                     atLeastOneHighlight = atLeastOneHighlight || this._bmus[i].highlight;
                 }
-                if (atLeastOneHighlight){
+                if (atLeastOneHighlight) {
                     this.invalidate();
                 }
             },
@@ -227,11 +265,11 @@ define([
             },
 
 
-            filterBmus: function(clazz, value){
-              return this._dataTable.filterItems(clazz, value);
+            filterBmus: function (clazz, value) {
+                return this._dataTable.filterItems(clazz, value);
             },
 
-            getClass: function(){
+            getClass: function () {
                 return this._classElement.value;
             },
 
