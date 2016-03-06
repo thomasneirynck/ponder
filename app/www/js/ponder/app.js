@@ -132,13 +132,16 @@ require([
         }
 
         var waitingDiv = document.createElement("div");
+        waitingDiv.setAttribute("data-ponder-type","progress_indicator");
         var spinnerIcon = document.createElement("img");
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
         var waitingDivText = document.createElement("span");
-        waitingDivText.innerHTML = "Thinking ... 0%";
+        waitingDivText.innerHTML = "Estimating progress...";
         waitingDiv.appendChild(waitingDivText);
         document.getElementById("center").appendChild(waitingDiv);
+
+        var first = false;
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
             .then(function (aSomHandle) {
@@ -149,23 +152,32 @@ require([
                 return somHandle.uMatrixNormalized();
             }, throwError, function (payload) {
                 //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
-                waitingDivText.innerHTML = "Thinking ..." + Math.round(payload.progress * 100) + "%";
+                waitingDivText.innerHTML = "Making map..." + Math.round(payload.progress * 100) + "%";
             })
             .then(function (successData) {
 
                 jquery("#map").show();
                 document.getElementById("mapToolContainer").style.display = oldDisplay;
 
-                waitingDiv.parentNode.removeChild(waitingDiv);
+
+
                 map = new Map("map", somHandle.width, somHandle.height);
 
 
                 uMatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
                 uMatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
                 map.addLayer(uMatrixLayer);
+
+                waitingDivText.innerHTML = "Finding locations ...";
+                document.getElementById("center").appendChild(waitingDiv);
+
+
                 return somHandle.bmus();
             }, throwError)
             .then(function (bmuResult) {
+
+
+                waitingDiv.parentNode.removeChild(waitingDiv);
 
                 //bmus
                 var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);

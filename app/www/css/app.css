@@ -187,7 +187,8 @@ a:hover {
     border-radius: 24px;
     background-color: #df723e;
     width: 80%;
-    opacity: 0.8
+    opacity: 0.8;
+    color: ivory;
 }
 
 #workflow table td {
@@ -668,4 +669,11 @@ div[data-ponder-type="balloon"]  > div > div >  div > span:nth-child(2){
 
 
 
-
+#center > div[data-ponder-type="progress_indicator"] {
+    position: absolute;
+    margin: 50% auto;
+    background-color: ivory;
+    border-radius: 8px;
+    height: auto;
+    text-align: center;
+}
