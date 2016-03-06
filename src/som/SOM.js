@@ -196,7 +196,7 @@ define([
                 for (t = 0; t < sampleData.length; t += this._codeBookWeights.length) {
                     this.train(sampleData, t, learningRate, neighbourhoodDistance, bmu);
                 }
-                this.emit("TrainMapProgress", s / iterationLimit);
+                this.emit("TrainMapProgress", (s + 1) / iterationLimit);
             }
         },
 

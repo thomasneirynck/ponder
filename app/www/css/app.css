@@ -213,6 +213,13 @@ a:hover {
 .previewTable {
 }
 
+.previewTable > div > div:nth-child(1) {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    font-weight: bold;
+    color: #df723e;
+}
+
 .previewTable input {
     border-radius: 8px;
     background-color: #df723e;
@@ -610,7 +617,7 @@ body div[data-boxplot-readout="1"] {
     background-color: white;
     opacity: 0.8;
     border-radius: 4px;
-    padding:2px;
+    padding: 2px;
 }
 
 #summary > div[data-plot-type="histogram"] > div:nth-child(2) > div {
@@ -634,7 +641,6 @@ body div[data-boxplot-readout="1"] {
     height: 100%;
 }
 
-
 div[data-ponder-type="balloon"] {
     background-color: #FFFFFF;
     opacity: 0.7;
@@ -643,31 +649,29 @@ div[data-ponder-type="balloon"] {
     border: 1px solid #df723e
 }
 
-div[data-ponder-type="balloon"]  > div > div{
+div[data-ponder-type="balloon"] > div > div {
     margin-bottom: 1em;
 }
 
-div[data-ponder-type="balloon"]  > div > div >  div {
+div[data-ponder-type="balloon"] > div > div > div {
     display: flex;
     flex-flow: row;
     position: relative;
     justify-content: space-between;
 }
 
-div[data-ponder-type="balloon"]  > div > div >  div > span {
+div[data-ponder-type="balloon"] > div > div > div > span {
     position: relative;
 }
 
-div[data-ponder-type="balloon"]  > div > div >  div > span:nth-child(1){
+div[data-ponder-type="balloon"] > div > div > div > span:nth-child(1) {
     font-weight: bold;
     padding-right: 0.4em;
 }
 
-div[data-ponder-type="balloon"]  > div > div >  div > span:nth-child(2){
+div[data-ponder-type="balloon"] > div > div > div > span:nth-child(2) {
     text-align: right;
 }
-
-
 
 #center > div[data-ponder-type="progress_indicator"] {
     position: absolute;

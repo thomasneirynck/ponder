@@ -174,6 +174,7 @@ define([
             },
 
             paint: function (context2d, map) {
+                console.log("paint!");
                 this._recomputeSizeColor();
                 var atLeastOneHighlight = false;
                 for (var i = 0; i < this._bmus.length; i += 1) {

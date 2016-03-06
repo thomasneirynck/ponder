@@ -177,11 +177,14 @@ require([
             .then(function (bmuResult) {
 
 
+                console.log("done finding result", bmuResult);
                 waitingDiv.parentNode.removeChild(waitingDiv);
+
 
                 //bmus
                 var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
+                console.log("added layer");
 
                 var areaSelectLayerController = new AreaSelectLayerController();
                 areaSelectLayerController.setOnMap(map);

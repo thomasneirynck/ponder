@@ -131,12 +131,12 @@ define([
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
-                header.innerHTML = "<div>Select the columns with the independent variables: </div>" +
-                    "<div>" +
-                    "<br/><strong>Number</strong>: e.g. measurements like height, weight, speed, rank or distance" +
-                    "<br/><strong>Category</strong>: e.g. observations like gender, color, or diagnosis" +
-                    "<br/><strong>Exclude</strong>: when selected, this field will not be taken into account when creating the map." +
-                    "</div>";
+                header.innerHTML = "<div>Select the columns with the independent variables</div>";
+                //    "<div>" +
+                //    "<br/><strong>Number</strong> measurements like height, weight, speed, rank or distance" +
+                //    "<br/><strong>Category</strong> " +
+                //    "<br/><strong>Exclude</strong> when selected, this field will not be taken into account when creating the map" +
+                //    "</div>";
                 headerWrapper.appendChild(header);
                 tablePreviewNode.appendChild(headerWrapper);
 
@@ -148,10 +148,13 @@ define([
                 nameColHead.innerHTML = "Name";
                 var ordinalColHead = document.createElement("th");
                 ordinalColHead.innerHTML = "Number";
+                ordinalColHead.title = "measurements like height, weight, speed, rank or distance";
                 var categoryColHead = document.createElement("th");
                 categoryColHead.innerHTML = "Category";
+                categoryColHead.title = "observations like gender, color, or diagnosis";
                 var ignoreColHead = document.createElement("th");
                 ignoreColHead.innerHTML = "Exclude";
+                ignoreColHead.title = "this field will not be taken into account when creating the map";
 
                 tableHeader.appendChild(nameColHead);
                 tableHeader.appendChild(ordinalColHead);
