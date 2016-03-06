@@ -47,13 +47,13 @@ define([
             }
 
             var itemSpan;
-            for (var i = 0; i < legend.values.length; i += 1) {
+            var maxItems = Math.min(legend.values.length,256);//magix number based on colors
+            for (var i = 0; i < maxItems; i += 1) {
                 itemSpan = document.createElement("span");
-                itemSpan.style.position = "absolute";
-                itemSpan.style.top = 0;
+                itemSpan.style.position = "absolute"; itemSpan.style.top = 0;
                 itemSpan.style.height = "100%";
-                itemSpan.style.width = (100 / legend.values.length) + "%";
-                itemSpan.style.left = (100 / legend.values.length) * i + "%";
+                itemSpan.style.width = (100 / maxItems) + "%";
+                itemSpan.style.left = (100 / maxItems) * i + "%";
                 itemSpan.style["background-color"] = legend.classifier(legend.values[i]);
                 itemSpan.innerHTML = legend.values[i];
                 itemSpan.title = legend.values[i];

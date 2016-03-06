@@ -47,7 +47,7 @@ define([
                 plot.appendChild(container);
 
                 minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
-                console.log(minmax);
+
                 box = new Boxplot(minmax[0], minmax[1], container);
                 box.setData(ordinalValues[selectedOrdinals[c]]);
 
