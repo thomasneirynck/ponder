@@ -18,13 +18,13 @@ define([
         var GLOWMAXSIZE = 4;
         var MINAREA = Math.PI * Math.pow(5, 2);
         var MAXAREA = Math.PI * Math.pow(20, 2);
-        var MAXSIZE = areaToSize(MAXAREA);
+        var MAXSIZE = areaToRadius(MAXAREA);
 
         function jigger(float) {
             return Math.floor(float) + 0.5;
         }
 
-        function areaToSize(area) {
+        function areaToRadius(area) {
             return Math.round(Math.sqrt(area / (Math.PI)));
         }
 
@@ -48,7 +48,7 @@ define([
                 this._dataTable = dataTable;
                 this._bmus = bmus.map(function (bmu, index) {
                     var bmuView = Object.create(bmu);
-                    bmuView.size = -1;
+                    bmuView.radius = -1;
                     bmuView.index = index;
                     bmuView.icon = null;
                     return bmuView;
@@ -178,8 +178,8 @@ define([
                     ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, classValue)) : -1;
 
                     area = MINAREA + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (MAXAREA - MINAREA);
-                    size = areaToSize(area);
-                    this._bmus[i].size = size;
+                    size = areaToRadius(area);
+                    this._bmus[i].radius = size;
 
                     fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
                     if (!ICONCACHE[fillStyle]) {
@@ -218,11 +218,11 @@ define([
                     x = jigger(map.toViewX(this._bmus[i].x));
                     y = jigger(map.toViewY(this._bmus[i].y));
 
-                    haloSize = this._bmus[i].size + this._getOutlineWidth(this._bmus[i]);
+                    haloSize = this._bmus[i].radius + this._getOutlineWidth(this._bmus[i]);
 
 
                     context2d.drawImage(HALOICON, x - haloSize / 2, y - haloSize / 2, haloSize, haloSize);
-                    context2d.drawImage(this._bmus[i].icon, x - this._bmus[i].size / 2, y - this._bmus[i].size / 2, this._bmus[i].size, this._bmus[i].size);
+                    context2d.drawImage(this._bmus[i].icon, x - this._bmus[i].radius, y - this._bmus[i].radius, this._bmus[i].radius * 2, this._bmus[i].radius * 2);
 
 
                     atLeastOneHighlight = atLeastOneHighlight || this._bmus[i].highlight;
@@ -259,7 +259,7 @@ define([
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     bx = map.toViewX(this._bmus[i].x);
                     by = map.toViewY(this._bmus[i].y);
-                    if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].size, 2)) {
+                    if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].radius * 2, 2)) {
                         items.push(i);
                     }
                 }
