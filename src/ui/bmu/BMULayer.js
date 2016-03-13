@@ -18,7 +18,7 @@ define([
         var GLOWMAXSIZE = 4;
         var MINAREA = Math.PI * Math.pow(5, 2);
         var MAXAREA = Math.PI * Math.pow(20, 2);
-        var MAXSIZE = areaToRadius(MAXAREA);
+        var MAXRADIUS = areaToRadius(MAXAREA);
 
         function jigger(float) {
             return Math.floor(float) + 0.5;
@@ -29,8 +29,7 @@ define([
         }
 
         var HALOWIDTH = 2 + PADDING;
-        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXSIZE + GLOWMAXSIZE + HALOWIDTH);
-
+        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXRADIUS * 2 + GLOWMAXSIZE + HALOWIDTH);
 
         var ICONCACHE = {};
 
@@ -183,7 +182,7 @@ define([
 
                     fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
                     if (!ICONCACHE[fillStyle]) {
-                        ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXSIZE);
+                        ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXRADIUS);
                     }
                     this._bmus[i].icon = ICONCACHE[fillStyle];
 
@@ -218,7 +217,7 @@ define([
                     x = jigger(map.toViewX(this._bmus[i].x));
                     y = jigger(map.toViewY(this._bmus[i].y));
 
-                    haloSize = this._bmus[i].radius + this._getOutlineWidth(this._bmus[i]);
+                    haloSize = this._bmus[i].radius * 2 + this._getOutlineWidth(this._bmus[i]);
 
 
                     context2d.drawImage(HALOICON, x - haloSize / 2, y - haloSize / 2, haloSize, haloSize);
