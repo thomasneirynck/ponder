@@ -45,7 +45,6 @@ define([
             function removeHighlight() {
                 self._bmuLayer.highlight(Array.prototype);
             }
-
             var itemSpan;
             var maxItems = Math.min(legend.values.length,256);//magix number based on colors
             for (var i = 0; i < maxItems; i += 1) {

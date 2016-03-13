@@ -118,6 +118,9 @@ define(["type", "./util"], function (type, util) {
             for (var i = 0; i < this._data.length; i += 1) {
                 if (this._uniques[columnIndex].indexOf(this._data[i][columnIndex]) < 0) {
                     this._uniques[columnIndex].push(this._data[i][columnIndex]);
+                    if (this._uniques[columnIndex].length > 256){
+                        break;
+                    }
                 }
             }
             return this._uniques[columnIndex];

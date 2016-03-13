@@ -11,6 +11,7 @@ define([
 
         setOnMap: function (map) {
 
+            var hadIdle = false;
             function select (mapEvent) {
                 var itemsPerLayer = map.pick(mapEvent.getMapViewX(), mapEvent.getMapViewY());
                 var all = document.createElement("div");
@@ -22,19 +23,22 @@ define([
                             var html = result.layer.formatForItem(itemId);
                             all.appendChild(html);
                             hasItems = true;
-                        });
-                    }
+                        }); }
                 });
 
 
-                if (hasItems) {
+                if (hasItems && (hadIdle || map.hasBalloon())) {
                     map.showBalloon(mapEvent.getMapViewX(), mapEvent.getMapViewY(), all);
                 }else{
                     map.hideBalloon();
                 }
-
+                hadIdle = false;
             }
 
+            this._handle = map.on("idle", function(mapEvent){
+                hadIdle = true;
+                setTimeout(select.bind(null, mapEvent),0);
+            });
             this._handle = map.on("move",select);
 
             function turnOff(layer){
