@@ -199,12 +199,13 @@ require([
             .then(function () {
 
                 //start intro
-
-                if (getCookie("ponder-intro") !== "1") {
-                    intro = introJs();
-                    intro.start();
-                    setCookie("ponder-intro", "1");
+                if (getCookie("ponder-intro") === "1") {
+                    return;
                 }
+
+                var intro = introJs();
+                setCookie("ponder-intro", "1", 100);
+                intro.start();
 
 
             })
@@ -223,8 +224,12 @@ require([
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1);
-            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
         }
         return "";
     }
