@@ -44,10 +44,10 @@ define([
                     };
 
 
-                    self.select(selectionEvent);
                     if (selectionEvent.stats.getIndices().length === 0) {
                         self.emit("clear", selectionEvent);
                     } else {
+                        self.select(selectionEvent);
                         self.emit("change", selectionEvent);
                     }
 
