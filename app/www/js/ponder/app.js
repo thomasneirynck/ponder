@@ -9,13 +9,8 @@ require.config({
         'jquery': "bower_components/jquery/dist/jquery",
         datatables: 'bower_components/datatables/media/js/jquery.dataTables',
         datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis',
-        //plotly: "vendor/plotly_20150812a_basic/plotly.min",
-        //plotly: "vendor/plotly/plotly-latest.min",
-        //plotly: "vendor/plotly/plotly.min",
-        plotly: "vendor/plotly/plotly",
-        typedarray: "vendor/plotly_20150812a_basic/dependencies/typedarray",
-        d3: "vendor/plotly_20150812a_basic/dependencies/d3.v3.min",
-        jStat: "vendor/jstat"
+        jStat: "vendor/jstat",
+        introJs: "vendor/intro.js-2.0.0/minified/intro.min"
     },
     shim: {
         Papa: {
@@ -24,20 +19,16 @@ require.config({
         jquery: {
             exports: "jquery"
         },
-        plotly: {
-            exports: "Plotly",
-            deps: ["d3", "jquery", "typedarray"]
-        },
-        d3: {
-            exports: "d3"
-        },
         jStat: {
             exports: "jStat"
+        },
+        "introJs": {
+            exports: "introJs"
         }
     }
 });
 
-Plotly = this.Plotly || {};//plotly makes baby-jesus cry by not being compatible with requirejs.(https://github.com/plotly/plotly.github.io/issues/74)
+
 require([
     "ponder/som/SOMFactory",
     "ponder/dataload/DataSelector",
@@ -49,8 +40,12 @@ require([
     "ponder/ui/highlight/SelectController",
     "ponder/ui/bmu/BMUSelector",
     "ponder/ui/bmu/BMUSelectionHistory",
+    "introJs",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, jquery) {
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, intro, jquery) {
+
+
+    console.log("intro", intro);
 
     document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
