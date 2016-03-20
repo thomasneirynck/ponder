@@ -69,7 +69,6 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
         },
 
         toWorldX: function(x){
-            console.log(this._min, this._max);
             return x * (this._max - this._min) / this._context2d.canvas.width;
         },
 

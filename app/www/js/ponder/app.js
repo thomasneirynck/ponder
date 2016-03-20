@@ -42,10 +42,10 @@ require([
     "ponder/ui/bmu/BMUSelectionHistory",
     "introJs",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, intro, jquery) {
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, introJs, jquery) {
 
 
-    console.log("intro", intro);
+    console.log("intro", introJs);
 
     document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
@@ -127,7 +127,7 @@ require([
         }
 
         var waitingDiv = document.createElement("div");
-        waitingDiv.setAttribute("data-ponder-type","progress_indicator");
+        waitingDiv.setAttribute("data-ponder-type", "progress_indicator");
         var spinnerIcon = document.createElement("img");
         spinnerIcon.src = "images/ajax-loader.gif";
         waitingDiv.appendChild(spinnerIcon);
@@ -155,7 +155,6 @@ require([
                 document.getElementById("mapToolContainer").style.display = oldDisplay;
 
 
-
                 map = new Map("map", somHandle.width, somHandle.height);
 
 
@@ -172,14 +171,12 @@ require([
             .then(function (bmuResult) {
 
 
-                console.log("done finding result", bmuResult);
                 waitingDiv.parentNode.removeChild(waitingDiv);
 
 
                 //bmus
                 var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
-                console.log("added layer");
 
                 var areaSelectLayerController = new AreaSelectLayerController();
                 areaSelectLayerController.setOnMap(map);
@@ -199,8 +196,38 @@ require([
 
 
             }, throwError)
+            .then(function () {
+
+                //start intro
+
+                if (getCookie("ponder-intro") !== "1") {
+                    intro = introJs();
+                    intro.start();
+                    setCookie("ponder-intro", "1");
+                }
+
+
+            })
             .then(Function.prototype, throwError);
     });
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
 
 
 });

@@ -180,18 +180,18 @@
 
         <div id="toggle">
             <div id="toggle-to-map" class="selectedToggle">Map</div>
-            <div id="toggle-to-table">Table</div>
+            <div id="toggle-to-table" data-step="7" data-intro="Open a table view of your current selection.">Table</div>
         </div>
 
         <!--<div id="summary-wrapper">-->
-        <div id="summary"></div>
+        <div id="summary" data-position="right" data-step="3" data-intro="A summary of the attributes of the selected items."></div>
         <!--</div>-->
     </div>
 
     <div id="right">
         <div id="top">
             <div id="mapToolContainer">
-                <div id="ease">
+                <div id="ease" data-step="4" data-intro="Change the contrast of the terrain. Big differences in contrast reveal big differences beteen items on the map.">
                     <div>Contrast</div>
                     <div><span id="easeReadout"></span></div>
                 </div>
@@ -200,12 +200,12 @@
                 <!--<div>Labels</div>-->
                 <!--<div id="label" class="dropDown"></div>-->
                 <!--</div>-->
-                <div id="sizeEasing">
+                <div id="sizeEasing" data-step="5" data-intro="Change the size of the items on the map">
                     <div>Size</div>
                     <!--<div id="size" class="dropDown"></div>-->
 
                 </div>
-                <div>
+                <div data-step="6" data-intro="Use different colors to classify your items.">
                     <div>Classification</div>
                     <div id="class" class="dropDown"></div>
                 </div>
@@ -215,7 +215,7 @@
 
 
         <div id="center">
-            <div id="mapContainer">
+            <div id="mapContainer" data-position="right" data-step="1" data-intro="Draw an area to select items.">
                 <div id="map">
                 </div>
             </div>
@@ -226,7 +226,7 @@
 
 
         <div id="bottom">
-            <div id="selectionHistoryContainer">
+            <div id="selectionHistoryContainer" data-position="top" data-step="2" data-intro="This strip keeps track of all your previous selections.">
                 <div id="selectionHistory"></div>
             </div>
         </div>
