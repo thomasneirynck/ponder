@@ -85,6 +85,7 @@ define([
             table.border = 0;
             table.class = "display";
             table.id = "ponder-table";
+            table.setAttribute("class","hover");
             document.getElementById(this._bmuContainer).appendChild(table);
 
             var daTable = jquery(table).dataTable({
