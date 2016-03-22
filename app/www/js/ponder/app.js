@@ -45,7 +45,6 @@ require([
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, introJs, jquery) {
 
 
-    console.log("intro", introJs);
 
     document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
