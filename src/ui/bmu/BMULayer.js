@@ -22,7 +22,8 @@ define([
         var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXRADIUS * 2 + GLOWMAXSIZE + HALOWIDTH);
 
         function jigger(float) {
-            return Math.floor(float) + 0.5;
+            //return Math.floor(float) + 0.5;
+            return float;
         }
 
         function areaToRadius(area) {
@@ -256,8 +257,8 @@ define([
                 var bx, by;
                 var items = [];
                 for (var i = 0; i < this._bmus.length; i += 1) {
-                    bx = map.toViewX(this._bmus[i].x);
-                    by = map.toViewY(this._bmus[i].y);
+                    bx = jigger(map.toViewX(this._bmus[i].x));
+                    by = jigger(map.toViewY(this._bmus[i].y));
                     if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].radius, 2)) {
                         items.push(i);
                     }
