@@ -3,7 +3,6 @@ define([
     ],
     function (type, Evented, EasingInput, Legend, classColors) {
 
-        var PADDING = 1;
         function generateIcon(color, halfSize) {
             var context2d = document.createElement("canvas").getContext("2d");
             context2d.canvas.width = context2d.canvas.height = halfSize * 2;
@@ -14,11 +13,13 @@ define([
             return context2d.canvas;
         }
 
-
-        var GLOWMAXSIZE = 4;
+        var GLOWMAXSIZE = 16;
+        var PADDING = 1;
         var MINAREA = Math.PI * Math.pow(5, 2);
         var MAXAREA = Math.PI * Math.pow(20, 2);
         var MAXRADIUS = areaToRadius(MAXAREA);
+        var HALOWIDTH = 2 + PADDING;
+        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXRADIUS * 2 + GLOWMAXSIZE + HALOWIDTH);
 
         function jigger(float) {
             return Math.floor(float) + 0.5;
@@ -28,8 +29,6 @@ define([
             return Math.round(Math.sqrt(area / (Math.PI)));
         }
 
-        var HALOWIDTH = 2 + PADDING;
-        var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXRADIUS * 2 + GLOWMAXSIZE + HALOWIDTH);
 
         var ICONCACHE = {};
 
@@ -204,7 +203,7 @@ define([
                     offset = pulseTime - offset;
                 }
 
-                return HALOWIDTH + (4 * offset / (pulseTime / 2));
+                return HALOWIDTH + (GLOWMAXSIZE * offset / (pulseTime / 2));
 
             },
 

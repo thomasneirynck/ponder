@@ -73,7 +73,8 @@ define([
 
             document.getElementById(this._bmuContainer).innerHTML = "";
 
-            var data = selectionEvent.stats.getIndices().map(function (index) {
+            var indices = selectionEvent.stats.getIndices();
+            var data = indices.map(function (index) {
                 return self._bmuLayer.getDataTable().getFeatureData(index);
             });
 
@@ -83,9 +84,10 @@ define([
             table.cellspacing = 0;
             table.border = 0;
             table.class = "display";
+            table.id = "ponder-table";
             document.getElementById(this._bmuContainer).appendChild(table);
 
-            jquery(table).dataTable({
+            var daTable = jquery(table).dataTable({
                 //searching: true,
                 //ordering: true,
                 //paging: true,
@@ -96,6 +98,23 @@ define([
                     };
                 })
             });
+
+            jquery('#ponder-table tbody').on('click', 'tr', function (event) {
+                if (jquery(this).hasClass('selected')) {
+                    jquery(this).removeClass('selected');
+                }
+                else {
+                    daTable.$('tr.selected').removeClass('selected');
+                    jquery(this).addClass('selected');
+                    if (data[event.currentTarget._DT_RowIndex]) {
+                        self.emit("RowSelection", {
+                            item: data[event.currentTarget._DT_RowIndex],
+                            index: indices.indexOf(event.currentTarget._DT_RowIndex)
+                        });
+                    }
+                }
+            });
+
 
             document.getElementById(this._summaryContainer).innerHTML = "";
             new SummaryChart(this._summaryContainer, selectionEvent.selectedIndices, this._bmuLayer.getDataTable());

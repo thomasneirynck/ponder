@@ -174,17 +174,19 @@ require([
 
 
                 //bmus
-                var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
+                bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
 
                 var areaSelectLayerController = new AreaSelectLayerController();
                 areaSelectLayerController.setOnMap(map);
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
+                bmuSelector.on("RowSelection", function(object){
+                    bmuLayer.highlight([object.index]);
+                });
 
 
                 new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
-
                 bmuSelector.selectAll();
 
                 var hoverController = new HoverController();
