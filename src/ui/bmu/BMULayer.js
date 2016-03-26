@@ -15,19 +15,19 @@ define([
 
         var GLOWMAXSIZE = 16;
         var PADDING = 1;
-        var MINAREA = Math.PI * Math.pow(5, 2);
+        var MINAREA = Math.PI * Math.pow(3, 2);
         var MAXAREA = Math.PI * Math.pow(20, 2);
         var MAXRADIUS = areaToRadius(MAXAREA);
         var HALOWIDTH = 2 + PADDING;
         var HALOICON = generateIcon("rgba(255,255,255,0.8)", MAXRADIUS * 2 + GLOWMAXSIZE + HALOWIDTH);
 
         function jigger(float) {
-            //return Math.floor(float) + 0.5;
+
             return float;
         }
 
         function areaToRadius(area) {
-            return Math.round(Math.sqrt(area / (Math.PI)));
+            return Math.ceil(Math.sqrt(area / (Math.PI)));
         }
 
 
@@ -209,6 +209,8 @@ define([
             },
 
             paint: function (context2d, map) {
+
+
                 this._recomputeSizeColor();
                 var atLeastOneHighlight = false;
                 var x, y, haloSize;
@@ -222,11 +224,10 @@ define([
                     context2d.drawImage(HALOICON, x - haloSize / 2, y - haloSize / 2, haloSize, haloSize);
                     context2d.drawImage(this._bmus[i].icon, x - this._bmus[i].radius, y - this._bmus[i].radius, this._bmus[i].radius * 2, this._bmus[i].radius * 2);
 
-                    //context2d.fillStyle= "rgb(255,0,0)";
-                    //context2d.fillRect(map.toViewX(this._bmus[i].x) - 5,map.toViewY(this._bmus[i].y) - 5,10,10);
-
                     atLeastOneHighlight = atLeastOneHighlight || this._bmus[i].highlight;
                 }
+
+
                 if (atLeastOneHighlight) {
                     this.invalidate();
                 }
@@ -259,7 +260,7 @@ define([
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     bx = jigger(map.toViewX(this._bmus[i].x));
                     by = jigger(map.toViewY(this._bmus[i].y));
-                    if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].radius, 2)) {
+                    if (squareDistance(bx, by, x, y) <= Math.pow(this._bmus[i].radius + HALOWIDTH, 2)) {
                         items.push(i);
                     }
                 }

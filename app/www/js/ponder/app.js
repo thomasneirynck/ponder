@@ -45,14 +45,14 @@ require([
 ], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, introJs, jquery) {
 
 
-
     document.body.addEventListener("contextmenu", function (e) {
         e.preventDefault();
     });
 
-    jquery("#map").hide();
-    var oldDisplay = document.getElementById("mapToolContainer").style.display;
-    document.getElementById("mapToolContainer").style.display = "none";
+
+    var oldDisplayMapTool = document.getElementById("mapToolContainer").style.display;
+    var oldDisplayToggle = document.getElementById("toggle").style.display;
+
     var somHandle;
 
     SOMFactory.SCRIPT_PATH = /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/;
@@ -66,13 +66,13 @@ require([
     }
 
 
-    jquery("#map").hide();
-    document.getElementById("mapToolContainer").style.display = "none";
-
-
     var tableContainer = document.getElementById("tableContainer");
     var mapContainer = document.getElementById("map");
+    mapContainer.style.display = "none";
     tableContainer.style.display = "none";
+    document.getElementById("mapToolContainer").style.display = "none";
+    document.getElementById("toggle").style.display = "none";
+
 
     var mapToggleButton = document.getElementById("toggle-to-map");
     var tableToggleButton = document.getElementById("toggle-to-table");
@@ -89,7 +89,7 @@ require([
         } else {
             mapToggleButton.classList.remove("selectedToggle");
             mapContainer.style.display = "none";
-            mapContainer.style.height = "auto";
+            mapContainer.style.height = "100%";
             tableToggleButton.classList.add("selectedToggle");
             tableContainer.style.display = "block";
         }
@@ -133,9 +133,9 @@ require([
         var waitingDivText = document.createElement("span");
         waitingDivText.innerHTML = "Estimating progress...";
         waitingDiv.appendChild(waitingDivText);
-        document.getElementById("center").appendChild(waitingDiv);
+        document.getElementById("center").insertBefore(waitingDiv, document.getElementById("center").firstChild);
 
-        var first = false;
+
         SOMFactory
             .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
             .then(function (aSomHandle) {
@@ -151,7 +151,9 @@ require([
             .then(function (successData) {
 
                 jquery("#map").show();
-                document.getElementById("mapToolContainer").style.display = oldDisplay;
+                document.getElementById("mapToolContainer").style.display = oldDisplayMapTool;
+                document.getElementById("toggle").style.display = oldDisplayToggle;
+                mapContainer.style.display = "block";
 
 
                 map = new Map("map", somHandle.width, somHandle.height);
@@ -181,7 +183,7 @@ require([
                 areaSelectLayerController.setOnMap(map);
 
                 var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
-                bmuSelector.on("RowSelection", function(object){
+                bmuSelector.on("RowSelection", function (object) {
                     bmuLayer.highlight([object.index]);
                 });
 

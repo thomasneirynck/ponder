@@ -17,7 +17,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._balloonDiv.style.position = "absolute";
             this._balloonDiv.style.top = 0;
             this._balloonDiv.style["pointer-events"] = "none";
-            this._balloonDiv.setAttribute("data-ponder-type","balloon");
+            this._balloonDiv.setAttribute("data-ponder-type", "balloon");
 
 
             this._context2d = document.createElement("canvas").getContext("2d");
@@ -41,56 +41,72 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             };
 
 
-
-
             this._rx = 0;
             this._ry = 0;
+            this._mx = 0;
+            this._my = 0;
             var mapEvent = Object.freeze({
                 getMapViewX: function () {
-                    return self._rx;
+                    return self._mx;
                 },
                 getMapViewY: function () {
-                    return self._ry;
+                    return self._my;
                 }
             });
 
             var down = false;
             var out = false;
             var waitingHandle = null;
-            function idle(){
+
+            function idle() {
                 self.emit("idle", mapEvent);
                 waitingHandle = null;
             }
-            function cancelIdle(){
+
+            function cancelIdle() {
                 clearTimeout(waitingHandle);
                 waitingHandle = null;
             }
+
+            function updateRelativeXY(event) {
+                var offset = jquery(self._context2d.canvas).offset();
+                self._rx = event.pageX - offset.left;
+                self._ry = event.pageY - offset.top;
+                self._mx = self._rx;
+                self._my = self._ry;
+            }
+
+            function updateRelativeMousePosition(event) {
+                self._mx = event.offsetX;
+                self._my = event.offsetY;
+            }
+
             jquery(this._context2d.canvas)
                 .mousedown(function (event) {
                     cancelIdle();
                     out = false;
                     down = true;
-                    self._rx = event.offsetX;
-                    self._ry = event.offsetY;
+                    updateRelativeMousePosition(event);
                     self.emit("dragstart", mapEvent);
                 })
                 .mousemove(function (event) {
+
                     cancelIdle();
                     out = false;
-                    self._rx = event.offsetX;
-                    self._ry = event.offsetY;
+
+                    updateRelativeMousePosition(event);
+
                     if (down) {
                         self.emit("drag", mapEvent);
                     } else {
                         self.emit("move", mapEvent);
                     }
-                    waitingHandle = setTimeout(idle,500);
+                    waitingHandle = setTimeout(idle, 500);
                 })
                 .mouseout(function (event) {
                     cancelIdle();
                     out = true;
-                    self._rx = event.offsetX;
-                    self._ry = event.offsetY;
+                    updateRelativeMousePosition(event);
                     self.emit("mouseout", mapEvent);
                 })
                 .mouseup(function (event) {
@@ -98,21 +114,14 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                     out = false;
                     if (down) {
                         down = false;
-                        self._rx = event.offsetX;
-                        self._ry = event.offsetY;
+                        updateRelativeMousePosition(event);
                         self.emit("dragend", mapEvent);
                     }
                 })
-                .click(function(event){
+                .click(function (event) {
                     self.emit("click", mapEvent);
                 });
 
-
-            function updateRelativeXY(event) {
-                var offset = jquery(self._context2d.canvas).offset();
-                self._rx = event.pageX - offset.left;
-                self._ry = event.pageY - offset.top;
-            }
 
             jquery(window)
                 .mousemove(function (event) {
@@ -130,23 +139,21 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
                 });
 
 
-
-
             window.addEventListener("resize", this.resize.bind(this));
             this.resize();
 
         },
 
 
-        hideBalloon: function(){
+        hideBalloon: function () {
             this._balloonDiv.style.display = "none";
         },
 
-        hasBalloon: function(){
-          return this._balloonDiv.style.display === "block";
+        hasBalloon: function () {
+            return this._balloonDiv.style.display === "block";
         },
 
-        showBalloon: function(x, y, content){
+        showBalloon: function (x, y, content) {
             this._balloonDiv.innerHTML = "";
             this._balloonDiv.appendChild(content);
             this._balloonDiv.style.display = "block";
@@ -165,7 +172,7 @@ define(["type", "Evented", "jquery"], function (type, Evented, jquery) {
             this._context2d = oldContext2d;
         },
 
-        forEachLayer: function(callback){
+        forEachLayer: function (callback) {
             this._layers.forEach(callback);
         },
 
