@@ -36,7 +36,6 @@ define([
                 areaSelectionNode.appendChild(screenshotGraphics.canvas);
                 self._node.insertBefore(areaSelectionNode, self._node.firstChild);
 
-                areaSelectionNode.addEventListener("mouseenter", select);
                 areaSelectionNode.addEventListener("click", select);
 
                 removeSelectionCSSClass();
