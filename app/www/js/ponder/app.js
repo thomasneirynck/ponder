@@ -133,7 +133,8 @@ require([
         var waitingDivText = document.createElement("span");
         waitingDivText.innerHTML = "Estimating progress...";
         waitingDiv.appendChild(waitingDivText);
-        document.getElementById("center").insertBefore(waitingDiv, document.getElementById("center").firstChild);
+        document.getElementById("waiting").appendChild(waitingDiv);
+
 
 
         SOMFactory
@@ -152,7 +153,6 @@ require([
 
                 jquery("#map").show();
                 document.getElementById("mapToolContainer").style.display = oldDisplayMapTool;
-                document.getElementById("toggle").style.display = oldDisplayToggle;
                 mapContainer.style.display = "block";
 
 
@@ -171,12 +171,15 @@ require([
             }, throwError)
             .then(function (bmuResult) {
 
+                document.getElementById("toggle").style.display = oldDisplayToggle;
 
                 waitingDiv.parentNode.removeChild(waitingDiv);
+                document.getElementById("waiting").style.display = "none";
+                document.getElementById("center").style.overflow = "auto";
 
 
                 //bmus
-                bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
+                var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", table, bmuResult.locations);
                 map.addLayer(bmuLayer);
 
                 var areaSelectLayerController = new AreaSelectLayerController();
