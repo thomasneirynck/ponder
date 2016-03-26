@@ -140,7 +140,7 @@ a:hover {
 }
 
 #selectionHistoryContainer > div > div:hover {
-    border: 3px solid #df723e;
+    border: 1px solid #df723e;
 }
 
 #selectionHistoryContainer > div > div:last-child:hover {
@@ -149,7 +149,7 @@ a:hover {
 
 #selectionHistoryContainer > div > div:last-child {
     opacity: 0.4;
-    border: 2px solid #5b3b31;
+    /*border: 2px solid #5b3b31;*/
 }
 
 #selector {
@@ -158,6 +158,13 @@ a:hover {
 
 #selector > div:nth-child(2) {
     overflow: auto;
+}
+
+#footer {
+    background-color: rgb(255, 247, 229);
+    border-radius: 2px;
+    font-size: 0.8em;
+    text-align: center;
 }
 
 #blurb {
