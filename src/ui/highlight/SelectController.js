@@ -18,7 +18,6 @@ define([
             function select (mapEvent) {
                 var itemsPerLayer = map.pick(mapEvent.getMapViewX(), mapEvent.getMapViewY());
                 var all = itemsPerLayer.reduce(collectItems, []);
-                console.log("select", all);
             }
 
             this._handle = map.on("click",select);

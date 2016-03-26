@@ -171,23 +171,22 @@ a:hover {
     flex-flow: row nowrap;
     justify-content: center;
     padding: 0.6em;
+    background-color: #df723e;
+    opacity: 0.8;
+    margin-bottom: 1em;
 }
 
 #workflow img {
     width: 64px;
     height: auto;
-    border-radius: 8px;
 }
 
 #workflow h2 {
-    font-size: 1.5em;
+    font-size: 1em;
 }
 
 #workflow table {
-    border-radius: 24px;
-    background-color: #df723e;
-    width: 80%;
-    opacity: 0.8;
+    width: 100%;
     color: ivory;
 }
 
@@ -199,6 +198,7 @@ a:hover {
 #uploadblurb {
     background-color: rgb(255, 247, 229);
     border-radius: 24px;
+    display: flex;
 }
 
 #uploadblurb input {
@@ -209,6 +209,8 @@ a:hover {
     display: flex;
     justify-content: flex-end;
 }
+
+
 
 .previewTable {
 }
@@ -226,13 +228,13 @@ a:hover {
     border-color: #df723e;
     margin-left: 50%;
     margin-right: 50%;
-    margin-top: 50px;
+    /*margin-top: 50px;*/
     font-weight: bold;
     color: #5b3b31;
 }
 
 .previewTable input:hover {
-    margin-top: 52px;
+    margin-top: 1px;
 }
 
 .previewTable table tr td:nth-child(4) {
@@ -465,8 +467,8 @@ body {
 }
 
 #examples img:hover {
-    transform: scale(0.95);
-    border: 1px solid #df723e;
+    transform: scale(0.98);
+    /*border: 1px solid #df723e;*/
 
 }
 

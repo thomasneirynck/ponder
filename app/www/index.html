@@ -22,17 +22,13 @@
 
 <div id="welcome">
 
-    <div class="header">
-        <div>Ponder</div>
-        <div>by <a href="//hepburnave.com">Hepburn Ave LLC</a></div>
-    </div>
 
 
-    <div id="tablePreview" class="previewTable"></div>
-
-    <div id="blurb">
-
-
+    <div id="intro">
+        <div class="header">
+            <div>Ponder</div>
+            <div>by <a href="//hepburnave.com">Hepburn Ave LLC</a></div>
+        </div>
         <div id="workflow">
             <table>
 
@@ -58,7 +54,7 @@
                 </tr>
                 <tr>
                     <td>
-                        Spreadsheet
+                        Measure
                     </td>
                     <td>
 
@@ -66,7 +62,7 @@
                     <td>Map</td>
                     <td></td>
                     <td>
-                       Eureka!
+                        Marvel
                     </td>
                 </tr>
             </table>
@@ -74,20 +70,26 @@
 
         </div>
 
+        <div id="uploadblurb">
+            <div>
+                <div id="selector">
+                </div>
+            </div>
+            <div>
+                <span style="font-weight: bold">Map your own spreadsheet</span>
+                (.csv/.txt format, comma, tab, or space delimited).
+            </div>
+
+        </div>
+        <div id="tablePreview" class="previewTable"></div>
+    </div>
+
+    <div id="blurb">
 
         <div id="info">
             <div id="examples">
                 <div>
-                    <div id="uploadblurb">
-                        <div>
-                            <div id="selector">
-                            </div>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold">Map your own spreadsheet</span>
-                            (.csv/.txt format, comma, tab, or space delimited).
-                        </div>
-                    </div>
+
                     <div>
                         <div>
                             <a href="?table=data/iris.csv&exclude=id,class&ordinal=Sepal-length,Sepal-width,Petal-length,Petal-width">
@@ -95,21 +97,24 @@
                             </a>
                         </div>
                         <div>
-                            orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
-                            laoreet
-                            vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
-                            non
-                            libero fermentum sapien viverra lobortis eget in lacus. Aen
-                            orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
-                            laoreet
-                            vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
-                            non
-                            libero fermentum sapien viverra lobortis eget in lacus. Aen
-                            orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
-                            laoreet
-                            vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
-                            non
-                            libero fermentum sapien viverra lobortis eget in lacus. Aen
+                            <h3>Iris</h3>
+                            <p>
+                                orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
+                                laoreet
+                                vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
+                                non
+                                libero fermentum sapien viverra lobortis eget in lacus. Aen
+                                orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
+                                laoreet
+                                vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
+                                non
+                                libero fermentum sapien viverra lobortis eget in lacus. Aen
+                                orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
+                                laoreet
+                                vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
+                                non
+                                libero fermentum sapien viverra lobortis eget in lacus. Aen
+                            </p>
                         </div>
                     </div>
                     <div>
@@ -119,6 +124,7 @@
                             </a>
                         </div>
                         <div>
+                            <h3>Titanic Passengers</h3>
                             orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
                             laoreet
                             vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
@@ -143,6 +149,7 @@
                             </a>
                         </div>
                         <div>
+                            <h3>2015 NBA Playoffs</h3>
                             orem ipsum dolor sit amet, consectetur adipiscing elit. Integer non leo vitae lorem pulvinar
                             laoreet
                             vel ut mauris. Phasellus pharetra lorem nisl, tempus maximus enim tincidunt sit amet. Mauris
@@ -170,6 +177,8 @@
 </div>
 
 
+
+
 <div id="dashboard">
 
     <div id="left">
@@ -180,18 +189,21 @@
 
         <div id="toggle">
             <div id="toggle-to-map" class="selectedToggle">Map</div>
-            <div id="toggle-to-table" data-step="7" data-intro="Open a table view of your current selection.">Table</div>
+            <div id="toggle-to-table" data-step="7" data-intro="Open a table view of your current selection.">Table
+            </div>
         </div>
 
         <!--<div id="summary-wrapper">-->
-        <div id="summary" data-position="right" data-step="3" data-intro="A summary of the attributes of the selected items."></div>
+        <div id="summary" data-position="right" data-step="3"
+             data-intro="A summary of the attributes of the selected items."></div>
         <!--</div>-->
     </div>
 
     <div id="right">
         <div id="top">
             <div id="mapToolContainer">
-                <div id="ease" data-step="4" data-intro="Change the contrast of the terrain. Big differences in contrast reveal big differences beteen items on the map.">
+                <div id="ease" data-step="4"
+                     data-intro="Change the contrast of the terrain. Big differences in contrast reveal big differences beteen items on the map.">
                     <div>Contrast</div>
                     <div><span id="easeReadout"></span></div>
                 </div>
@@ -226,7 +238,8 @@
 
 
         <div id="bottom">
-            <div id="selectionHistoryContainer" data-position="top" data-step="2" data-intro="This strip keeps track of all your previous selections.">
+            <div id="selectionHistoryContainer" data-position="top" data-step="2"
+                 data-intro="This strip keeps track of all your previous selections.">
                 <div id="selectionHistory"></div>
             </div>
         </div>
@@ -236,10 +249,17 @@
 </div>
 
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-75411334-1', 'auto');
     ga('send', 'pageview');
