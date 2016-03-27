@@ -4,18 +4,12 @@ define([
     "Evented",
     "jquery",
     "./DataTable",
-    "./util",
+    "../util",
     "require",
     "datatables"
 ], function (Papa, type, Evented, jquery, DataTable, util, require) {
 
 
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
 
     function isOrdinal(name, sampleValue) {
         return !isNaN(util.toNumber(sampleValue));
@@ -31,9 +25,9 @@ define([
 
     function suggestType(name, sampleValue, position) {
 
-        var categories = getParameterByName("category");
-        var ordinals = getParameterByName("ordinal");
-        var excludes = getParameterByName("exclude");
+        var categories = util.getParameterByName("category");
+        var ordinals = util.getParameterByName("ordinal");
+        var excludes = util.getParameterByName("exclude");
 
         if (typeof categories === "string"){
             if (categories.split(",").indexOf(name) > -1){
@@ -256,7 +250,7 @@ define([
 
             }
 
-            var tableUrl = getParameterByName("table");
+            var tableUrl = util.getParameterByName("table");
             if (typeof tableUrl === "string" && tableUrl.length > 0) {
                 tableUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1) + tableUrl;
                 loadWidthPapa(tableUrl, true);

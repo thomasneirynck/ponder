@@ -1,7 +1,7 @@
 define([
     "type",
     "jquery",
-    "../../dataload/util",
+    "../../util",
     "../stats/Boxplot",
     "../stats/Histogram"
 ], function (type, jquery, util, Boxplot, Histogram) {

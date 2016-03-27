@@ -1,4 +1,4 @@
-define(["type", "./util"], function (type, util) {
+define(["type", "../util"], function (type, util) {
 
 
     function getColumnsIndex(columns, column) {

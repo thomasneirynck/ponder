@@ -1,7 +1,7 @@
 define([
-        "type", "Evented", "../EasingInput", "./Legend", "./classColors"
+        "type", "Evented", "../EasingInput", "./Legend", "./classColors", "../../util"
     ],
-    function (type, Evented, EasingInput, Legend, classColors) {
+    function (type, Evented, EasingInput, Legend, classColors, util) {
 
         function generateIcon(color, halfSize) {
             var context2d = document.createElement("canvas").getContext("2d");
@@ -107,6 +107,12 @@ define([
                 this._easingInput = new EasingInput(sizeEasingNode, document.createElement("div"));
                 this._easingInput.on("input", this.invalidate.bind(this));
                 this._easingInput.on("input", flagDirt);
+
+
+                var column = util.getParameterByName("initial");
+                if (column && dataTable.getColumns().indexOf(column) >= 0){
+                    this._classElement.value = dataTable.getColumns().indexOf(column);
+                }
 
                 setEasingInputMode();
 

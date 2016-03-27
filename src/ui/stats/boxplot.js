@@ -22,13 +22,13 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
             document.body.appendChild(valueRead);
 
             var self = this;
-            this._context2d.canvas.addEventListener("mousemove", function (event) {
+            this._context2d.canvas.parentNode.addEventListener("mousemove", function (event) {
 
                 self.paint();
                 var offset = jquery(self._context2d.canvas).offset();
                 self._context2d.strokeStyle = "rgb(255,0,0)";
 
-                var rx = event.pageX - offset.left;
+                var rx = event.clientX - offset.left;
                 self._context2d.strokeRect(rx, 0, 0, self._context2d.canvas.height);
 
                 valueRead.style.display = "block"; valueRead.style.left = event.pageX + "px";
