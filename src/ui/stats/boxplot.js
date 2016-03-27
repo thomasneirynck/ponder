@@ -13,13 +13,13 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
             this._context2d.canvas.height = jquery(node).height();
             node.appendChild(this._context2d.canvas);
 
-            var valueRead = document.createElement("div");
-            valueRead.style.display = "none";
-            valueRead.style.position = "absolute";
-            valueRead.style.color = "rgb(255,0,0)";
-            valueRead.setAttribute("data-boxplot-readout", "1");
-            valueRead.style["pointer-events"] = "none";
-            document.body.appendChild(valueRead);
+            this._valueRead = document.createElement("div");
+            this._valueRead.style.display = "none";
+            this._valueRead.style.position = "absolute";
+            this._valueRead.style.color = "rgb(255,0,0)";
+            this._valueRead.setAttribute("data-boxplot-readout", "1");
+            this._valueRead.style["pointer-events"] = "none";
+            document.body.appendChild(this._valueRead);
 
             var self = this;
             this._context2d.canvas.parentNode.addEventListener("mousemove", function (event) {
@@ -31,18 +31,24 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
                 var rx = event.pageX - offset.left;
                 self._context2d.strokeRect(rx, 0, 0, self._context2d.canvas.height);
 
-                valueRead.style.display = "block";
-                valueRead.style.left = event.pageX + "px";
-                valueRead.style.top = offset.top + "px";
-                valueRead.innerHTML = Math.round(self.toWorldX(rx) * 100) / 100;
+                self._valueRead.style.display = "block";
+                self._valueRead.style.left = event.pageX + "px";
+                self._valueRead.style.top = offset.top + "px";
+                self._valueRead.innerHTML = Math.round(self.toWorldX(rx) * 100) / 100;
+
+                self.emit("displayReadout", self);
 
 
             });
 
             this._context2d.canvas.addEventListener("mouseout", function (event) {
-                valueRead.style.display = "none";
-                self.paint();
+                self.hideReadout();
             });
+        },
+
+        hideReadout: function(){
+            this._valueRead.style.display = "none";
+            this.paint();
         },
 
         setData: function (data) {

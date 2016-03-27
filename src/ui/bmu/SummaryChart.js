@@ -29,6 +29,17 @@ define([
 
 
             var plot, label, container, minmax, box;
+            this._boxes = [];
+            var self = this;
+
+            function hideAllOtherReadouts(boxplot) {
+                for (var i = 0; i < self._boxes.length; i += 1) {
+                    if (self._boxes[i] !== boxplot) {
+                        self._boxes[i].hideReadout();
+                    }
+                }
+            }
+
             for (c = 0; c < selectedOrdinals.length; c += 1) {
                 plot = document.createElement("div");
                 plot.style.width = "100%";
@@ -51,7 +62,10 @@ define([
                 box = new Boxplot(minmax[0], minmax[1], container);
                 box.setData(ordinalValues[selectedOrdinals[c]]);
 
+                box.on("displayReadout", hideAllOtherReadouts);
 
+
+                this._boxes.push(box);
             }
 
 
