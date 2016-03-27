@@ -127,6 +127,7 @@
                         </div>
                         <div>
                             <h3>Titanic Passengers</h3>
+
                             <p>
                                 A list of passengers of the Titantic, organized by various attributes: their gender,
                                 their age, whether they traveled in first, second and 3rd, class, where they embarked,
@@ -155,10 +156,14 @@
                             <h3>2015 NBA Playoffs</h3>
 
                             <p>
-                                Players and their statitics for the 2015 playoffs. This includes their position, age, minutes player per game, two and tree point averages and more.
+                                Players and their statitics for the 2015 playoffs. This includes their position, age,
+                                minutes player per game, two and tree point averages and more.
                             </p>
+
                             <p>
-                                Players with similar statistics are positioned together on the map. Note for example how star players Stephen Curry, Lebron James, and James Harden are all positioned next to each other, even though they play different positions.
+                                Players with similar statistics are positioned together on the map. Note for example how
+                                star players Stephen Curry, Lebron James, and James Harden are all positioned next to
+                                each other, even though they play different positions.
                             </p>
 
                             <p>
@@ -177,13 +182,25 @@
     <div id="faq">
         <h3>Frequently Asked Questions</h3>
         <h4>How are the maps created?</h4>
-        Ponder uses an unsupervised machine learning technique called "self-organizing maps" that can be used
-        to generate two-dimensional layouts of multidimensional data. It is unsupervised since the technique attempts to detect clusters
-        in the data without any human intervention. All that is required from the user is to indicate what variables (ie. "columns") should be taken into account.
-        <h4>What amount of data can ponder handle?</h4>
-        The amount of data that can be mapped depends on the number of rows and columns in the spreadsheet, the number of unique values in
-        the columns, and on how powerful your computer is.
-        Broadly speaking, Ponder can handle small to moderately sized files.
+
+        <p>
+            Ponder uses an unsupervised machine learning technique called "self-organizing maps" that can be used
+            to generate two-dimensional layouts of multidimensional data. It is unsupervised since the technique
+            attempts to detect clusters
+            in the data without any human intervention. All that is required from the user is to indicate what variables
+            (ie. "columns") should be taken into account.
+        </p>
+        <h4>How long does it take to create a map?</h4>
+
+        <p>
+            The time it takes to map the data depends on the number of rows and columns in the spreadsheet, the
+            number of unique values in the columns, and on how powerful your computer is. So there is no straightforward answer. Files with many rows can be
+            mapped very quickly if the variables are of low complexity, while small files with few rows may take longer
+            if the variables contain
+            many different values.
+        </p>
+
+
     </div>
     <div id="footer">by <a href="//hepburnave.com">Hepburn Ave LLC</a></div>
 </div>
