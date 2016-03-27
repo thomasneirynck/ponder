@@ -23,7 +23,13 @@ define([
             this._areaSelectLayerController.on("change", function (mapSelection) {
 
                 var selectedIndices = bmuLayer.selectBmusFromController(areaSelectLayerController);
-                self.selectFromIndices(selectedIndices, mapSelection);
+
+                if (selectedIndices.length) {
+                    self.selectFromIndices(selectedIndices, mapSelection);
+                }else{
+                    self._areaSelectLayerController.clear();
+                    self.emit("clear");
+                }
 
 
             });
@@ -45,6 +51,7 @@ define([
 
 
                     if (selectionEvent.stats.getIndices().length === 0) {
+                        self._areaSelectLayerController.clear();
                         self.emit("clear", selectionEvent);
                     } else {
                         self.select(selectionEvent);
@@ -60,7 +67,6 @@ define([
         },
 
         selectAll: function () {
-
             var selectedIndices = this._bmuLayer.getBmuIndices();
             this.selectFromIndices(selectedIndices);
 

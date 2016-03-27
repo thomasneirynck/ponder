@@ -49,6 +49,12 @@ define(["type", "jquery", "Evented"], function (type, $, Evented) {
         },
 
 
+        clear: function(){
+            this._active = false;
+            this._linearRing = [];
+            this.emit("invalidate");
+        },
+
         setOnMap: function (map) {
 
             if (this._map) {

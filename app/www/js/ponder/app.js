@@ -191,8 +191,10 @@ require([
                 });
 
 
-                new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
+                var bmuSelectionHistory = new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
                 bmuSelector.selectAll();
+
+
 
                 var hoverController = new HoverController();
                 hoverController.setOnMap(map);

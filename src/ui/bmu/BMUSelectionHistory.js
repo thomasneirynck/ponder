@@ -15,13 +15,18 @@ define([
 
             var self = this;
 
-            function removeSelectionCSSClass(){
+            function removeSelectionCSSClass() {
                 for (var i = 0; i < self._selections.length; i += 1) {
                     self._selections[i].areaSelectionNode.classList.remove(selectionCssClass);
                 }
             }
 
             bmuSelector.on("clear", removeSelectionCSSClass);
+            bmuSelector.on("clear", function () {
+                if (self._selections.length) {
+                    self._selections[0].select();
+                }
+            });
 
 
             bmuSelector.on("change", function (selectionEvent) {
@@ -36,26 +41,27 @@ define([
                 areaSelectionNode.appendChild(screenshotGraphics.canvas);
                 self._node.insertBefore(areaSelectionNode, self._node.firstChild);
 
-                areaSelectionNode.addEventListener("click", select);
+
 
                 removeSelectionCSSClass();
                 areaSelectionNode.classList.add(selectionCssClass);
 
 
-                function select() {
-                    if (isActive()) {
-                        return;
-                    }
-                    removeSelectionCSSClass();
-                    bmuSelector.select(selectionEvent);
-                    areaSelectionNode.classList.add(selectionCssClass);
-                }
-
-
-                self._selections.push({
+                var selectionHistoryNode = {
                     selectionEvent: selectionEvent,
-                    areaSelectionNode: areaSelectionNode
-                });
+                    areaSelectionNode: areaSelectionNode,
+                    select: function () {
+                        if (isActive()) {
+                            return;
+                        }
+                        removeSelectionCSSClass();
+                        bmuSelector.select(this.selectionEvent);
+                        this.areaSelectionNode.classList.add(selectionCssClass);
+                    }
+                };
+
+                self._selections.push(selectionHistoryNode);
+                areaSelectionNode.addEventListener("click", selectionHistoryNode.select.bind(selectionHistoryNode));
 
             });
 
