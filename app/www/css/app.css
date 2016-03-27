@@ -168,6 +168,7 @@ a:hover {
 }
 
 #footer {
+    margin-top: 3em;
     background-color: rgb(255, 247, 229);
     border-radius: 2px;
     font-size: 0.8em;
