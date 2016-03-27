@@ -28,10 +28,11 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
                 var offset = jquery(self._context2d.canvas).offset();
                 self._context2d.strokeStyle = "rgb(255,0,0)";
 
-                var rx = event.clientX - offset.left;
+                var rx = event.pageX - offset.left;
                 self._context2d.strokeRect(rx, 0, 0, self._context2d.canvas.height);
 
-                valueRead.style.display = "block"; valueRead.style.left = event.pageX + "px";
+                valueRead.style.display = "block";
+                valueRead.style.left = event.pageX + "px";
                 valueRead.style.top = offset.top + "px";
                 valueRead.innerHTML = Math.round(self.toWorldX(rx) * 100) / 100;
 

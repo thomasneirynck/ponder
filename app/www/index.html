@@ -90,7 +90,7 @@
 
                     <div>
                         <div>
-                            <a href="?table=data/iris.csv&exclude=class&ordinal=sepal length,sepal width,petal length,petal width">
+                            <a href="?table=data/iris.csv&exclude=class&ordinal=sepal length,sepal width,petal length,petal width&start=1">
                                 <img src="./images/iris_256.png"/>
                             </a>
                         </div>
@@ -121,13 +121,12 @@
                     </div>
                     <div>
                         <div>
-                            <a href="?table=data/titanic.csv&exclude=name&ordinal=age,siblings aboard,parents aboard,fare&category=survived,passenger class,gender,embarded">
+                            <a href="?table=data/titanic.csv&exclude=name&ordinal=age,siblings aboard,parents aboard,fare&category=survived,passenger class,gender,embarked&start=1">
                                 <img src="./images/titanic_256.png"/>
                             </a>
                         </div>
                         <div>
                             <h3>Titanic Passengers</h3>
-
                             <p>
                                 A list of passengers of the Titantic, organized by various attributes: their gender,
                                 their age, whether they traveled in first, second and 3rd, class, where they embarked,
@@ -148,7 +147,7 @@
                     </div>
                     <div>
                         <div>
-                            <a href="?table=data/2015playoffs.csv&exclude=player&category=position,team&initial=position">
+                            <a href="?table=data/2015playoffs.csv&exclude=player&category=position,team&initial=position&start=1">
                                 <img src="./images/playoffs_256.png"/>
                             </a>
                         </div>
@@ -173,6 +172,18 @@
 
         </div>
 
+    </div>
+
+    <div id="faq">
+        <h3>Frequently Asked Questions</h3>
+        <h4>How are the maps created?</h4>
+        Ponder uses an unsupervised machine learning technique called "self-organizing maps" that can be used
+        to generate two-dimensional layouts of multidimensional data. It is unsupervised since the technique attempts to detect clusters
+        in the data without any human intervention. All that is required from the user is to indicate what variables (ie. "columns") should be taken into account.
+        <h4>What amount of data can ponder handle?</h4>
+        The amount of data that can be mapped depends on the number of rows and columns in the spreadsheet, the number of unique values in
+        the columns, and on how powerful your computer is.
+        Broadly speaking, Ponder can handle small to moderately sized files.
     </div>
     <div id="footer">by <a href="//hepburnave.com">Hepburn Ave LLC</a></div>
 </div>

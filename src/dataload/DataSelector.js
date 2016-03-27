@@ -10,7 +10,6 @@ define([
 ], function (Papa, type, Evented, jquery, DataTable, util, require) {
 
 
-
     function isOrdinal(name, sampleValue) {
         return !isNaN(util.toNumber(sampleValue));
     }
@@ -29,20 +28,20 @@ define([
         var ordinals = util.getParameterByName("ordinal");
         var excludes = util.getParameterByName("exclude");
 
-        if (typeof categories === "string"){
-            if (categories.split(",").indexOf(name) > -1){
+        if (typeof categories === "string") {
+            if (categories.split(",").indexOf(name) > -1) {
                 return "category";
             }
         }
 
-        if (typeof ordinals === "string"){
-            if (ordinals.split(",").indexOf(name) > -1){
+        if (typeof ordinals === "string") {
+            if (ordinals.split(",").indexOf(name) > -1) {
                 return "ordinal";
             }
         }
 
-        if (typeof excludes === "string"){
-            if (excludes.split(",").indexOf(name) > -1){
+        if (typeof excludes === "string") {
+            if (excludes.split(",").indexOf(name) > -1) {
                 return "exclude";
             }
         }
@@ -234,7 +233,7 @@ define([
 
                 self.emit("tableLoaded");
 
-                jquery(doneButton).on("click", function () {
+                function makeMap() {
 
                     for (var key in radioButtonsMap) {
                         if (radioButtonsMap[key].ordinal.checked) {
@@ -246,7 +245,14 @@ define([
 
                     var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
                     self.emit("change", dataTable);
-                });
+                }
+
+
+                if (util.getParameterByName("start") === "1") {
+                    makeMap();
+                } else {
+                    jquery(doneButton).on("click", makeMap);
+                }
 
             }
 
@@ -255,8 +261,6 @@ define([
                 tableUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1) + tableUrl;
                 loadWidthPapa(tableUrl, true);
             }
-
-
 
 
         },
