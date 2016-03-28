@@ -95,27 +95,35 @@
                             </a>
                         </div>
                         <div>
-                            <h3><a href="?table=data/iris.csv&exclude=class&ordinal=sepal length,sepal width,petal length,petal width&start=1">Iris Flowers</a></h3>
+                            <h3>
+                                <a href="?table=data/iris.csv&exclude=class&ordinal=sepal length,sepal width,petal length,petal width&start=1">Iris
+                                    Flowers</a></h3>
 
                             <p>
-                                The famous iris dataset: 150 iris flowers, divided equally into three classes. Four features
-                                where measured of each flower; the length and width of the petals, and the length and
+                                The famous iris dataset: 150 iris flowers, divided into three classes; 50 of type setosa, 50 of type versicolor, and 50 of type virginica.
+                                Four features of each flower were measured: the length and width of the petals, and the length and
                                 width of the sepals.
                             </p>
 
                             <p>
                                 The three types of flowers each occupy a region on the map. Their position is based on
-                                their shared characteristics. The four measurements are sufficient to place flowers of
-                                the same type together on the map, without taking into account the type of flower.
+                                their shared characteristics.
                             </p>
 
                             <p>
-                                Without any extra labeling, this dataset contains only two obvious clusters that can clearly be distinguished on the
+                                Without any extra labeling, this dataset contains only two obvious clusters that can
+                                clearly be distinguished on the
                                 map.
                             </p>
 
                             <p>
-                                Source: <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Wikipedia</a>
+                                <span><a
+                                        href="?table=data/iris.csv&exclude=class&ordinal=sepal length,sepal width,petal length,petal width">Edit
+                                    the parameters</a></span>
+                            </p>
+
+                            <p>
+                                <span>Source: <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Wikipedia</a></span>
                             </p>
                         </div>
                     </div>
@@ -126,23 +134,31 @@
                             </a>
                         </div>
                         <div>
-                            <h3><a href="?table=data/titanic.csv&exclude=name&ordinal=age,siblings aboard,parents aboard,fare&category=survived,passenger class,gender,embarked&start=1">Titanic Passengers</a></h3>
+                            <h3>
+                                <a href="?table=data/titanic.csv&exclude=name&ordinal=age,siblings aboard,parents aboard,fare&category=survived,passenger class,gender,embarked&start=1">Titanic
+                                    Passengers</a></h3>
 
                             <p>
                                 A list of passengers of the Titantic, organized by various attributes: their gender,
-                                their age, whether they traveled in first, second and 3rd, class, where they embarked,
+                                their age, whether they traveled in first, second and third, class, where they embarked,
                                 and whether they survived the voyage.
 
                             </p>
 
                             <p>
-                                You can use the map to gain valuable insight in which type of passengers survived, and
-                                who was not as fortunate. Particularly, woman had a much higher chance of survival then
+                                You can use the map to gain valuable insight into which passengers survived, and
+                                who were not as fortunate. For example, woman had a much higher chance of survival then
                                 men. Can you find other relationships?
                             </p>
 
                             <p>
-                                Source: <a href="https://www.kaggle.com/c/titanic/data">Kaggle</a>
+                                <span><a
+                                        href="?table=data/titanic.csv&exclude=name&ordinal=age,siblings aboard,parents aboard,fare&category=survived,passenger class,gender,embarked">Edit
+                                    the parameters</a></span>
+                            </p>
+
+                            <p>
+                                <span>Source: <a href="https://www.kaggle.com/c/titanic/data">Kaggle</a></span>
                             </p>
                         </div>
                     </div>
@@ -153,22 +169,30 @@
                             </a>
                         </div>
                         <div>
-                            <h3><a href="?table=data/2015playoffs.csv&exclude=player&category=position,team&initial=position&start=1">2015 NBA Playoffs</a></h3>
+                            <h3>
+                                <a href="?table=data/2015playoffs.csv&exclude=player&category=position,team&initial=position&start=1">2015
+                                    NBA Playoffs</a></h3>
 
                             <p>
-                                Players and their statitics for the 2015 playoffs. This includes their position, age,
-                                minutes player per game, two and tree point averages and more.
+                                Individual players' statistics for the 2015 NBA playoffs. This includes their position, age,
+                                minutes played per game, two and tree point averages and many more.
                             </p>
 
                             <p>
                                 Players with similar statistics are positioned together on the map. Note for example how
                                 star players Stephen Curry, Lebron James, and James Harden are all positioned next to
-                                each other, even though they play different positions.
+                                each other, even though they play different positions and have different playing styles.
+                            </p>
+                            <p>
+                                <span><a
+                                        href="?table=data/2015playoffs.csv&exclude=player&category=position,team&initial=position">Edit
+                                    the parameters</a></span>
                             </p>
 
-                            <p>
+                            <p><span>
                                 Source: <a href="http://www.nbastuffer.com/2015_NBA_Playoffs_Player_Stats.html">NBA
                                 Stuffer</a>
+</span>
                             </p>
                         </div>
                     </div>
@@ -187,17 +211,17 @@
             Ponder uses an unsupervised machine learning technique called "self-organizing maps" that can be used
             to generate two-dimensional layouts of multidimensional data. It is unsupervised since the technique
             attempts to detect clusters
-            in the data without any human intervention. All that is required from the user is to indicate what variables
+            in the data without any human intervention. All that is required from the user is indicating what variables
             (ie. "columns") should be taken into account.
         </p>
         <h4>How long does it take to create a map?</h4>
 
         <p>
             The time it takes to map the data depends on the number of rows and columns in the spreadsheet, the
-            number of unique values in the columns, and on how powerful your computer is. So there is no straightforward answer. Files with many rows can be
+            number of unique values in the columns, and on how powerful your computer is. So there is no straightforward
+            answer. Files with many rows can be
             mapped very quickly if the variables are of low complexity, while small files with few rows may take longer
-            if the variables contain
-            many different values.
+            if the variables contain many different values.
         </p>
 
     </div>

@@ -194,6 +194,7 @@ a:hover {
 #workflow img {
     width: 64px;
     height: auto;
+    border-radius: 8px;
 }
 
 #workflow h2 {
@@ -489,10 +490,12 @@ body {
     padding: 0.3em;
 }
 
+#examples span {
+    font-size: 0.8em;
+}
+
 #examples img:hover {
     transform: scale(0.98);
-    /*border: 1px solid #df723e;*/
-
 }
 
 #examples {
@@ -508,6 +511,7 @@ body {
 #examples img {
     width: 256px;
     height: auto;
+    border-radius: 16px;
 }
 
 #examples > div > div {
