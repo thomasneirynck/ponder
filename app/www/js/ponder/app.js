@@ -105,6 +105,8 @@ require([
 
     dataSelector.on("tableLoaded", function () {
         document.getElementById("blurb").style.display = "none";
+        document.getElementById("uploadblurb").style.display = "none";
+        document.getElementById("faq").style.display = "none";
     });
 
 
