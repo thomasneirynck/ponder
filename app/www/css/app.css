@@ -499,32 +499,53 @@ body {
 }
 
 #examples {
-    display: flex;
-    flex-flow: row;
+    /*display: flex;*/
+    /*flex-flow: row;*/
 }
 
 #examples > div {
-    display: flex;
-    flex-flow: column;
+    /*display: flex;*/
+    /*flex-flow: column;*/
 }
 
-#examples img {
+
+
+#examples > div > div {
+    /*display: flex;*/
+    /*flex-flow: row;*/
+    padding-top: 1em;
+    padding-bottom: 1em;
+    height: 100%;
+}
+
+#examples > div > div > div {
+    display: inline-block;
+    position: relative
+}
+
+#examples > div > div > div:nth-child(1) {
+    margin: 1em;
+    /*justify-content: flex-end;*/
+    width: 30%;
+    position: relative;
+    height: 100%;
+    top: 0;
+}
+
+#examples > div > div > div:nth-child(1) > a {
+    float:right
+}
+
+#examples > div > div > div:nth-child(1) > a > img {
     width: 256px;
     height: auto;
     border-radius: 16px;
 }
 
-#examples > div > div {
-    display: flex;
-    flex-flow: row;
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
-#examples > div > div > div:nth-child(1) {
+#examples > div > div > div:nth-child(2) {
     margin: 1em;
-    justify-content: flex-end;
-    max-width: 500px;
+    /*justify-content: flex-end;*/
+    width: 60%;
 }
 
 #tutorial {
@@ -533,7 +554,6 @@ body {
 }
 
 #tutorial > div {
-
     min-width: 300px;
 }
 
