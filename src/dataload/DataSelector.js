@@ -93,9 +93,8 @@ define([
             }
 
             function loadWidthPapa(resource, download) {
-                console.log("resource", resource);
 
-                var title = util.getParameterByName("title")
+                var title = util.getParameterByName("title");
                 if (!title) {
                     title = typeof resource === "string" ? resource : resource.name;
                     title = title ? title.replace(/\.[^/.]+$/, "") : "";

@@ -46,6 +46,11 @@ a:hover {
     padding-left: 0.2em;
 }
 
+#feedback {
+    padding-top: 1em;
+    font-size: 0.55em;
+}
+
 #header > div:nth-child(1) {
     padding-top: 0em;
     font-size: 2em;
