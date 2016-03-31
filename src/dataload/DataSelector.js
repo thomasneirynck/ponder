@@ -93,10 +93,20 @@ define([
             }
 
             function loadWidthPapa(resource, download) {
+                console.log("resource", resource);
+
+                var title = util.getParameterByName("title")
+                if (!title) {
+                    title = typeof resource === "string" ? resource : resource.name;
+                    title = title ? title.replace(/\.[^/.]+$/, "") : "";
+                    title = title.replace(/^.*[\\\/]/, '');
+
+                }
+
                 Papa.parse(resource, {
                     worker: true,
                     download: download,
-                    complete: showPreview,
+                    complete: showPreview.bind(null, title),
                     skipEmptyLines: true,
                     error: function (e) {
                         self.emit("error", e);
@@ -108,7 +118,7 @@ define([
 
             var self = this;
 
-            function showPreview(event) {
+            function showPreview(title, event) {
 
                 if (!event) {
                     self.emit("error");
@@ -125,11 +135,6 @@ define([
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
                 header.innerHTML = "<div>Select the columns with the independent variables</div>";
-                //    "<div>" +
-                //    "<br/><strong>Number</strong> measurements like height, weight, speed, rank or distance" +
-                //    "<br/><strong>Category</strong> " +
-                //    "<br/><strong>Exclude</strong> when selected, this field will not be taken into account when creating the map" +
-                //    "</div>";
                 headerWrapper.appendChild(header);
                 tablePreviewNode.appendChild(headerWrapper);
 
@@ -219,7 +224,6 @@ define([
 
                 var divver = document.createElement("div");
                 divver.appendChild(table);
-                //self._fileSelectorNode.appendChild(divver);
                 tablePreviewNode.appendChild(divver);
 
 
@@ -227,7 +231,6 @@ define([
                 doneButton.type = "button";
                 doneButton.value = "Make Map";
 
-                //self._fileSelectorNode.appendChild(doneButton);
 
                 tablePreviewNode.appendChild(doneButton);
 
@@ -244,6 +247,11 @@ define([
                     }
 
                     var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
+
+                    if (ga) {
+                        ga("send", "event", "button", "makeMap", title);
+                    }
+
                     self.emit("change", dataTable);
                 }
 
