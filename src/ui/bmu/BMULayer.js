@@ -15,7 +15,7 @@ define([
 
         var GLOWMAXSIZE = 16;
         var PADDING = 1;
-        var MINAREA = Math.PI * Math.pow(3, 2);
+        var MINAREA = Math.PI * Math.pow(1, 2);
         var MAXAREA = Math.PI * Math.pow(20, 2);
         var MAXRADIUS = areaToRadius(MAXAREA);
         var HALOWIDTH = 2 + PADDING;
