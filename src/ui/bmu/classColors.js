@@ -5,13 +5,11 @@ define(["../../Random"], function (Random) {
 
     var colors = [];
     for (var i = 0; i < 256; i += 1) {
-
         colors.push({
             r: (Math.round((random() * 255 + 255) / 2)),
             g: (Math.round((random() * 255 + 255) / 2)),
             b: (Math.round((random() * 255 + 255) / 2))
         });
-
     }
 
     colors = colors.map(function (color) {
