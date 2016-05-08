@@ -122,6 +122,8 @@ a:hover {
     overflow: hidden;
 }
 
+
+
 #waiting {
     position: absolute;
     width: 100%;
@@ -437,6 +439,15 @@ body {
     left: 0;
 }
 
+#title-blurb {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    color: #df723e;
+    font-size: 1.5em;font-size: 1vw;
+    font-weight: bold;
+}
+
 #mapContainer {
     position: relative;
     width: 100%;
@@ -700,7 +711,7 @@ div[data-ponder-type="balloon"] {
     opacity: 0.7;
     padding: 4px;
     border-radius: 8px;
-    border: 1px solid #df723e
+    border: 1px solid #df723e;
 }
 
 div[data-ponder-type="balloon"] > div > div {

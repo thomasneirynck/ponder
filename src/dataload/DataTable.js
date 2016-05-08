@@ -7,7 +7,8 @@ define(["type", "../util"], function (type, util) {
 
     return type({
 
-        constructor: function DataTable(data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
+        constructor: function DataTable(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
+            this._name = name;
             this._data = data;
             this._columnNames = columns;
             this._selectedOrdinalColumns = selectedOrdinalColumns;
@@ -24,6 +25,10 @@ define(["type", "../util"], function (type, util) {
 
         },
 
+        getName: function () {
+            return this._name;
+        },
+
         getSelectedOrdinalColumns: function () {
             return this._selectedOrdinalColumns;
         },
@@ -36,8 +41,8 @@ define(["type", "../util"], function (type, util) {
             return this.getValueByRowAndColumnIndex(row, this.getColumnIndex(columnName));
         },
 
-        getColumnName: function(index){
-          return this._columnNames[index];
+        getColumnName: function (index) {
+            return this._columnNames[index];
         },
 
         getColumns: function () {
@@ -118,7 +123,7 @@ define(["type", "../util"], function (type, util) {
             for (var i = 0; i < this._data.length; i += 1) {
                 if (this._uniques[columnIndex].indexOf(this._data[i][columnIndex]) < 0) {
                     this._uniques[columnIndex].push(this._data[i][columnIndex]);
-                    if (this._uniques[columnIndex].length > 256){
+                    if (this._uniques[columnIndex].length > 256) {
                         break;
                     }
                 }

@@ -89,10 +89,10 @@ define([
                 if (!file) {
                     return;
                 }
-                loadWidthPapa(file);
+                loadWithPapa(file);
             }
 
-            function loadWidthPapa(resource, download) {
+            function loadWithPapa(resource, download) {
 
                 var title = util.getParameterByName("title");
                 if (!title) {
@@ -245,7 +245,7 @@ define([
                         }
                     }
 
-                    var dataTable = new DataTable(self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
+                    var dataTable = new DataTable(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
 
                     if (ga) {
                         ga("send", "event", "button", "makeMap", title);
@@ -266,7 +266,7 @@ define([
             var tableUrl = util.getParameterByName("table");
             if (typeof tableUrl === "string" && tableUrl.length > 0) {
                 tableUrl = window.location.pathname.substring(0, window.location.pathname.lastIndexOf("/") + 1) + tableUrl;
-                loadWidthPapa(tableUrl, true);
+                loadWithPapa(tableUrl, true);
             }
 
 

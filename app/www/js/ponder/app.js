@@ -40,9 +40,10 @@ require([
     "ponder/ui/highlight/SelectController",
     "ponder/ui/bmu/BMUSelector",
     "ponder/ui/bmu/BMUSelectionHistory",
+    "ponder/util",
     "introJs",
     "jquery"
-], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, introJs, jquery) {
+], function (SOMFactory, DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, introJs, jquery) {
 
 
     document.body.addEventListener("contextmenu", function (e) {
@@ -111,9 +112,14 @@ require([
 
 
     dataSelector.on("change", function (table) {
-
+        
         dataSelector.destroy();
         jquery("#welcome").hide();
+
+
+        //figure out title
+        var title = util.getParameterByName("title") ? util.getParameterByName("title") : table.getName();
+        document.getElementById("title-blurb").innerHTML = title.toUpperCase();
 
         var somTrainingData = table.createSOMTrainingData();
 
@@ -136,7 +142,6 @@ require([
         waitingDivText.innerHTML = "Estimating progress...";
         waitingDiv.appendChild(waitingDivText);
         document.getElementById("waiting").appendChild(waitingDiv);
-
 
 
         SOMFactory
@@ -195,7 +200,6 @@ require([
 
                 var bmuSelectionHistory = new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
                 bmuSelector.selectAll();
-
 
 
                 var hoverController = new HoverController();
