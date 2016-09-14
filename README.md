@@ -1,5 +1,5 @@
 
-## setup
+## Setup
 
 ### install node
     
@@ -14,8 +14,9 @@
     > node setup.js
        
            
-## release
+## Release
 
     > grunt release
      
-     
+## Demo     
+[http://ponder.hepburnave.com](http://ponder.hepburnave.com)
