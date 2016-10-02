@@ -79,6 +79,9 @@ module.exports = function (grunt) {
                         compress: false
                     },
                     onBuildRead: function (moduleName, path, contents) {
+                        /**
+                         * Ensure workers are loaded correctly
+                         */
                         if (moduleName === appModule) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_SCRIPT_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + ".js" + "\"");
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
@@ -87,10 +90,6 @@ module.exports = function (grunt) {
                         }
                         return contents;
                     }
-                    //,
-                    //paths: {
-                    //    plotly: "empty:"
-                    //}
                 }
             },
             somWorker: {
@@ -148,17 +147,6 @@ module.exports = function (grunt) {
             .save(file);
 
     });
-    grunt.registerTask("correct-plotly", function(){
-
-        var file = wwwReleaseDir + "js/ponder/app.js";
-        buildify()
-            .load(file)
-            .perform(function(contents){
-                return "Plotly=this.Plotly||{}"+contents;
-            })
-            .save(file);
-
-    });
 
     grunt.registerTask("tag-with-revision", function (a, b) {
 
@@ -191,7 +179,7 @@ module.exports = function (grunt) {
 
 
 
-    grunt.registerTask("build-www", ["clean", "copy", "requirejs","correct-css","correct-plotly"]);
+    grunt.registerTask("build-www", ["clean", "copy", "requirejs","correct-css"]);
     grunt.registerTask("release", ["jshint", "build-www","tag-with-revision", "compress"]);
     grunt.registerTask("default", ["release"]);
 
