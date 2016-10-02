@@ -22,6 +22,7 @@
     "Evented": "https://bitbucket.org/trgn/evented.git#~0.0.0",
     "jquery": "~2.1.3",
     "bootstrap": "~3.3.4",
-    "requirejs": "^2.3.2"
+    "requirejs": "^2.3.2",
+    "almond": "^0.3.3"
   }
 }

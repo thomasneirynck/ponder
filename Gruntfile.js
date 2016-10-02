@@ -23,9 +23,12 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
         jshint: {
             source: [
-                "./src",
-                "app/www/js/ponder"
-            ]
+                "src",
+                "./app/www/js/ponder"
+            ],
+            options: {
+                reporterOutput: ""
+            }
         },
         clean: {
             release: [
