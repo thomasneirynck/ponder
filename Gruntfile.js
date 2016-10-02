@@ -189,7 +189,6 @@ module.exports = function (grunt) {
 
 
     grunt.registerTask("build-www", ["clean", "copy", "requirejs","correct-css","correct-plotly"]);
-
     grunt.registerTask("release", ["jshint", "build-www","tag-with-revision", "compress"]);
     grunt.registerTask("default", ["release"]);
 

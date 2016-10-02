@@ -1,6 +1,4 @@
-
-
 @import url("app.css");
-@import url("../../../bower_components/datatables/media/css/jquery.dataTables.css");
+@import url("../../../vendor/DataTables-1.10.7/media/css/jquery.dataTables.css");
 @import url("../../../vendor/intro.js-2.0.0/minified/introjs.min.css");
 

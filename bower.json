@@ -1,26 +1,27 @@
 {
-    "name": "ponder",
-    "version": "0.0.0",
-    "authors": [
-        "trgn <thomas@neirynck.us>"
-    ],
-    "moduleType": [
-        "amd"
-    ],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "intern": "~2.2.2",
-        "type": "https://bitbucket.org/trgn/type.git#~0.0.0",
-        "Promise": "https://bitbucket.org/trgn/promise.git#~0.0.0",
-        "Evented": "https://bitbucket.org/trgn/evented.git#~0.0.0",
-        "jquery": "~2.1.3",
-        "bootstrap": "~3.3.4"
-    }
+  "name": "ponder",
+  "version": "0.0.0",
+  "authors": [
+    "trgn <thomas@neirynck.us>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "intern": "~2.2.2",
+    "type": "https://bitbucket.org/trgn/type.git#~0.0.0",
+    "Promise": "https://bitbucket.org/trgn/promise.git#~0.0.0",
+    "Evented": "https://bitbucket.org/trgn/evented.git#~0.0.0",
+    "jquery": "~2.1.3",
+    "bootstrap": "~3.3.4",
+    "requirejs": "^2.3.2"
+  }
 }
