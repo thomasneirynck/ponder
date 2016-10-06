@@ -7,7 +7,6 @@ require.config({
         'Evented': "bower_components/Evented/Evented",
         'Papa': /**{{PAPA_PARSE_MODULE_PATH}}*/"vendor/papaparse"/**{{PAPA_PARSE_MODULE_PATH}}*/,
         'jquery': "bower_components/jquery/dist/jquery",
-        // datatables: 'bower_components/datatables/media/js/jquery.dataTables',
         datatables: 'vendor/DataTables-1.10.7/media/js/jquery.dataTables',
         datatables_colvis: 'vendor/DataTables-1.10.7/extensions/ColVis/js/dataTables.colVis',
         jStat: "vendor/jstat",
@@ -74,7 +73,6 @@ require([
     tableContainer.style.display = "none";
     document.getElementById("mapToolContainer").style.display = "none";
     document.getElementById("toggle").style.display = "none";
-
 
     var mapToggleButton = document.getElementById("toggle-to-map");
     var tableToggleButton = document.getElementById("toggle-to-table");
@@ -165,7 +163,6 @@ require([
 
 
                 map = new Map("map", somHandle.width, somHandle.height);
-
 
                 uMatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
                 uMatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
