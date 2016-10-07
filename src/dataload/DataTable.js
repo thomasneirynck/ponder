@@ -1,11 +1,13 @@
-define(["type", "../util"], function (type, util) {
-
+define(["type", "../util", "../Table"], function (type, util, Table) {
 
     function getColumnsIndex(columns, column) {
         return columns.indexOf(column);
     }
 
-    return type({
+
+    //todo: we introduced public data api (ponder/Table). The SOM components should use that API, instead use datatable...
+    // REMOVE THIS SHIAT!
+    var DataTable = type({
 
         constructor: function DataTable(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
             this._name = name;
@@ -133,8 +135,6 @@ define(["type", "../util"], function (type, util) {
 
         createSOMTrainingData: function () {
 
-
-
             //ORDINAL PREP
             var mins = new Array(this._selectedOrdinalColumnsIndices.length);
             var maxs = new Array(this._selectedOrdinalColumnsIndices.length);
@@ -223,5 +223,50 @@ define(["type", "../util"], function (type, util) {
 
     });
 
+
+    /**
+     * temprorary: funnels table into DataTable. remove this when we get rid of dataload/DataTable abstraction
+     * @param table tabular data. must immplement ponder/Table
+     */
+    DataTable.createDataTableFromTable = function (table) {
+
+
+        var columns = [];
+        var selectedOrdinals = [];
+        var selectedCategories = [];
+        var label;
+        for (var i = 0; i < table.columnCount(); i += 1) {
+            label = table.columnLabel(i);
+            columns.push(label);
+            if (table.columnType === Table.ORDINAL) {
+                selectedOrdinals.push(label);
+            } else if (table.columnType === Table.CATEGORY) {
+                selectedCategories.push(label);
+            }
+        }
+
+
+        var data = new Array(table.rowCount());
+        var row;
+        for (var r = 0; r < table.rowCount(); r += 1) {
+            row = new Array(table.columnCount());
+            for (var c = 0; c < table.columnCount(); c += 1) {
+                row[c] = table.getValue(r, c);
+            }
+            data[r] = row;
+        }
+
+        return new DataTable(
+        table.getName(),
+        data,
+        columns,
+        selectedOrdinals,
+        selectedCategories
+        );
+
+    };
+
+
+    return DataTable;
 
 });
