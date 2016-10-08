@@ -225,8 +225,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
 
     /**
-     * temprorary: funnels table into DataTable. remove this when we get rid of dataload/DataTable abstraction
-     * @param table tabular data. must immplement ponder/Table
+     * creates dataload/DataTable from ./Table
+     * remove this when we get rid of dataload/DataTable abstraction
+     * @param {ponder/Table} tabular data. must immplement ponder/Table
+     * @returns {ponder/dataload/DataTable}
      */
     DataTable.createDataTableFromTable = function (table) {
 
@@ -238,9 +240,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         for (var i = 0; i < table.columnCount(); i += 1) {
             label = table.columnLabel(i);
             columns.push(label);
-            if (table.columnType === Table.ORDINAL) {
+            console.log('label', label);
+            if (table.columnType(i) === Table.ORDINAL) {
                 selectedOrdinals.push(label);
-            } else if (table.columnType === Table.CATEGORY) {
+            } else if (table.columnType(i) === Table.CATEGORY) {
                 selectedCategories.push(label);
             }
         }

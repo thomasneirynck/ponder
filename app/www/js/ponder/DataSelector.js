@@ -11,14 +11,25 @@ define([
 ], function (Papa, type, Evented, jquery, DataTable, util, Table, require) {
 
 
+    /**
+     * Implements the table-API from ponder. Required to load data into ponder.
+     */
     var TableFromPapa = type(Table.prototype, {
 
         constructor: function TableFromPapaParseData(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
             this._name = name;
             this._data = data;
             this._columns = columns;
-            this._selectedOrdinalColumns = selectedCategoryColumns;
+            this._selectedOrdinalColumns = selectedOrdinalColumns;
             this._selectedCategoryColumns = selectedCategoryColumns;
+        },
+
+        columnType: function (index) {
+            var label = this._columns[index];
+
+            return (this._selectedCategoryColumns.indexOf(label) >= 0) ? Table.CATEGORY :
+            (this._selectedOrdinalColumns.indexOf(label) >= 0) ? Table.ORDINAL :
+            Table.IGNORE;
         },
 
         getName: function () {
@@ -27,9 +38,18 @@ define([
 
         columnCount: function () {
             return this._columns.length;
+        },
+
+        rowCount: function () {
+            return this._data.length;
+        },
+
+        columnLabel: function (index) {
+            return this._columns[index];
+        },
+        getValue: function (row, column) {
+            return this._data[row][column];
         }
-
-
     });
 
 
@@ -270,15 +290,8 @@ define([
                         }
                     }
 
-                    var table = new DataTable(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
-
-                    console.dir("making table", title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
-
-
-                    //todo: -> should start using table...
-                    // var tableFromPapa = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
-                    // var dataTable2 = DataTable.createDataTableFromTable(tableFromPapa);
-
+                    var tableFromPapa = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
+                    var table = DataTable.createDataTableFromTable(tableFromPapa);
 
                     if (ga) {
                         ga("send", "event", "button", "makeMap", title);
@@ -309,29 +322,7 @@ define([
             this._fileSelectorNode.innerHTML = "";
         }
 
-
     });
-
-
-//
-// Table.prototype.columnCount = function () {
-//     throw new Error("should return the total number of columns");
-// };
-//
-// Table.prototype.columnLabel = function (columnIndex) {
-//     throw new Error("Should return human readable string for the column index");
-// };
-//
-// Table.prototype.columnType = function (columIndex) {
-//     throw new Error("Should either return [Table.ORDINAL|Table.CATEGORY|Table.IGNORE]");
-// };
-//
-// Table.prototype.rowCount = function(){
-//     throw new Error("Should return the number of rows");
-// };
-//
-// Table.prototype.getValue = function (rowNumber, columnNumber) {
-//     throw new Error("Should return the value for a given rownumber/columnnumber");
 
 
 

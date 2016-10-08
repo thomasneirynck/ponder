@@ -15,8 +15,6 @@ var PapaParse = "papaparse";
 
 var versionSlug = "";
 
-var srcApi = "src/appApi.js";
-
 module.exports = function (grunt) {
 
     require("load-grunt-tasks")(grunt);
@@ -121,30 +119,7 @@ module.exports = function (grunt) {
                     out: wwwReleaseDir + "css/main.css",
                     optimize: "uglify2"
                 }
-            },
-
-            apiLibrary: {
-                options: {
-                    baseUrl: ".",
-                    mainConfigFile: somWorkerScript,
-                    name: "bower_components/almond/almond.js",
-                    include: somWorkerScript,
-                    out: wwwReleaseDir + somWorkerScriptDestination,
-                    wrapShim: true,
-                    optimize: "uglify2",
-                    options: {
-                        mangle: true
-                    },
-                    onBuildRead: function (moduleName, path, contents) {
-                        if (moduleName === somWorkerScript) {
-                            contents = contents.replace(/\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\/(.*?)\/\*\*\{\{REQUIREJS_IMPORT\}\}\*\//g, "");
-                        }
-                        return contents;
-                    }
-                }
             }
-
-
         },
 
         compress: {
@@ -198,6 +173,7 @@ module.exports = function (grunt) {
             });
             done();
         });
+
 
     });
 
