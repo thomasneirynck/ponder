@@ -3,12 +3,10 @@ define([
     "type",
     "Evented",
     "jquery",
-    "ponder/dataload/DataTable",
     "ponder/util",
     "ponder/Table",
-    "require",
     "datatables"
-], function (Papa, type, Evented, jquery, DataTable, util, Table, require) {
+], function (Papa, type, Evented, jquery, util, Table) {
 
 
     /**
@@ -290,9 +288,7 @@ define([
                         }
                     }
 
-                    var tableFromPapa = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
-                    var table = DataTable.createDataTableFromTable(tableFromPapa);
-
+                    var table = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
                     if (ga) {
                         ga("send", "event", "button", "makeMap", title);
                     }

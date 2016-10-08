@@ -85,6 +85,7 @@ require([
         alert("Cannot read table");
     });
 
+
     dataSelector.on("tableLoaded", function () {
         document.getElementById("blurb").style.display = "none";
         document.getElementById("uploadblurb").style.display = "none";
@@ -92,17 +93,17 @@ require([
     });
 
 
-    dataSelector.on("change", function (dataTable) {
+    dataSelector.on("change", function (table) {
 
         dataSelector.destroy();
         jquery("#welcome").hide();
 
         //figure out title
-        var title = util.getParameterByName("title") ? util.getParameterByName("title") : dataTable.getName();
+        var title = util.getParameterByName("title") ? util.getParameterByName("title") : table.getName();
         document.getElementById("title-blurb").innerHTML = title.toUpperCase();
 
         appApi.createSOM({
-            table: dataTable,
+            table: table,
             somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/
         });
 

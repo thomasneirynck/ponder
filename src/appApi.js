@@ -10,8 +10,9 @@ define([
   "./ui/bmu/BMUSelectionHistory",
   "./util",
   "./appApi",
+  "./dataload/DataTable",
   "jquery"
-], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, jquery) {
+], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery) {
 
 
   function throwError(error) {
@@ -46,7 +47,12 @@ define([
       var oldDisplayToggleDisplay = mapTableToggleNode.style.display;
 
       var somHandle;
-      var somTrainingData = params.table.createSOMTrainingData();
+
+
+      //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
+      //the correct data-API is ponder/Table
+      var dataTable = DataTable.createDataTableFromTable(params.table);
+      var somTrainingData = dataTable.createSOMTrainingData();
       var map, uMatrixLayer;
       if (somHandle) {
         somHandle.kill();
@@ -110,7 +116,7 @@ define([
 
 
         //bmus
-        var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", params.table, bmuResult.locations);
+        var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", dataTable, bmuResult.locations);
         map.addLayer(bmuLayer);
 
         var areaSelectLayerController = new AreaSelectLayerController();
