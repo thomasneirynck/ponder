@@ -240,7 +240,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         for (var i = 0; i < table.columnCount(); i += 1) {
             label = table.columnLabel(i);
             columns.push(label);
-            console.log('label', label);
             if (table.columnType(i) === Table.ORDINAL) {
                 selectedOrdinals.push(label);
             } else if (table.columnType(i) === Table.CATEGORY) {

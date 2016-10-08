@@ -40,11 +40,41 @@ define([
       containerNode.addEventListener("contextmenu", function (e) {
         e.preventDefault();
       });
-      //----------------------------------
-
-
       var oldDisplayMapToolDisplay = mapToolNode.style.display;
       var oldDisplayToggleDisplay = mapTableToggleNode.style.display;
+
+      var tableContainer = document.getElementById("tableContainer");
+      var mapContainer = document.getElementById("map");
+      mapContainer.style.display = "none";
+      tableContainer.style.display = "none";
+      document.getElementById("mapToolContainer").style.display = "none";
+      document.getElementById("toggle").style.display = "none";
+
+      var mapToggleButton = document.getElementById("toggle-to-map");
+      var tableToggleButton = document.getElementById("toggle-to-table");
+
+
+      function selectMapOrTable(event) {
+        if (event.target === mapToggleButton) {
+          tableToggleButton.classList.remove("selectedToggle");
+          tableContainer.style.display = "none";
+          mapToggleButton.classList.add("selectedToggle");
+          mapContainer.style.display = "block";
+          mapContainer.style.height = "100%";
+
+        } else {
+          mapToggleButton.classList.remove("selectedToggle");
+          mapContainer.style.display = "none";
+          mapContainer.style.height = "100%";
+          tableToggleButton.classList.add("selectedToggle");
+          tableContainer.style.display = "block";
+        }
+      }
+
+      mapToggleButton.addEventListener("click", selectMapOrTable);
+      tableToggleButton.addEventListener("click", selectMapOrTable);
+
+
 
       var somHandle;
 
