@@ -1,7 +1,7 @@
 require.config({
     baseUrl: /**{{BASE_URL}}*/"../.."/**{{BASE_URL}}*/,
     paths: {
-        'app': 'app/www/js/ponder',
+        'demo': 'app/www/js/ponder',
         'ponder': 'src',
         'type': "bower_components/type/type",
         'Promise': "bower_components/Promise/Promise",
@@ -31,7 +31,7 @@ require.config({
 
 
 require([
-    "app/DataSelector",
+    "demo/DataSelector",
     "ponder/ui/Map",
     "ponder/ui/umatrix/UMatrixTerrainLayer",
     "ponder/ui/bmu/BMULayer",
