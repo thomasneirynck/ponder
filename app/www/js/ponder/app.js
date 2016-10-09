@@ -36,7 +36,12 @@ require([
     "introJs",
     "demo/util",
     "jquery"
-], function (DataSelector, appApi, introJs, util, jquery) {
+], function (DataSelector,
+             appApi,
+             introJs,
+             util,
+             jquery
+) {
 
 
     Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
@@ -63,6 +68,8 @@ require([
         //figure out title
         var title = util.getParameterByName("title") ? util.getParameterByName("title") : table.getName();
         document.getElementById("title-blurb").innerHTML = title.toUpperCase();
+
+        // var somApp = PONDER.createSOM({
 
         var somApp = appApi.createSOM({
             table: table,

@@ -1,10 +1,17 @@
-define(["Promise", "./SOMHandle", "require"], function (Promise, SOMHandle, require) {
-
+define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
 
     var somFactory = {
         SCRIPT_PATH: null,
         makeSOMAsync: function (dataArray, codeBookWeights) {
+
+
+            if (somFactory.SCRIPT_PATH === null && typeof require !== 'function' && typeof require.toUrl !== 'function') {
+                throw new Error("Cannot load SOM worker dynamically if require and require.toUrl are not available");
+            }
+            console.log('require;', require, require.toUrl);
             var script = somFactory.SCRIPT_PATH === null ? require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
+
+
             var somWorker = new Worker(script);
             var somReady = new Promise();
 
