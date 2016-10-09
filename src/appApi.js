@@ -13,8 +13,9 @@ define([
   "./dataload/DataTable",
   "jquery",
   "type",
-  "Evented"
-], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery, type, Evented) {
+  "Evented",
+  "introJs"
+], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery, type, Evented, introJs) {
 
 
   function throwError(error) {
@@ -69,21 +70,17 @@ define([
       tableToggleButton.addEventListener("click", selectMapOrTable);
 
 
-      var somHandle;
+      var self = this;
+      self._somHandle = null;
 
       //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
       //the correct data-API is ponder/Table
       var dataTable = DataTable.createDataTableFromTable(params.table);
       var somTrainingData = dataTable.createSOMTrainingData();
-      var map, uMatrixLayer;
-      if (somHandle) {
-        somHandle.kill();
-        somHandle = null;
-        if (map) {
-          map.destroy();
-        }
-        map = null;
-      }
+
+      self._map = null;
+      var uMatrixLayer;
+
 
       var waitingDiv = document.createElement("div");
       waitingDiv.setAttribute("data-ponder-type", "progress_indicator");
@@ -99,11 +96,11 @@ define([
       return SOMFactory
       .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
       .then(function (aSomHandle) {
-        somHandle = aSomHandle;
-        return somHandle.trainMap();
+        self._somHandle = aSomHandle;
+        return self._somHandle.trainMap();
       }, throwError)
       .then(function () {
-        return somHandle.uMatrixNormalized();
+        return self._somHandle.uMatrixNormalized();
       }, throwError, function onProgress(payload) {
         console.log('on porgress', arguments);
         //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
@@ -116,17 +113,17 @@ define([
         mapContainer.style.display = "block";
 
 
-        map = new Map("map", somHandle.width, somHandle.height);
+        self._map = new Map("map", self._somHandle.width, self._somHandle.height);
 
         uMatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
-        uMatrixLayer.setUMatrixData(successData.uMatrix, somHandle.width, somHandle.height);
-        map.addLayer(uMatrixLayer);
+        uMatrixLayer.setUMatrixData(successData.uMatrix, self._somHandle.width, self._somHandle.height);
+        self._map.addLayer(uMatrixLayer);
 
         waitingDivText.innerHTML = "Finding locations ...";
         getNode(params.nodes.center).appendChild(waitingDiv);
 
 
-        return somHandle.bmus();
+        return self._somHandle.bmus();
       }, throwError)
       .then(function (bmuResult) {
 
@@ -139,26 +136,26 @@ define([
 
         //bmus
         var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", dataTable, bmuResult.locations);
-        map.addLayer(bmuLayer);
+        self._map.addLayer(bmuLayer);
 
         var areaSelectLayerController = new AreaSelectLayerController();
-        areaSelectLayerController.setOnMap(map);
+        areaSelectLayerController.setOnMap(self._map);
 
-        var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, somHandle, "table", "summary");
+        var bmuSelector = new BMUSelector(areaSelectLayerController, bmuLayer, self._somHandle, "table", "summary");
         bmuSelector.on("RowSelection", function (object) {
           bmuLayer.highlight([object.index]);
         });
 
 
-        var bmuSelectionHistory = new BMUSelectionHistory("selectionHistory", bmuSelector, map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
+        var bmuSelectionHistory = new BMUSelectionHistory("selectionHistory", bmuSelector, self._map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
         bmuSelector.selectAll();
 
 
         var hoverController = new HoverController();
-        hoverController.setOnMap(map);
+        hoverController.setOnMap(self._map);
 
         var selectController = new SelectController();
-        selectController.setOnMap(map);
+        selectController.setOnMap(self._map);
 
 
       }, throwError)
@@ -180,6 +177,14 @@ define([
     },
 
     destroy: function () {
+      if (this._somHandle) {
+        this._somHandle.kill();
+        this._somHandle = null;
+        if (this._map) {
+          this._map.destroy();
+        }
+        this._map = null;
+      }
 
     }
 
