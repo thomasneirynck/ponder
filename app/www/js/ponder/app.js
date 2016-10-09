@@ -72,10 +72,22 @@ require([
         var title = util.getParameterByName("title") ? util.getParameterByName("title") : table.getName();
         document.getElementById("title-blurb").innerHTML = title.toUpperCase();
 
-        appApi.createSOM({
+        var somApp = appApi.createSOM({
             table: table,
-            somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/
+            somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
+            nodes: {
+                toolbar: "mapToolContainer",
+                mapTableToggle: "toggle",
+                table: "tableContainer",
+                map: "map",
+                container: document.body
+            }
         });
+
+
+
+
+
 
     });
 

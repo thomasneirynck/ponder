@@ -11,8 +11,10 @@ define([
   "./util",
   "./appApi",
   "./dataload/DataTable",
-  "jquery"
-], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery) {
+  "jquery",
+  "type",
+  "Evented"
+], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery, type, Evented) {
 
 
   function throwError(error) {
@@ -22,33 +24,26 @@ define([
   }
 
 
-  /**
-   * Public API to embed this app inside another web-app.
-   * .. starting this so we can
-   */
-  return {
+  var SomApp = type(Evented.prototype, {
 
-    createSOM: function (params) {
+    constructor: function (params) {
 
-      params.container = document.body;
-      params.mapTool = 'mapToolContainer';
-      params.mapTableToggle = 'toggle';
+      var containerNode = getNode(params.nodes.container);
+      var mapToolNode = getNode(params.nodes.toolbar);
+      var mapTableToggleNode = getNode(params.nodes.mapTableToggle);
 
-      var containerNode = typeof params.container === 'string' ? document.getElementById(params.container) : params.container;
-      var mapToolNode = typeof params.mapTool === 'string' ? document.getElementById(params.mapTool) : params.mapTool;
-      var mapTableToggleNode = typeof params.mapTableToggle === 'string' ? document.getElementById(params.mapTableToggle) : params.mapTableToggle;
       containerNode.addEventListener("contextmenu", function (e) {
         e.preventDefault();
       });
       var oldDisplayMapToolDisplay = mapToolNode.style.display;
       var oldDisplayToggleDisplay = mapTableToggleNode.style.display;
 
-      var tableContainer = document.getElementById("tableContainer");
-      var mapContainer = document.getElementById("map");
+      var tableContainer = getNode(params.nodes.table);
+      var mapContainer = getNode(params.nodes.map);
       mapContainer.style.display = "none";
       tableContainer.style.display = "none";
-      document.getElementById("mapToolContainer").style.display = "none";
-      document.getElementById("toggle").style.display = "none";
+      mapToolNode.style.display = "none";
+      mapTableToggleNode.style.display = "none";
 
       var mapToggleButton = document.getElementById("toggle-to-map");
       var tableToggleButton = document.getElementById("toggle-to-table");
@@ -61,7 +56,6 @@ define([
           mapToggleButton.classList.add("selectedToggle");
           mapContainer.style.display = "block";
           mapContainer.style.height = "100%";
-
         } else {
           mapToggleButton.classList.remove("selectedToggle");
           mapContainer.style.display = "none";
@@ -73,7 +67,6 @@ define([
 
       mapToggleButton.addEventListener("click", selectMapOrTable);
       tableToggleButton.addEventListener("click", selectMapOrTable);
-
 
 
       var somHandle;
@@ -185,7 +178,25 @@ define([
       })
       .then(Function.prototype, throwError);
 
+    },
 
+    destroy: function () {
+
+    }
+
+  });
+
+  function getNode(node) {
+    return typeof node === 'string' ? document.getElementById(node) : node;
+  }
+
+  /**
+   * Public API to embed this app inside another web-app.
+   * .. starting this so we can
+   */
+  return {
+    createSOM: function (params) {
+      return new SomApp(params);
     }
 
   };
@@ -213,7 +224,6 @@ define([
     }
     return "";
   }
-
 
 
 });
