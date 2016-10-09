@@ -103,7 +103,6 @@ module.exports = function (grunt) {
                     include: apiModule,
                     out: releaseDir + "ponder.js",
                     optimize: "uglify2",
-                    optimize: "none",
                     options: {
                         mangle: false,
                         compress: false

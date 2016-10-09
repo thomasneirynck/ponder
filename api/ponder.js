@@ -31,6 +31,6 @@ require.config({
 });
 
 
-define(["api/api"], function(api){
-  //loads the ponder API; todo remove
+define(["ponder/appApi"], function (appApi) {
+  window.PONDER = appApi;
 });
