@@ -45,8 +45,8 @@ define([
       mapToolNode.style.display = "none";
       mapTableToggleNode.style.display = "none";
 
-      var mapToggleButton = document.getElementById("toggle-to-map");
-      var tableToggleButton = document.getElementById("toggle-to-table");
+      var mapToggleButton = getNode(params.nodes.toggleToMap);
+      var tableToggleButton = getNode(params.nodes.toggleToTable);
 
 
       function selectMapOrTable(event) {
@@ -70,7 +70,6 @@ define([
 
 
       var somHandle;
-
 
       //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
       //the correct data-API is ponder/Table
@@ -112,8 +111,8 @@ define([
       })
       .then(function (successData) {
 
-        jquery("#map").show();
-        document.getElementById("mapToolContainer").style.display = oldDisplayMapToolDisplay;
+        jquery(mapContainer).show();
+        mapToolNode.style.display = oldDisplayMapToolDisplay;
         mapContainer.style.display = "block";
 
 
@@ -124,18 +123,18 @@ define([
         map.addLayer(uMatrixLayer);
 
         waitingDivText.innerHTML = "Finding locations ...";
-        document.getElementById("center").appendChild(waitingDiv);
+        getNode(params.nodes.center).appendChild(waitingDiv);
 
 
         return somHandle.bmus();
       }, throwError)
       .then(function (bmuResult) {
 
-        document.getElementById("toggle").style.display = oldDisplayToggleDisplay;
+        mapTableToggleNode.style.display = oldDisplayToggleDisplay;
 
         waitingDiv.parentNode.removeChild(waitingDiv);
-        document.getElementById("waiting").style.display = "none";
-        document.getElementById("center").style.overflow = "auto";
+        getNode(params.nodes.waiting).style.display = "none";
+        getNode(params.nodes.center).style.overflow = "auto";
 
 
         //bmus

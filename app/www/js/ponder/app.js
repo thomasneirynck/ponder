@@ -80,7 +80,12 @@ require([
                 mapTableToggle: "toggle",
                 table: "tableContainer",
                 map: "map",
-                container: document.body
+                toggleToMap: "toggle-to-map",
+                toggleToTable: "toggle-to-table",
+                container: document.body,
+                center: "center",
+                waiting: "waiting"
+
             }
         });
 
