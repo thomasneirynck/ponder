@@ -103,9 +103,14 @@ module.exports = function (grunt) {
                     include: apiModule,
                     out: releaseDir + "ponder.js",
                     optimize: "uglify2",
+                    optimize: "none",
                     options: {
-                        mangle: true,
+                        mangle: false,
                         compress: false
+                    },
+                    wrap: {
+                        start: "(function() {",
+                        end: "require('api/ponder');}());"
                     }
                 }
             },

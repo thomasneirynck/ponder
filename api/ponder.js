@@ -31,4 +31,6 @@ require.config({
 });
 
 
-require(["api/api.js"]);
+define(["api/api"], function(api){
+  //loads the ponder API; todo remove
+});
