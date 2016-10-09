@@ -84,10 +84,7 @@ require([
         });
 
 
-        console.log(somApp);
-
         somApp.on("AppLoaded", function () {
-            console.log("app is loaded!");
 
             //start intro
             if (getCookie("ponder-intro") === "1") {
@@ -97,6 +94,7 @@ require([
             var intro = introJs();
             setCookie("ponder-intro", "1", 100);
             intro.start();
+
         });
 
         function setCookie(cname, cvalue, exdays) {
