@@ -14,8 +14,9 @@ define([
   "./Table",
   "jquery",
   "type",
-  "Evented"
-], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, Table, jquery, type, Evented) {
+  "Evented",
+  "datatables"
+], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, Table, jquery, type, Evented, datatables) {
 
 
   function throwError(error) {

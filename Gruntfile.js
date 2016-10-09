@@ -10,6 +10,8 @@ var somWorkerScript = "src/som/worker/SOMWorker.js";
 var somWorkerScriptDestination = "js/worker/SOMWorker.js";
 var appModule = "app/www/js/ponder/app";
 
+var apiModule = "api/ponder";
+
 var workerDir = "js/worker/";
 var PapaParse = "papaparse";
 
@@ -92,6 +94,23 @@ module.exports = function (grunt) {
                     }
                 }
             },
+
+            api: {
+                options: {
+                    baseUrl: ".",
+                    mainConfigFile: apiModule + ".js",
+                    name: "bower_components/almond/almond.js",
+                    include: apiModule,
+                    out: releaseDir + "ponder.js",
+                    optimize: "uglify2",
+                    options: {
+                        mangle: true,
+                        compress: false
+                    }
+                }
+            },
+
+
             somWorker: {
                 options: {
                     baseUrl: ".",
