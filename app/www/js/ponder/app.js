@@ -32,19 +32,11 @@ require.config({
 
 require([
     "demo/DataSelector",
-    "ponder/ui/Map",
-    "ponder/ui/umatrix/UMatrixTerrainLayer",
-    "ponder/ui/bmu/BMULayer",
-    "ponder/ui/areaselect/AreaSelectLayerController",
-    "ponder/ui/highlight/HoverController",
-    "ponder/ui/highlight/SelectController",
-    "ponder/ui/bmu/BMUSelector",
-    "ponder/ui/bmu/BMUSelectionHistory",
-    "ponder/util",
     "ponder/appApi",
     "introJs",
+    "demo/util",
     "jquery"
-], function (DataSelector, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, introJs, jquery) {
+], function (DataSelector, appApi, introJs, util, jquery) {
 
 
     Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
@@ -85,13 +77,51 @@ require([
                 container: document.body,
                 center: "center",
                 waiting: "waiting"
-
+            },
+            bmu: {
+                initialColumn: util.getParameterByName("initial")
             }
         });
 
 
+        console.log(somApp);
 
+        somApp.on("AppLoaded", function () {
+            console.log("app is loaded!");
 
+            //start intro
+            if (getCookie("ponder-intro") === "1") {
+                return;
+            }
+
+            var intro = introJs();
+            setCookie("ponder-intro", "1", 100);
+            intro.start();
+        });
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+
+            }
+            return "";
+        }
 
 
     });

@@ -3,16 +3,16 @@ define([
     "type",
     "Evented",
     "jquery",
-    "ponder/util",
-    "ponder/Table",
+    "demo/util",
+    "ponder/appApi",
     "datatables"
-], function (Papa, type, Evented, jquery, util, Table) {
+], function (Papa, type, Evented, jquery, util, appApi) {
 
 
     /**
-     * Implements the table-API from ponder. Required to load data into ponder.
+     * Implements the ponder/Table-API. Required to load data into ponder.
      */
-    var TableFromPapa = type(Table.prototype, {
+    var TableFromPapa = type({
 
         constructor: function TableFromPapaParseData(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
             this._name = name;
@@ -25,9 +25,9 @@ define([
         columnType: function (index) {
             var label = this._columns[index];
 
-            return (this._selectedCategoryColumns.indexOf(label) >= 0) ? Table.CATEGORY :
-            (this._selectedOrdinalColumns.indexOf(label) >= 0) ? Table.ORDINAL :
-            Table.IGNORE;
+            return (this._selectedCategoryColumns.indexOf(label) >= 0) ? appApi.Table.CATEGORY :
+            (this._selectedOrdinalColumns.indexOf(label) >= 0) ? appApi.Table.ORDINAL :
+            appApi.Table.IGNORE;
         },
 
         getName: function () {
@@ -54,7 +54,7 @@ define([
 
 
     function isOrdinal(name, sampleValue) {
-        return !isNaN(util.toNumber(sampleValue));
+        return !isNaN(appApi.toNumber(sampleValue));
     }
 
     function isCategorical(name, sampleValue) {

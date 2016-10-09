@@ -11,11 +11,11 @@ define([
   "./util",
   "./appApi",
   "./dataload/DataTable",
+  "./Table",
   "jquery",
   "type",
-  "Evented",
-  "introJs"
-], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, jquery, type, Evented, introJs) {
+  "Evented"
+], function (SOMFactory, Map, UMatrixTerrainLayer, BMULayer, AreaSelectLayerController, HoverController, SelectController, BMUSelector, BMUSelectionHistory, util, appApi, DataTable, Table, jquery, type, Evented) {
 
 
   function throwError(error) {
@@ -28,6 +28,8 @@ define([
   var SomApp = type(Evented.prototype, {
 
     constructor: function (params) {
+
+      Evented.call(this);
 
       var containerNode = getNode(params.nodes.container);
       var mapToolNode = getNode(params.nodes.toolbar);
@@ -93,7 +95,8 @@ define([
       document.getElementById("waiting").appendChild(waitingDiv);
 
       SOMFactory.SCRIPT_PATH = params.somWorkerScriptPath;
-      return SOMFactory
+
+      SOMFactory
       .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
       .then(function (aSomHandle) {
         self._somHandle = aSomHandle;
@@ -111,7 +114,6 @@ define([
         jquery(mapContainer).show();
         mapToolNode.style.display = oldDisplayMapToolDisplay;
         mapContainer.style.display = "block";
-
 
         self._map = new Map("map", self._somHandle.width, self._somHandle.height);
 
@@ -135,7 +137,7 @@ define([
 
 
         //bmus
-        var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", dataTable, bmuResult.locations);
+        var bmuLayer = new BMULayer("label", "class", "size", "sizeEasing", "legend", dataTable, bmuResult.locations, params.bmu.initialColumn);
         self._map.addLayer(bmuLayer);
 
         var areaSelectLayerController = new AreaSelectLayerController();
@@ -160,17 +162,7 @@ define([
 
       }, throwError)
       .then(function () {
-
-        //start intro
-        if (getCookie("ponder-intro") === "1") {
-          return;
-        }
-
-        var intro = introJs();
-        setCookie("ponder-intro", "1", 100);
-        intro.start();
-
-
+        self.emit("AppLoaded");
       })
       .then(Function.prototype, throwError);
 
@@ -201,33 +193,17 @@ define([
   return {
     createSOM: function (params) {
       return new SomApp(params);
-    }
+    },
+
+    Table: Table,
+
+    /**
+     * this is the toNumber function used by Ponder.
+     * Use this when you want to e.g. show previews of data.
+     */
+    toNumber: util.toNumber
 
   };
-
-  function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-  }
-
-  function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1);
-      }
-
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-
-    }
-    return "";
-  }
 
 
 });

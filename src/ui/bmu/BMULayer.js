@@ -40,7 +40,7 @@ define([
 
         return type(Object.prototype, Evented.prototype, {
 
-            constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus) {
+            constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus, initialColumn) {
 
                 Evented.call(this);
 
@@ -108,8 +108,7 @@ define([
                 this._easingInput.on("input", this.invalidate.bind(this));
                 this._easingInput.on("input", flagDirt);
 
-
-                var column = util.getParameterByName("initial");
+                var column = initialColumn;
                 if (column && dataTable.getColumns().indexOf(column) >= 0){
                     this._classElement.value = dataTable.getColumns().indexOf(column);
                 }
