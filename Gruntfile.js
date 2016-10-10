@@ -64,7 +64,16 @@ module.exports = function (grunt) {
                     {expand: true, cwd: "vendor", src: [PapaParse + ".js"], dest: wwwReleaseDir + workerDir, filter: 'isFile'},
                     {expand: true, cwd: "bower_components/requirejs", src: ["require.js"], dest: wwwReleaseDir + "js/", filter: 'isFile'}
                 ]
+            },
+            api_worker: {
+                files: [
+                    {
+                        src: "release/www/js/worker/SOMWorker.js",
+                        dest: "release/api/ponder_worker.js"
+                    }
+                ]
             }
+
         },
         requirejs: {
 
@@ -101,7 +110,7 @@ module.exports = function (grunt) {
                     mainConfigFile: apiModule + ".js",
                     name: "bower_components/almond/almond.js",
                     include: apiModule,
-                    out: releaseDir + "ponder.js",
+                    out: releaseDir + "api/ponder.js",
                     optimize: "uglify2",
                     options: {
                         mangle: false,
@@ -201,9 +210,8 @@ module.exports = function (grunt) {
     });
 
 
-
-    grunt.registerTask("build-www", ["clean", "copy", "requirejs","correct-css"]);
-    grunt.registerTask("release", ["jshint", "build-www","tag-with-revision", "compress"]);
+    grunt.registerTask("build-www", ["clean", "copy:www_images", "copy:www_text", "copy:www_js", "requirejs", "correct-css"]);
+    grunt.registerTask("release", ["jshint", "build-www", "copy:api_worker", "tag-with-revision", "compress"]);
     grunt.registerTask("default", ["release"]);
 
 };
