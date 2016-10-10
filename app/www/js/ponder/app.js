@@ -69,7 +69,6 @@ require([
         var title = util.getParameterByName("title") ? util.getParameterByName("title") : table.getName();
         document.getElementById("title-blurb").innerHTML = title.toUpperCase();
 
-        // var somApp = PONDER.createSOM({
 
         var somApp = appApi.createSOM({
             table: table,
