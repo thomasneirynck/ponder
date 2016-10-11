@@ -106,8 +106,7 @@ define([
       .then(function () {
         return self._somHandle.uMatrixNormalized();
       }, throwError, function onProgress(payload) {
-        console.log('on porgress', arguments);
-        //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
+        //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! PUSH IT TO REPO!!!!
         waitingDivText.innerHTML = "Making map..." + Math.round(payload.progress * 100) + "%";
       })
       .then(function (successData) {
