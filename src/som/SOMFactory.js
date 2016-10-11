@@ -8,11 +8,14 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
             if (somFactory.SCRIPT_PATH === null && (typeof window.require !== 'function' || typeof window.require.toUrl !== 'function')) {
                 throw new Error("Cannot load SOM worker dynamically if require and require.toUrl are not available");
             }
-            console.log('require;', window.require, window.require.toUrl);
-            var script = somFactory.SCRIPT_PATH === null ? window.require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
 
 
-            var somWorker = new Worker(script);
+            var foobarScript = somFactory.SCRIPT_PATH === null ? window.require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
+
+
+            //!!!! this function must be replaced with worker content by build process!!!!!!!!!
+            var somWorker = /*!keep_this*/(function foobarWorker(){return new Worker(foobarScript);}());/*!keep_this*/
+
             var somReady = new Promise();
 
             somWorker.addEventListener("message", function workerLoaded(event) {
@@ -34,7 +37,6 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
                     height: mapHeight,
                     codeBookWeights: codeBookWeights
                 });
-
             });
 
             return somReady.thenable();
@@ -43,4 +45,8 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
     };
 
     return somFactory;
+
+
+
 });
+

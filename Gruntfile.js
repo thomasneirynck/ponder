@@ -8,9 +8,12 @@ var wwwReleaseDir = releaseDir + wwwRelease;
 
 var somWorkerScript = "src/som/worker/SOMWorker.js";
 var somWorkerScriptDestination = "js/worker/SOMWorker.js";
+
 var appModule = "app/www/js/ponder/app";
+var appDestination = wwwReleaseDir + "js/ponder/app.js";
 
 var apiModule = "api/ponder";
+var apiDestination = releaseDir + "api/ponder.js";
 
 var workerDir = "js/worker/";
 var PapaParse = "papaparse";
@@ -83,11 +86,14 @@ module.exports = function (grunt) {
                     mainConfigFile: appModule + ".js",
                     name: "bower_components/almond/almond.js",
                     include: appModule,
-                    out: wwwReleaseDir + "js/ponder/app.js",
+                    out: appDestination,
                     optimize: "uglify2",
+                    // optimize: "none",
                     options: {
                         mangle: true,
-                        compress: false
+                        compress: false,
+                        preserveComments: 'some',
+                        preserve: ["foobarWorker", "foobarScript"]
                     },
                     onBuildRead: function (moduleName, path, contents) {
                         /**
@@ -98,6 +104,8 @@ module.exports = function (grunt) {
                             contents = contents.replace(/\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\/(.*?)\/\*\*\{\{PAPA_PARSE_MODULE_PATH\}\}\*\//g, "\"" + workerDir + PapaParse + "\"");
                             contents = contents.replace(/\/\*\*\{\{BASE_URL\}\}\*\/(.*?)\/\*\*\{\{BASE_URL\}\}\*\//g, "\".\"");
                             contents = contents.replace(/\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\/(.*?)\/\*\*\{\{SOM_SCRIPT_PATH\}\}\*\//g, "\"" + somWorkerScriptDestination + "\"");
+                        } else if (moduleName.endsWith('SOMFactory')) {
+                            contents = embedWorker(contents);
                         }
                         return contents;
                     }
@@ -110,15 +118,21 @@ module.exports = function (grunt) {
                     mainConfigFile: apiModule + ".js",
                     name: "bower_components/almond/almond.js",
                     include: apiModule,
-                    out: releaseDir + "api/ponder.js",
+                    out: apiDestination,
                     optimize: "uglify2",
                     options: {
-                        mangle: false,
+                        mangle: true,
                         compress: false
                     },
                     wrap: {
                         start: "(function() {",
                         end: "require('api/ponder');}());"
+                    },
+                    onBuildRead: function (moduleName, path, contents) {
+                        if (moduleName.endsWith('SOMFactory')) {
+                            contents = embedWorker(contents);
+                        }
+                        return contents;
                     }
                 }
             },
@@ -168,6 +182,45 @@ module.exports = function (grunt) {
         }
     });
 
+    function embedWorker(contents) {
+        buildify()
+        .load(wwwReleaseDir + somWorkerScriptDestination)
+        .perform(function (workerContent) {
+            var worker = JSON.stringify(workerContent);
+            var createWithEmbeddedWorker = "(function a(){var blobURL = URL.createObjectURL(new Blob([" + worker + "], { type: 'application/javascript' } ) ); return new Worker(blobURL);}())";
+            contents = contents.replace(/\/\*\!keep_this\*\/(.*?)\/\*\!keep_this\*\//g, createWithEmbeddedWorker);
+        });
+        return contents;
+    }
+
+    grunt.registerTask("embed-worker", function () {
+
+        console.log(appDestination);
+
+        buildify()
+        .load(appDestination)
+        .perform(function (appContent) {
+
+
+            buildify()
+            .load(wwwReleaseDir + somWorkerScriptDestination)
+            .perform(function (workerContent) {
+                console.log(appContent.length, workerContent.length);
+
+                var createWithEmbeddedWorker = "function a(){var blobURL = URL.createObjectURL(new Blob([`" + workerContent + "`], { type: 'application/javascript' } ) ); return new Worker(blobURL);}";
+                console.log(appContent.indexOf("heyo"));
+                appContent = appContent.replace("function a(a){return new Worker(a);}", createWithEmbeddedWorker);
+
+                console.log('done replacing');
+            });
+
+            console.log('must return', appContent.length);
+            return appContent;
+
+        })
+        .save(appDestination)
+    });
+
     grunt.registerTask("correct-css", function(){
 
         var file = wwwReleaseDir + "css/main.css";
@@ -210,7 +263,7 @@ module.exports = function (grunt) {
     });
 
 
-    grunt.registerTask("build-www", ["clean", "copy:www_images", "copy:www_text", "copy:www_js", "requirejs", "correct-css"]);
+    grunt.registerTask("build-www", ["clean", "copy:www_images", "copy:www_text", "copy:www_js", "requirejs:somWorker", "requirejs:ponderApp", "requirejs:api", "requirejs:mainCss", "correct-css"]);
     grunt.registerTask("release", ["jshint", "build-www", "copy:api_worker", "tag-with-revision", "compress"]);
     grunt.registerTask("default", ["release"]);
 
