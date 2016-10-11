@@ -71,6 +71,7 @@ require([
 
 
         var somApp = appApi.createSOM({
+        // var somApp = PONDER.createSOM({
             table: table,
             somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
             nodes: {

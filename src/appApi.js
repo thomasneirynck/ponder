@@ -93,7 +93,7 @@ define([
       var waitingDivText = document.createElement("span");
       waitingDivText.innerHTML = "Estimating progress...";
       waitingDiv.appendChild(waitingDivText);
-      document.getElementById("waiting").appendChild(waitingDiv);
+      getNode(params.nodes.waiting).appendChild(waitingDiv);
 
       SOMFactory.SCRIPT_PATH = params.somWorkerScriptPath;
 
@@ -110,7 +110,7 @@ define([
         //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
         waitingDivText.innerHTML = "Making map..." + Math.round(payload.progress * 100) + "%";
       })
-      .then(function (successData) {
+      .then(function (successData) {ode
 
         jquery(mapContainer).show();
         mapToolNode.style.display = oldDisplayMapToolDisplay;
