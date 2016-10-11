@@ -62,6 +62,7 @@ require([
 
     dataSelector.on("change", function (table) {
 
+
         dataSelector.destroy();
         jquery("#welcome").hide();
 

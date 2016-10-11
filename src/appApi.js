@@ -110,7 +110,7 @@ define([
         //todo!!!! YOU HACKED THE PROMISE DEPENDENCY WHICH HAD A BUG!!!!!!! FIX IT!!!!
         waitingDivText.innerHTML = "Making map..." + Math.round(payload.progress * 100) + "%";
       })
-      .then(function (successData) {ode
+      .then(function (successData) {
 
         jquery(mapContainer).show();
         mapToolNode.style.display = oldDisplayMapToolDisplay;
