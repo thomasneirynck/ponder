@@ -7,7 +7,6 @@ define([], function () {
    */
 
   function Table() {
-    throw new Error("This type needs to be implemented. SOM uses it to load data.");
   }
 
   Table.ORDINAL = "ordinal";

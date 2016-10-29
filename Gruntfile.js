@@ -120,6 +120,7 @@ module.exports = function (grunt) {
                     include: apiModule,
                     out: apiDestination,
                     optimize: "uglify2",
+                    // optimize: "none",
                     options: {
                         mangle: true,
                         compress: false

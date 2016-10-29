@@ -178,6 +178,12 @@ define([
         this._map = null;
       }
 
+    },
+
+    fit: function () {
+      if (this._map) {
+        this._map.resize();
+      }
     }
 
   });
