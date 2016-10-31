@@ -106,7 +106,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             var max = -Infinity;
             var value;
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                value = util.toNumber(this._table.getValue([i], columnIndexForOdinal));
+                value = util.toNumber(this._table.getValue(i, columnIndexForOdinal));
                 if (isNaN(value)) {
                     continue;
                 }
@@ -124,7 +124,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         filterItems: function (columnIndex, value) {
             var results = [];
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                if (this._table.getValue([i][columnIndex]) === value) {
+                if (this._table.getValue(i, columnIndex) === value) {
                     results.push(i);
                 }
             }
@@ -139,8 +139,8 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
             this._uniques[columnIndex] = [];
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                if (this._uniques[columnIndex].indexOf(this.getValue([i][columnIndex])) < 0) {
-                    this._uniques[columnIndex].push(this.getValue([i][columnIndex]));
+                if (this._uniques[columnIndex].indexOf(this.getValue(i, columnIndex)) < 0) {
+                    this._uniques[columnIndex].push(this.getValue(i, columnIndex));
                     if (this._uniques[columnIndex].length > 256) {
                         break;
                     }
@@ -163,8 +163,9 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
 
             for (var i = 0; i < this._data.length; i += 1) {
-                this._counts[columnIndexForCategory][this.getValue([i][columnIndexForCategory])] += 1;
+                this._counts[columnIndexForCategory][this._table.getValue([i], columnIndexForCategory)] += 1;
             }
+
             return this._counts[columnIndexForCategory];
 
         },
@@ -216,7 +217,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             var value;
             for (r = 0; r < this._table.rowCount(); r += 1) {
                 for (c = 0; c < selectedOrdinalColumnsIndices.length; c += 1) {
-                    value = util.toNumber(this._table.getValue([r], selectedOrdinalColumnsIndices[c]));
+                    value = util.toNumber(this._table.getValue(r, selectedOrdinalColumnsIndices[c]));
                     if (isNaN(value)) {
                         console.warn("ignoring missing value" + " row: " + r + ", col: " + c);
                         continue;
@@ -256,7 +257,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
                 //scale ordinals to [0,1] domain
                 for (c = 0; c < selectedOrdinalColumnsIndices.length; c += 1, i += 1) {
-                    value = util.toNumber(this._table.getValue([r], [selectedOrdinalColumnsIndices[c]]));
+                    value = util.toNumber(this._table.getValue(r, selectedOrdinalColumnsIndices[c]));
                     if (isNaN(value)) {
                         console.warn("Missing value for: " + " row: " + r + ", col: " + c);
                         value = (maxs[c] + mins[c]) / 2;
@@ -267,7 +268,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 //categories
                 for (c = 0; c < categories.length; c += 1) {
                     for (v = 0; v < categories[c].uniqueValues.length; v += 1) {
-                        dataArray[i] = (categories[c].uniqueValues[v] === this._table.getValue([r], [categories[c].indexInRow])) ? 1 : 0;
+                        dataArray[i] = (categories[c].uniqueValues[v] === this._table.getValue(r, categories[c].indexInRow)) ? 1 : 0;
                         i += 1;
                     }
                 }
