@@ -67,7 +67,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         getColumnIndex: function (columnName) {
             for (var i = 0; i < this._table.columnCount(); i += 1) {
                 if (this._table.columnLabel(i) === columnName) {
-                    console.log('column index', columnName, i);
                     return i;
                 }
             }
