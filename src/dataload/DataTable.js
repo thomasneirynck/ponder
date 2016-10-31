@@ -67,6 +67,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         getColumnIndex: function (columnName) {
             for (var i = 0; i < this._table.columnCount(); i += 1) {
                 if (this._table.columnLabel(i) === columnName) {
+                    console.log('column index', columnName, i);
                     return i;
                 }
             }
@@ -161,8 +162,8 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 this._counts[columnIndexForCategory][uniques[u]] = 0;
             }
 
-            for (var i = 0; i < this._data.length; i += 1) {
-                this._counts[columnIndexForCategory][this._table.getValue([i], columnIndexForCategory)] += 1;
+            for (var i = 0; i < this._table.rowCount(); i += 1) {
+                this._counts[columnIndexForCategory][this._table.getValue(i, columnIndexForCategory)] += 1;
             }
 
             return this._counts[columnIndexForCategory];

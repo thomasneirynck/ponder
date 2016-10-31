@@ -89,6 +89,7 @@ define([
 
                 bars = document.createElement("div");
                 counts = datatable.getCounts(datatable.getColumnIndex(selectedCategories[c]));
+
                 hist = new Histogram(bars, counts);
                 hist.setData(categoryValues[selectedCategories[c]]);
 
