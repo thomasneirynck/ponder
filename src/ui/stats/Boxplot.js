@@ -4,6 +4,7 @@ define(["type", "jStat", "Evented", "jquery"], function (type, jStat, Evented, j
     return type(Evented.prototype, {
 
         constructor: function Boxplot(min, max, node) {
+            console.log('Boxplot', arguments);
             Evented.call(this);
             this._context2d = document.createElement("canvas").getContext("2d");
             this._min = min;

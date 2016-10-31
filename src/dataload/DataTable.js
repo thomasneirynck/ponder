@@ -96,6 +96,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getMinMax: function (columnIndexForOdinal) {
 
+            columnIndexForOdinal = parseInt(columnIndexForOdinal);
             if (this._minMax[columnIndexForOdinal]) {
                 return this._minMax[columnIndexForOdinal];
             }
@@ -105,7 +106,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             var max = -Infinity;
             var value;
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                value = util.toNumber(this._table.getValue[i],[columnIndexForOdinal]);
+                value = util.toNumber(this._table.getValue([i], columnIndexForOdinal));
                 if (isNaN(value)) {
                     continue;
                 }
@@ -114,6 +115,8 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
 
             this._minMax[columnIndexForOdinal] = [min, max];
+
+            console.log('minmax', this._minMax);
             return this._minMax[columnIndexForOdinal];
 
         },
@@ -282,7 +285,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
 
     DataTableComposed.createDataTableFromTable = function (table) {
-        debugger;
         return new DataTableComposed(table);
     };
 

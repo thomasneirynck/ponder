@@ -252,6 +252,7 @@ define([
 
                 //ordinal type
                 var minMax = this._dataTable.getMinMax(clazz);
+
                 var self = this;
                 return function (classValue) {
                     return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
