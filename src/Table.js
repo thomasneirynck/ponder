@@ -11,7 +11,21 @@ define([], function () {
 
   Table.ORDINAL = "ordinal";
   Table.CATEGORY = "category";
+  Table.TAGLIST = "taglist";
   Table.IGNORE = "ignore";
+
+
+  Table.prototype.getWeight = function (columnIndex) {
+    return 1;
+  };
+
+  Table.prototype.getTagCount = function (rowNumber, columnNumber) {
+    throw new Error("should return the count of tags");
+  };
+
+  Table.prototype.getTagValue = function (rowNumber, columnNumber, tagIndex) {
+    throw new Error("should return the tag-value");
+  };
 
   Table.prototype.getName = function(){
     throw new Error("should return the name of the table");
