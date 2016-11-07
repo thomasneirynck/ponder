@@ -126,6 +126,26 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return this._uniques[columnIndex];
         },
 
+        getUniqueTags: function (columnIndex) {
+            if (this._uniqueTags[columnIndex]) {
+                return this._uniqueTags[columnIndex];
+            }
+
+            this._uniqueTags[columnIndex] = [];
+            var tagCount, tag;
+            for (var r = 0; r < this._table.rowCount(); r += 1) {
+                tagCount = this._table.getTagCount(r, columnIndex);
+                for (var i = 0; i < tagCount; i += 1) {
+                    tag = this._table.getTagValue(r, columnIndex, i);
+                    if (this._uniqueTags[columnIndex].indexOf(tag) < 0) {
+                        this._uniqueTags[columnIndex].push(tag);
+                    }
+                }
+            }
+            this._uniqueTags[columnIndex].sort();
+            return this._uniqueTags[columnIndex];
+        },
+
         getCounts: function (columnIndexForCategory) {
 
             if (this._counts[columnIndexForCategory]) {
@@ -157,26 +177,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 featureData.push(this._table.getValue(index, i));
             }
             return featureData;
-        },
-
-        getUniqueTags: function (columnIndex) {
-            if (this._uniqueTags[columnIndex]) {
-                return this._uniqueTags[columnIndex];
-            }
-
-            this._uniqueTags[columnIndex] = [];
-            var tagCount, tag;
-            for (var r = 0; r < this._table.rowCount(); r += 1) {
-                tagCount = this._table.getTagCount(r, columnIndex);
-                for (var i = 0; i < tagCount; i += 1) {
-                    tag = this._table.getTagValue(r, columnIndex, i);
-                    if (this._uniqueTags[columnIndex].indexOf(tag) < 0) {
-                        this._uniqueTags[columnIndex].push(tag);
-                    }
-                }
-            }
-            this._uniqueTags[columnIndex].sort();
-            return this._uniqueTags[columnIndex];
         },
 
         createSOMTrainingData: function () {
@@ -288,9 +288,9 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 //uniquetags
 
                 for (c = 0; c < allTags.length; c += 1) {
-                    // tagcount = this._table.getTagCount(r, allTags[c].columnIndex);
+                    tagcount = this._table.getTagCount(r, allTags[c].columnIndex);
                     for (v = 0; v < allTags[c].uniqueTags.length; v += 1) {
-                        dataArray[i] = this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v]) ? 1 : 0;
+                        dataArray[i] = this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v]) ? 1 /tagcount : 0;
                         i += 1;
                     }
                 }

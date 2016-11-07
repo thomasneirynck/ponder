@@ -176,7 +176,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
                 var area, size, ordinalPositionForSize;
 
-                var colorClassifier = this._getClassifier();
+                var colorClassifier = this._getColorClassifier();
                 var isOrdinal = this._dataTable.isType(classValue, Table.ORDINAL);
                 var fillStyle;
                 for (var i = 0; i < this._bmus.length; i += 1) {
@@ -186,6 +186,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                     size = areaToRadius(area);
                     this._bmus[i].radius = size;
 
+                    console.log('get value');
                     fillStyle = colorClassifier(this._dataTable.getValue(i, classValue));
                     if (!ICONCACHE[fillStyle]) {
                         ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXRADIUS);
@@ -216,12 +217,10 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
             paint: function (context2d, map) {
 
-
                 this._recomputeSizeColor();
                 var atLeastOneHighlight = false;
                 var x, y, haloSize;
 
-                console.log(this._bmus);
                 for (var i = 0; i < this._bmus.length; i += 1) {
 
                     x = jigger(map.toViewX(this._bmus[i].x));
@@ -242,26 +241,25 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
             },
 
 
-            _getClassifier: function () {
+            _getColorClassifier: function () {
 
                 var uniques;
-                var clazz = parseInt(this._classElement.value);
-                if (this._dataTable.isType(clazz, Table.CATEGORY) || this._dataTable.isType(clazz, Table.IGNORE)) {
-                    uniques = this._dataTable.getUniqueValues(clazz);
-                    return function categoryClassifier(classValue) {
-                        return classColors[uniques.indexOf(classValue) % classColors.length];
+                var columnIndex = parseInt(this._classElement.value);
+                if (this._dataTable.isType(columnIndex, Table.CATEGORY) || this._dataTable.isType(columnIndex, Table.IGNORE)) {
+                    uniques = this._dataTable.getUniqueValues(columnIndex);
+                    return function categoryClassifier(value) {
+                        return classColors[uniques.indexOf(value) % classColors.length];
                     };
-                } else if (this._dataTable.isType(clazz, Table.ORDINAL)) {
+                } else if (this._dataTable.isType(columnIndex, Table.ORDINAL)) {
                     //ordinal type
-                    var minMax = this._dataTable.getMinMax(clazz);
-
+                    var minMax = this._dataTable.getMinMax(columnIndex);
                     var self = this;
                     return function (classValue) {
                         return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
                     };
-                } else if (this._dataTable.isType(clazz, Table.TAGLIST)) {
+                } else if (this._dataTable.isType(columnIndex, Table.TAGLIST)) {
                     return function (classValue) {
-                        console.log('must implement!!!');
+                        console.log('must implement!!!', classValue);
                         return false;
                     };
                 }
@@ -311,7 +309,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 if (this._dataTable.isType(clazz, Table.ORDINAL)) {
                     return {
                         type: "ORDINAL",
-                        classifier: this._getClassifier(),
+                        classifier: this._getColorClassifier(),
                         minMax: this._dataTable.getMinMax(clazz),
                         lower: classColors[0],
                         higher: classColors[1]
@@ -319,19 +317,19 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 } else if (this._dataTable.isType(clazz, Table.CATEGORY)) {
                     return {
                         type: "CATEGORY",
-                        classifier: this._getClassifier(),
+                        classifier: this._getColorClassifier(),
                         values: this._dataTable.getUniqueValues(clazz)
                     };
                 } else if (this._dataTable.isType(clazz, Table.TAGLIST)) {
                     console.log('gettign legend for taglist!');
                     return {
                         type: "TAGLIST",
-                        classifier: this._getClassifier()
+                        classifier: this._getColorClassifier()
                     };
                 } else if (this._dataTable.isType(clazz, Table.IGNORE)) {
                     return {
                         type: "CATEGORY",
-                        classifier: this._getClassifier(),
+                        classifier: this._getColorClassifier(),
                         values: this._dataTable.getUniqueValues(clazz)
                     };
                 }

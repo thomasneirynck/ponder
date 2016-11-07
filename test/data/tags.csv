@@ -3,3 +3,7 @@ id,number,cat,tags
 2,100,bar,cat;lion;tiger
 3,100,foo,tiger;lion;snake
 4,100,bar,whale;goldfish;crab
+5,100,bar,whale
+6,100,bar,dog
+7,100,bar,crab
+8,100,bar,snake;turtle
