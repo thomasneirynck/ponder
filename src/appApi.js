@@ -78,7 +78,7 @@ define([
 
       //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
       //the correct data-API is ponder/Table
-      var dataTable = DataTable.createDataTableFromTable(params.table);
+      var dataTable = new DataTable(params.table);
       var somTrainingData = dataTable.createSOMTrainingData();
 
       self._map = null;

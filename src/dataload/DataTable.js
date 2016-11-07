@@ -1,7 +1,7 @@
 define(["type", "../util", "../Table"], function (type, util, Table) {
 
 
-    var DataTableComposed = type(Table.prototype, {
+    return type(Table.prototype, {
 
 
         constructor: function DataTableComposed(table) {
@@ -136,7 +136,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         isType: function(columnIndex, columnType){
             return this._table.columnType(parseInt(columnIndex)) === columnType;
         },
-        
+
         getFeatureData: function (index) {
             var featureData = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {
@@ -239,11 +239,5 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
     });
 
-
-    DataTableComposed.createDataTableFromTable = function (table) {
-        return new DataTableComposed(table);
-    };
-
-    return DataTableComposed;
 
 });
