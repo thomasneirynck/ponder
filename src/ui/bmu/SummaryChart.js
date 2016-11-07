@@ -71,7 +71,6 @@ define([
 
 
             var categoryValues = [];
-            var value;
             for (c = 0; c < categoryColumns.length; c += 1) {
                 categoryValues[categoryColumns[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
