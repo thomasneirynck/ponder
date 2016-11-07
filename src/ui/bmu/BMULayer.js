@@ -243,7 +243,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
                 var uniques;
                 var clazz = parseInt(this._classElement.value);
-                if (this._dataTable.isCategory(clazz) || this._dataTable.isExcluded(clazz)) {
+                if (this._dataTable.isType(clazz, Table.CATEGORY) || this._dataTable.isType(clazz, Table.IGNORE)) {
                     uniques = this._dataTable.getUniqueValues(clazz);
                     return function categoryClassifier(classValue) {
                         return classColors[uniques.indexOf(classValue) % classColors.length];

@@ -137,15 +137,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return this._table.columnType(parseInt(columnIndex)) === columnType;
         },
         
-
-        isExcluded: function (columnIndex) {
-            return this._table.columnType(parseInt(columnIndex)) === Table.IGNORE;
-        },
-
-        isCategory: function (columnIndex) {
-            return this._table.columnType(parseInt(columnIndex)) === Table.CATEGORY;
-        },
-
         getFeatureData: function (index) {
             var featureData = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {
