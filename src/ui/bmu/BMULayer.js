@@ -65,7 +65,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
                 function setEasingInputMode() {
                     self.invalidate();
-                    if (self._dataTable.isOrdinal(self._classElement.value)) {
+                    if (self._dataTable.isType(self._classElement.value, Table.ORDINAL)) {
                         self._easingInput.setEasingMode("log");
                     } else {
                         self._easingInput.setEasingMode("constant");
@@ -176,7 +176,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 var area, size, ordinalPositionForSize;
 
                 var colorClassifier = this._getClassifier();
-                var isOrdinal = this._dataTable.isOrdinal(classValue);
+                var isOrdinal = this._dataTable.isType(classValue, Table.ORDINAL);
                 var fillStyle;
                 for (var i = 0; i < this._bmus.length; i += 1) {
                     ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValue(i, classValue)) : -1;
@@ -298,7 +298,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
             getLegend: function () {
 
                 var clazz = this._classElement.value;
-                if (this._dataTable.isOrdinal(clazz)) {
+                if (this._dataTable.isType(clazz, Table.ORDINAL)) {
                     return {
                         type: "ORDINAL",
                         classifier: this._getClassifier(),

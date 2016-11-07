@@ -133,9 +133,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         },
 
-        isOrdinal: function (columnIndex) {
-            return this._table.columnType(parseInt(columnIndex)) === Table.ORDINAL;
+        isType: function(columnIndex, columnType){
+            return this._table.columnType(parseInt(columnIndex)) === columnType;
         },
+        
 
         isExcluded: function (columnIndex) {
             return this._table.columnType(parseInt(columnIndex)) === Table.IGNORE;
