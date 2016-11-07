@@ -50,20 +50,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         },
 
 
-        getColumnIndex: function (columnLabel) {
-            for (var i = 0; i < this._table.columnCount(); i += 1) {
-                if (this._table.columnLabel(i) === columnLabel) {
-                    return i;
-                }
-            }
-            throw new Error('no column index for this name');
-        },
-
-
-        getValueByRowAndColumnIndex: function (index, columnIndex) {
-            return this._table.getValue(index, columnIndex);
-        },
-
         getColumnLabels: function () {
             var columns = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {

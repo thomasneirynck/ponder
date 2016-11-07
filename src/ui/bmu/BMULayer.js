@@ -179,13 +179,13 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 var isOrdinal = this._dataTable.isOrdinal(classValue);
                 var fillStyle;
                 for (var i = 0; i < this._bmus.length; i += 1) {
-                    ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValueByRowAndColumnIndex(i, classValue)) : -1;
+                    ordinalPositionForSize = isOrdinal ? this._getOrdinalPosition(minMaxForSize, this._dataTable.getValue(i, classValue)) : -1;
 
                     area = MINAREA + this._easingInput.getEasingFunction()(ordinalPositionForSize) * (MAXAREA - MINAREA);
                     size = areaToRadius(area);
                     this._bmus[i].radius = size;
 
-                    fillStyle = colorClassifier(this._dataTable.getValueByRowAndColumnIndex(i, classValue));
+                    fillStyle = colorClassifier(this._dataTable.getValue(i, classValue));
                     if (!ICONCACHE[fillStyle]) {
                         ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXRADIUS);
                     }
