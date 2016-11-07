@@ -14,12 +14,13 @@ define([
      */
     var TableFromPapa = type({
 
-        constructor: function TableFromPapaParseData(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns) {
+        constructor: function TableFromPapaParseData(name, data, columns, selectedOrdinalColumns, selectedCategoryColumns, selectedTaglistColumns) {
             this._name = name;
             this._data = data;
             this._columns = columns;
             this._selectedOrdinalColumns = selectedOrdinalColumns;
             this._selectedCategoryColumns = selectedCategoryColumns;
+            this._selectedTaglistColumns = selectedTaglistColumns;
         },
 
         columnType: function (index) {
@@ -27,6 +28,7 @@ define([
 
             return (this._selectedCategoryColumns.indexOf(label) >= 0) ? appApi.Table.CATEGORY :
             (this._selectedOrdinalColumns.indexOf(label) >= 0) ? appApi.Table.ORDINAL :
+            (this._selectedTaglistColumns.indexOf(label) >= 0) ? appApi.Table.TAGLIST :
             appApi.Table.IGNORE;
         },
 
@@ -47,7 +49,20 @@ define([
         },
         getValue: function (row, column) {
             return this._data[row][column];
+        },
+
+        getTagCount: function (rowNumber, columnNumber) {
+            return this._data[rowNumber][columnNumber].split(';').length;
+        },
+
+        getTagValue: function (rowNumber, columnNumber, tagIndex) {
+            return this._data[rowNumber][columnNumber].split(';')[tagIndex]
+        },
+
+        hasTag: function (rowNumber, columnNumber, tag) {
+            return this._data[rowNumber][columnNumber].split(';').indexOf(tag) >= 0;
         }
+
     });
 
 
@@ -173,6 +188,7 @@ define([
 
                 self._selectedOrdinalColumns = [];
                 self._selectedCategoryColumns = [];
+                self._selectedTaglistColumns = [];
 
                 var headerWrapper = document.createElement("div");
                 var header = document.createElement("div");
@@ -192,13 +208,17 @@ define([
                 var categoryColHead = document.createElement("th");
                 categoryColHead.innerHTML = "Category";
                 categoryColHead.title = "observations like gender, color, or diagnosis";
+                var taglistColHead = document.createElement("th");
+                taglistColHead.innerHTML = "Tags";
+                taglistColHead.title = "List of tags, separated by semicolon";
                 var ignoreColHead = document.createElement("th");
-                ignoreColHead.innerHTML = "Exclude";
+                ignoreColHead.innerHTML = "Ignore";
                 ignoreColHead.title = "this field will not be taken into account when creating the map";
 
                 tableHeader.appendChild(nameColHead);
                 tableHeader.appendChild(ordinalColHead);
                 tableHeader.appendChild(categoryColHead);
+                tableHeader.appendChild(taglistColHead);
                 tableHeader.appendChild(ignoreColHead);
 
                 var limit = Math.min(6, self._data.length);
@@ -242,6 +262,7 @@ define([
                     suggestedType = suggestType(self._data[0][i], self._data[1] ? self._data[1][i] : null, i);
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "ordinal", "ordinal");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "category", "category");
+                    addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "taglist", "taglist");
                     addRadioColumn(row, radioButtonsMap, self._data[0][i], suggestedType === "exclude", "exclude");
 
 
@@ -285,10 +306,13 @@ define([
                             self._selectedOrdinalColumns.push(key);
                         } else if (radioButtonsMap[key].category.checked) {
                             self._selectedCategoryColumns.push(key);
+                        } else if (radioButtonsMap[key].taglist.checked) {
+                            console.log('taglist!');
+                            self._selectedTaglistColumns.push(key);
                         }
                     }
 
-                    var table = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns);
+                    var table = new TableFromPapa(title, self._data.slice(1), self._data[0], self._selectedOrdinalColumns, self._selectedCategoryColumns, self._selectedTaglistColumns);
                     if (ga) {
                         ga("send", "event", "button", "makeMap", title);
                     }

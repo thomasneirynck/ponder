@@ -70,6 +70,16 @@ define([
 
         },
 
+        _updateTaglistLegend: function (legend) {
+            var wrapperDiv = document.createElement("div");
+            wrapperDiv.style.position = "relative";
+            wrapperDiv.style.width = "100%";
+            wrapperDiv.style.height = "100%";
+            wrapperDiv.innerHTML = "TODO TAGLIST!";
+            this._legendDiv.innerHTML = "";
+            this._legendDiv.appendChild(wrapperDiv);
+        },
+
         _updateOrdinalLegend: function (legend) {
 
             var context2d = document.createElement("canvas").getContext("2d");
@@ -160,6 +170,10 @@ define([
             var legend = this._bmuLayer.getLegend();
             if (legend.type === "ORDINAL") {
                 this._updateOrdinalLegend(legend);
+            } else if (legend.type === "CATEGORY") {
+                this._updateCategoryLegend(legend);
+            } else if (legend.type === "TAGLIST") {
+                this._updateTaglistLegend(legend);
             } else {
                 this._updateCategoryLegend(legend);
             }

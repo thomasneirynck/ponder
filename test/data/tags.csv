@@ -1,4 +1,5 @@
-1,dog;cat;snake;goldfish
-2,cat;lion;tiger
-3,tiger;lion;snake
-4,whale;goldfish;crab
+id,number,cat,tags
+1,100,foo,dog;cat;snake;goldfish
+2,100,bar,cat;lion;tiger
+3,100,foo,tiger;lion;snake
+4,100,bar,whale;goldfish;crab

@@ -42,6 +42,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
             constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus, initialColumn) {
 
+                console.log('make bmu lauer', arguments);
                 Evented.call(this);
 
                 this._dataTable = dataTable;
@@ -219,6 +220,8 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 this._recomputeSizeColor();
                 var atLeastOneHighlight = false;
                 var x, y, haloSize;
+
+                console.log(this._bmus);
                 for (var i = 0; i < this._bmus.length; i += 1) {
 
                     x = jigger(map.toViewX(this._bmus[i].x));
@@ -248,15 +251,22 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                     return function categoryClassifier(classValue) {
                         return classColors[uniques.indexOf(classValue) % classColors.length];
                     };
+                } else if (this._dataTable.isType(clazz, Table.ORDINAL)) {
+                    //ordinal type
+                    var minMax = this._dataTable.getMinMax(clazz);
+
+                    var self = this;
+                    return function (classValue) {
+                        return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
+                    };
+                } else if (this._dataTable.isType(clazz, Table.TAGLIST)) {
+                    return function (classValue) {
+                        console.log('must implement!!!');
+                        return false;
+                    };
                 }
 
-                //ordinal type
-                var minMax = this._dataTable.getMinMax(clazz);
 
-                var self = this;
-                return function (classValue) {
-                    return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
-                };
 
             },
 
@@ -306,7 +316,19 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                         lower: classColors[0],
                         higher: classColors[1]
                     };
-                } else {
+                } else if (this._dataTable.isType(clazz, Table.CATEGORY)) {
+                    return {
+                        type: "CATEGORY",
+                        classifier: this._getClassifier(),
+                        values: this._dataTable.getUniqueValues(clazz)
+                    };
+                } else if (this._dataTable.isType(clazz, Table.TAGLIST)) {
+                    console.log('gettign legend for taglist!');
+                    return {
+                        type: "TAGLIST",
+                        classifier: this._getClassifier()
+                    };
+                } else if (this._dataTable.isType(clazz, Table.IGNORE)) {
                     return {
                         type: "CATEGORY",
                         classifier: this._getClassifier(),

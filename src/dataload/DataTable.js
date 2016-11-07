@@ -11,6 +11,8 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             this._uniques = {};
             this._minMax = {};
             this._counts = {};
+            this._uniqueTags = {};
+
         },
 
 
@@ -36,6 +38,18 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getValue: function (rowNumber, columnNumber) {
             return this._table.getValue(rowNumber, columnNumber);
+        },
+
+        getTagCount: function (row, col) {
+            return this._table.getTagCount(row, col);
+        },
+
+        getTagValue: function (row, col, tag) {
+            return this._table.getTagValue(row, col, tag);
+        },
+
+        hasTag: function (row, col, tag) {
+            return this._table.hasTag(row, col, tag);
         },
 
         /////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,16 +159,39 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return featureData;
         },
 
+        getUniqueTags: function (columnIndex) {
+            if (this._uniqueTags[columnIndex]) {
+                return this._uniqueTags[columnIndex];
+            }
+
+            this._uniqueTags[columnIndex] = [];
+            var tagCount, tag;
+            for (var r = 0; r < this._table.rowCount(); r += 1) {
+                tagCount = this._table.getTagCount(r, columnIndex);
+                for (var i = 0; i < tagCount; i += 1) {
+                    tag = this._table.getTagValue(r, columnIndex, i);
+                    if (this._uniqueTags[columnIndex].indexOf(tag) < 0) {
+                        this._uniqueTags[columnIndex].push(tag);
+                    }
+                }
+            }
+            this._uniqueTags[columnIndex].sort();
+            return this._uniqueTags[columnIndex];
+        },
+
         createSOMTrainingData: function () {
 
             var selectedOrdinalColumnsIndices = [];
             var selectedCategoryColumnIndices = [];
+            var selectedTaglistColumnIndices = [];
             var i;
             for (i = 0; i < this._table.columnCount(); i += 1) {
                 if (this._table.columnType(i) === Table.ORDINAL) {
                     selectedOrdinalColumnsIndices.push(i);
                 } else if (this._table.columnType(i) === Table.CATEGORY) {
                     selectedCategoryColumnIndices.push(i);
+                } else if (this._table.columnType(i) === Table.TAGLIST) {
+                    selectedTaglistColumnIndices.push(i);
                 }
             }
 
@@ -187,27 +224,47 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             var totCategories = 0;
             for (i = 0; i < selectedCategoryColumnIndices.length; i += 1) {
                 categories[i] = {
-                    indexInRow: selectedCategoryColumnIndices[i],
+                    columnIndex: selectedCategoryColumnIndices[i],
                     uniqueValues: this.getUniqueValues(selectedCategoryColumnIndices[i])
                 };
                 totCategories += categories[i].uniqueValues.length;
             }
 
-            //WEIGHTS
+            //TAGLIST PREP
+            var allTags = [];
+            var totTags = 0;
+            for (i = 0; i < selectedTaglistColumnIndices.length; i += 1) {
+                allTags[i] = {
+                    columnIndex: selectedTaglistColumnIndices[i],
+                    uniqueTags: this.getUniqueTags(selectedTaglistColumnIndices[i])
+                }
+                totTags += allTags[i].uniqueTags.length;
+            }
+
+            //WEIGHTS ORDINALS
             var codebookWeights = [];
             for (i = 0; i < selectedOrdinalColumnsIndices.length; i += 1) {
                 codebookWeights.push(1);
             }
+
+            //WEIGHTS CATEGORY
             for (c = 0; c < categories.length; c += 1) {
                 for (i = 0; i < categories[c].uniqueValues.length; i += 1) {
                     codebookWeights.push(1 / categories[c].uniqueValues.length);
                 }
             }
 
-            //FILL THE DATA
-            var dataArray = new Array(this._table.rowCount() * (selectedOrdinalColumnsIndices.length + totCategories));
+            //WEIGHTS TAGLIST
+            for (c = 0; c < allTags.length; c += 1) {
+                for (i = 0; i < allTags[c].uniqueTags.length; i += 1) {
+                    codebookWeights.push(1 / allTags[c].uniqueTags.length);
+                }
+            }
 
-            var v;
+            //FILL THE DATA
+            var dataArray = new Array(this._table.rowCount() * (selectedOrdinalColumnsIndices.length + totCategories + totTags));
+
+            var v, tagcount;
             for (i = 0, r = 0; r < this._table.rowCount(); r += 1) {
 
                 //scale ordinals to [0,1] domain
@@ -217,16 +274,27 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                         console.warn("Missing value for: " + " row: " + r + ", col: " + c);
                         value = (maxs[c] + mins[c]) / 2;
                     }
-                    dataArray[i] = (value - mins[c]) / (maxs[c] - mins[c]);
+                    dataArray[i] = (maxs[c] - mins[c]) !== 0 ? (value - mins[c]) / (maxs[c] - mins[c]) : 1;
                 }
 
                 //categories
                 for (c = 0; c < categories.length; c += 1) {
                     for (v = 0; v < categories[c].uniqueValues.length; v += 1) {
-                        dataArray[i] = (categories[c].uniqueValues[v] === this._table.getValue(r, categories[c].indexInRow)) ? 1 : 0;
+                        dataArray[i] = (categories[c].uniqueValues[v] === this._table.getValue(r, categories[c].columnIndex)) ? 1 : 0;
                         i += 1;
                     }
                 }
+
+                //uniquetags
+
+                for (c = 0; c < allTags.length; c += 1) {
+                    // tagcount = this._table.getTagCount(r, allTags[c].columnIndex);
+                    for (v = 0; v < allTags[c].uniqueTags.length; v += 1) {
+                        dataArray[i] = this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v]) ? 1 : 0;
+                        i += 1;
+                    }
+                }
+
             }
 
 

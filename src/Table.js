@@ -15,9 +15,6 @@ define([], function () {
   Table.IGNORE = "ignore";
 
 
-  Table.prototype.getWeight = function (columnIndex) {
-    return 1;
-  };
 
   Table.prototype.getTagCount = function (rowNumber, columnNumber) {
     throw new Error("should return the count of tags");
@@ -25,6 +22,10 @@ define([], function () {
 
   Table.prototype.getTagValue = function (rowNumber, columnNumber, tagIndex) {
     throw new Error("should return the tag-value");
+  };
+
+  Table.prototype.hasTag = function(rowNumber, columnNumber, tagValue){
+    throw new Error("should return whether row has tag");
   };
 
   Table.prototype.getName = function(){
