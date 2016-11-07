@@ -15,7 +15,7 @@ define([
             node = typeof node === "string" ? document.getElementById(node) : node;
 
             var ordinalColumns = datatable.getColumnsByType(Table.ORDINAL);
-            var selectedCategoriesNames = datatable.getSelectedCategoryColumnsLabels();
+            var categoryColumns = datatable.getColumnsByType(Table.CATEGORY);
 
             var ordinalValues = {};
 
@@ -71,28 +71,30 @@ define([
 
 
             var categoryValues = [];
-            for (c = 0; c < selectedCategoriesNames.length; c += 1) {
-                categoryValues[selectedCategoriesNames[c]] = [];
+            var value;
+            for (c = 0; c < categoryColumns.length; c += 1) {
+                categoryValues[categoryColumns[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
-                    categoryValues[selectedCategoriesNames[c]].push(datatable.getValueByRowAndColumnLabel(selectedBmuIndices[i], selectedCategoriesNames[c]));
+                    value = datatable.getValue(selectedBmuIndices[i], categoryColumns[c]);
+                    categoryValues[categoryColumns[c]].push(value);
                 }
             }
 
 
             var bars, counts, hist;
-            for (c = 0; c < selectedCategoriesNames.length; c += 1) {
+            for (c = 0; c < categoryColumns.length; c += 1) {
                 plot = document.createElement("div");
                 plot.setAttribute("data-plot-type", "histogram");
 
                 label = document.createElement("div");
-                label.innerHTML = selectedCategoriesNames[c];
+                label.innerHTML = datatable.columnLabel(categoryColumns[c]);
 
 
                 bars = document.createElement("div");
-                counts = datatable.getCounts(datatable.getColumnIndex(selectedCategoriesNames[c]));
+                counts = datatable.getCounts(categoryColumns[c]);
 
                 hist = new Histogram(bars, counts);
-                hist.setData(categoryValues[selectedCategoriesNames[c]]);
+                hist.setData(categoryValues[categoryColumns[c]]);
 
 
                 plot.appendChild(label);
