@@ -1,7 +1,7 @@
 define([
-        "type", "Evented", "../EasingInput", "./Legend", "./classColors", "../../util"
+    "type", "Evented", "../EasingInput", "./Legend", "./classColors", "../../util", "../../Table"
     ],
-    function (type, Evented, EasingInput, Legend, classColors, util) {
+function (type, Evented, EasingInput, Legend, classColors, util, Table) {
 
         function generateIcon(color, halfSize) {
             var context2d = document.createElement("canvas").getContext("2d");
@@ -92,10 +92,10 @@ define([
 
 
                 var sizeTag = $("<select />");
-                for (index in dataTable.getSelectedOrdinalColumnsLabels()) {
+                for (index in dataTable.getColumnsByType(Table.ORDINAL)) {
                     $("<option />", {
-                        value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumnsLabels()[index]),
-                        text: dataTable.getSelectedOrdinalColumnsLabels()[index]
+                        value: index,
+                        text: dataTable.columnLabel(index)
                     }).appendTo(sizeTag);
                 }
                 sizeTag.css("width", "100%");

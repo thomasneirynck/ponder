@@ -48,16 +48,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
             return columns;
         },
-
-        getSelectedOrdinalColumnsLabels: function () {
-            var columns = [];
-            for (var i = 0; i < this._table.columnCount(); i += 1) {
-                if (this._table.columnType(i) === Table.ORDINAL) {
-                    columns.push(this._table.columnLabel(i));
-                }
-            }
-            return columns;
-        },
+        
 
         getSelectedCategoryColumnsLabels: function () {
             var columns = [];
