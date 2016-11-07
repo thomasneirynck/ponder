@@ -99,7 +99,7 @@ define([
                 //ordering: true,
                 //paging: true,
                 "data": data,
-                "columns": this._bmuLayer.getDataTable().getColumns().map(function (e) {
+                "columns": this._bmuLayer.getDataTable().getColumnLabels().map(function (e) {
                     return {
                         title: e
                     };

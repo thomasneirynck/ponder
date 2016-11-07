@@ -56,9 +56,9 @@ define([
 
                 var labelSelectTag = $("<select />");
                 var classSelectTag = $("<select />");
-                for (var index in dataTable.getColumns()) {
-                    $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(labelSelectTag);
-                    $("<option />", {value: index, text: dataTable.getColumns()[index]}).appendTo(classSelectTag);
+                for (var index in dataTable.getColumnLabels()) {
+                    $("<option />", {value: index, text: dataTable.getColumnLabels()[index]}).appendTo(labelSelectTag);
+                    $("<option />", {value: index, text: dataTable.getColumnLabels()[index]}).appendTo(classSelectTag);
                 }
 
                 var self = this;
@@ -92,10 +92,10 @@ define([
 
 
                 var sizeTag = $("<select />");
-                for (index in dataTable.getSelectedOrdinalColumns()) {
+                for (index in dataTable.getSelectedOrdinalColumnsLabels()) {
                     $("<option />", {
-                        value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumns()[index]),
-                        text: dataTable.getSelectedOrdinalColumns()[index]
+                        value: dataTable.getColumnIndex(dataTable.getSelectedOrdinalColumnsLabels()[index]),
+                        text: dataTable.getSelectedOrdinalColumnsLabels()[index]
                     }).appendTo(sizeTag);
                 }
                 sizeTag.css("width", "100%");
@@ -109,8 +109,8 @@ define([
                 this._easingInput.on("input", flagDirt);
 
                 var column = initialColumn;
-                if (column && dataTable.getColumns().indexOf(column) >= 0){
-                    this._classElement.value = dataTable.getColumns().indexOf(column);
+                if (column && dataTable.getColumnLabels().indexOf(column) >= 0){
+                    this._classElement.value = dataTable.getColumnLabels().indexOf(column);
                 }
 
                 setEasingInputMode();
@@ -126,7 +126,7 @@ define([
                     elem = document.createElement("div");
 
                     name = document.createElement("span");
-                    name.innerHTML = this._dataTable.getColumnName(i);
+                    name.innerHTML = this._dataTable.columnLabel(i);
                     elem.appendChild(name);
 
                     value = document.createElement("span");

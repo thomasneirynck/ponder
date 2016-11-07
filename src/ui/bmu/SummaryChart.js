@@ -2,9 +2,10 @@ define([
     "type",
     "jquery",
     "../../util",
+    "../../Table",
     "../stats/Boxplot",
     "../stats/Histogram"
-], function (type, jquery, util, Boxplot, Histogram) {
+], function (type, jquery, util, Table, Boxplot, Histogram) {
 
 
     return type({
@@ -12,18 +13,18 @@ define([
         constructor: function SummaryChart(node, selectedBmuIndices, datatable) {
 
             node = typeof node === "string" ? document.getElementById(node) : node;
-            var selectedOrdinals = datatable.getSelectedOrdinalColumns();
-            var selectedCategories = datatable.getSelectedCategoryColumns();
+
+            var ordinalColumns = datatable.getColumnsByType(Table.ORDINAL);
+            var selectedCategoriesNames = datatable.getSelectedCategoryColumnsLabels();
 
             var ordinalValues = {};
 
-
-            var i;
-
-            for (var c = 0; c < selectedOrdinals.length; c += 1) {
-                ordinalValues[selectedOrdinals[c]] = [];
+            var i, value;
+            for (var c = 0; c < ordinalColumns.length; c += 1) {
+                ordinalValues[ordinalColumns[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
-                    ordinalValues[selectedOrdinals[c]].push(util.toNumber(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedOrdinals[c])));
+                    value = util.toNumber(datatable.getValue(selectedBmuIndices[i], ordinalColumns[c]));
+                    ordinalValues[ordinalColumns[c]].push(value);
                 }
             }
 
@@ -40,7 +41,7 @@ define([
                 }
             }
 
-            for (c = 0; c < selectedOrdinals.length; c += 1) {
+            for (c = 0; c < ordinalColumns.length; c += 1) {
                 plot = document.createElement("div");
                 plot.style.width = "100%";
                 plot.style.position = "relative";
@@ -50,17 +51,17 @@ define([
 
 
                 label = document.createElement("div");
-                label.innerHTML = selectedOrdinals[c];
+                label.innerHTML = datatable.columnLabel(ordinalColumns[c]);
                 plot.appendChild(label);
 
                 container = document.createElement("div");
                 container.style.position = "relative";
                 plot.appendChild(container);
 
-                minmax = datatable.getMinMax(datatable.getColumnIndex(selectedOrdinals[c]));
+                minmax = datatable.getMinMax(ordinalColumns[c]);
 
                 box = new Boxplot(minmax[0], minmax[1], container);
-                box.setData(ordinalValues[selectedOrdinals[c]]);
+                box.setData(ordinalValues[ordinalColumns[c]]);
 
                 box.on("displayReadout", hideAllOtherReadouts);
 
@@ -70,28 +71,28 @@ define([
 
 
             var categoryValues = [];
-            for (c = 0; c < selectedCategories.length; c += 1) {
-                categoryValues[selectedCategories[c]] = [];
+            for (c = 0; c < selectedCategoriesNames.length; c += 1) {
+                categoryValues[selectedCategoriesNames[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
-                    categoryValues[selectedCategories[c]].push(datatable.getValueByRowAndColumnName(selectedBmuIndices[i], selectedCategories[c]));
+                    categoryValues[selectedCategoriesNames[c]].push(datatable.getValueByRowAndColumnLabel(selectedBmuIndices[i], selectedCategoriesNames[c]));
                 }
             }
 
 
             var bars, counts, hist;
-            for (c = 0; c < selectedCategories.length; c += 1) {
+            for (c = 0; c < selectedCategoriesNames.length; c += 1) {
                 plot = document.createElement("div");
                 plot.setAttribute("data-plot-type", "histogram");
 
                 label = document.createElement("div");
-                label.innerHTML = selectedCategories[c];
+                label.innerHTML = selectedCategoriesNames[c];
 
 
                 bars = document.createElement("div");
-                counts = datatable.getCounts(datatable.getColumnIndex(selectedCategories[c]));
+                counts = datatable.getCounts(datatable.getColumnIndex(selectedCategoriesNames[c]));
 
                 hist = new Histogram(bars, counts);
-                hist.setData(categoryValues[selectedCategories[c]]);
+                hist.setData(categoryValues[selectedCategoriesNames[c]]);
 
 
                 plot.appendChild(label);

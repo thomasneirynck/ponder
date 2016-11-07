@@ -1,9 +1,5 @@
 define(["type", "../util", "../Table"], function (type, util, Table) {
 
-    function getColumnsIndex(columns, column) {
-        return columns.indexOf(column);
-    }
-
 
     var DataTableComposed = type(Table.prototype, {
 
@@ -43,8 +39,17 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         },
 
         /////////////////////////////////////////////////////////////////////////////////////////////
+        getColumnsByType: function (columnType) {
+            var columns = [];
+            for (var i = 0; i < this._table.columnCount(); i += 1) {
+                if (this._table.columnType(i) === columnType) {
+                    columns.push(i);
+                }
+            }
+            return columns;
+        },
 
-        getSelectedOrdinalColumns: function () {
+        getSelectedOrdinalColumnsLabels: function () {
             var columns = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {
                 if (this._table.columnType(i) === Table.ORDINAL) {
@@ -54,7 +59,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return columns;
         },
 
-        getSelectedCategoryColumns: function () {
+        getSelectedCategoryColumnsLabels: function () {
             var columns = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {
                 if (this._table.columnType(i) === Table.CATEGORY) {
@@ -64,9 +69,9 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return columns;
         },
 
-        getColumnIndex: function (columnName) {
+        getColumnIndex: function (columnLabel) {
             for (var i = 0; i < this._table.columnCount(); i += 1) {
-                if (this._table.columnLabel(i) === columnName) {
+                if (this._table.columnLabel(i) === columnLabel) {
                     return i;
                 }
             }
@@ -74,7 +79,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         },
 
 
-        getValueByRowAndColumnName: function (row, columnName) {
+        getValueByRowAndColumnLabel: function (row, columnName) {
             return this.getValueByRowAndColumnIndex(row, this.getColumnIndex(columnName));
         },
 
@@ -82,11 +87,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return this._table.getValue(index, columnIndex);
         },
 
-        getColumnName: function (index) {
-            return this._table.columnLabel(index);
-        },
-
-        getColumns: function () {
+        getColumnLabels: function () {
             var columns = [];
             for (var i = 0; i < this._table.columnCount(); i += 1) {
                 columns.push(this._table.columnLabel(i));
