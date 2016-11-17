@@ -237,7 +237,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 allTags[i] = {
                     columnIndex: selectedTaglistColumnIndices[i],
                     uniqueTags: this.getUniqueTags(selectedTaglistColumnIndices[i])
-                }
+                };
                 totTags += allTags[i].uniqueTags.length;
             }
 

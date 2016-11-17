@@ -56,7 +56,7 @@ define([
         },
 
         getTagValue: function (rowNumber, columnNumber, tagIndex) {
-            return this._data[rowNumber][columnNumber].split(';')[tagIndex]
+            return this._data[rowNumber][columnNumber].split(';')[tagIndex];
         },
 
         hasTag: function (rowNumber, columnNumber, tag) {
