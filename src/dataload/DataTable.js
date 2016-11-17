@@ -10,8 +10,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             //caches
             this._uniques = {};
             this._minMax = {};
-            this._counts = {};
+            this._categoryCounts = {};
+            this._tagCounts = {};
             this._uniqueTags = {};
+
 
         },
 
@@ -146,24 +148,48 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             return this._uniqueTags[columnIndex];
         },
 
-        getCounts: function (columnIndexForCategory) {
+        getCountsPerCategory: function (columnIndex) {
 
-            if (this._counts[columnIndexForCategory]) {
-                return this._counts[columnIndexForCategory];
+            if (this._categoryCounts[columnIndex]) {
+                return this._categoryCounts[columnIndex];
             }
 
-            var uniques = this.getUniqueValues(columnIndexForCategory);
+            var uniques = this.getUniqueValues(columnIndex);
 
-            this._counts[columnIndexForCategory] = {};
+            this._categoryCounts[columnIndex] = {};
             for (var u = 0; u < uniques.length; u += 1) {
-                this._counts[columnIndexForCategory][uniques[u]] = 0;
+                this._categoryCounts[columnIndex][uniques[u]] = 0;
             }
 
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                this._counts[columnIndexForCategory][this._table.getValue(i, columnIndexForCategory)] += 1;
+                this._categoryCounts[columnIndex][this._table.getValue(i, columnIndex)] += 1;
             }
 
-            return this._counts[columnIndexForCategory];
+            return this._categoryCounts[columnIndex];
+
+        },
+
+        getCountsPerTag: function (columnIndex) {
+            if (this._tagCounts[columnIndex]) {
+                return this._tagCounts[columnIndex];
+            }
+
+            var uniques = this.getUniqueTags(columnIndex);
+
+            this._tagCounts[columnIndex] = {};
+            for (var u = 0; u < uniques.length; u += 1) {
+                this._tagCounts[columnIndex][uniques[u]] = 0;
+            }
+
+            for (var i = 0; i < this._table.rowCount(); i += 1) {
+                var tagCount = this._table.getTagCount(i, columnIndex);
+                for (var t = 0; t < tagCount; t += 1) {
+                    var tag = this._table.getTagValue(i, columnIndex, t);
+                    this._tagCounts[columnIndex][tag] += 1;
+                }
+            }
+
+            return this._tagCounts[columnIndex];
 
         },
 

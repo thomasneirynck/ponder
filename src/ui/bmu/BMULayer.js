@@ -41,7 +41,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
         return type(Object.prototype, Evented.prototype, {
 
             constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus, initialColumn) {
-                
+
                 Evented.call(this);
 
                 this._dataTable = dataTable;

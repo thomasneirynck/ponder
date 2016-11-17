@@ -14,11 +14,18 @@ define([
 
             node = typeof node === "string" ? document.getElementById(node) : node;
 
+
+            this.addOrdinalBoxPlots(node, selectedBmuIndices, datatable);
+            this.addCategoryHistograms(node, selectedBmuIndices, datatable);
+            this.addTagListHistograms(node, selectedBmuIndices, datatable);
+
+
+        },
+
+
+        addOrdinalBoxPlots: function (node, selectedBmuIndices, datatable) {
             var ordinalColumns = datatable.getColumnsByType(Table.ORDINAL);
-            var categoryColumns = datatable.getColumnsByType(Table.CATEGORY);
-
             var ordinalValues = {};
-
             var i, value;
             for (var c = 0; c < ordinalColumns.length; c += 1) {
                 ordinalValues[ordinalColumns[c]] = [];
@@ -68,9 +75,14 @@ define([
 
                 this._boxes.push(box);
             }
+        },
+
+        addCategoryHistograms: function (node, selectedBmuIndices, datatable) {
+            var categoryColumns = datatable.getColumnsByType(Table.CATEGORY);
 
 
             var categoryValues = [];
+            var c, value, plot, i, label;
             for (c = 0; c < categoryColumns.length; c += 1) {
                 categoryValues[categoryColumns[c]] = [];
                 for (i = 0; i < selectedBmuIndices.length; i += 1) {
@@ -90,7 +102,7 @@ define([
 
 
                 bars = document.createElement("div");
-                counts = datatable.getCounts(categoryColumns[c]);
+                counts = datatable.getCountsPerCategory(categoryColumns[c]);
 
                 hist = new Histogram(bars, counts);
                 hist.setData(categoryValues[categoryColumns[c]]);
@@ -101,11 +113,50 @@ define([
 
 
                 node.appendChild(plot);
+            }
+        },
 
+        addTagListHistograms: function (node, selectedBmuIndices, datatable) {
+
+            var tagColumns = datatable.getColumnsByType(Table.TAGLIST);
+
+            var tagValues = [];
+            var c, plot, i, label;
+            for (c = 0; c < tagColumns.length; c += 1) {
+                tagValues[tagColumns[c]] = [];
+                for (i = 0; i < selectedBmuIndices.length; i += 1) {
+                    for (var t = 0; t < datatable.getTagCount(selectedBmuIndices[i], tagColumns[c]); t += 1) {
+                        var tag = datatable.getTagValue(selectedBmuIndices[i], tagColumns[c], t);
+                        tagValues[tagColumns[c]].push(tag);
+                    }
+                }
             }
 
 
+            var bars, counts, hist;
+            for (c = 0; c < tagColumns.length; c += 1) {
+                plot = document.createElement("div");
+                plot.setAttribute("data-plot-type", "histogram");
+
+                label = document.createElement("div");
+                label.innerHTML = datatable.columnLabel(tagColumns[c]);
+
+
+                bars = document.createElement("div");
+                counts = datatable.getCountsPerTag(tagColumns[c]);
+
+                hist = new Histogram(bars, counts);
+                hist.setData(tagValues[tagColumns[c]]);
+
+
+                plot.appendChild(label);
+                plot.appendChild(bars);
+
+
+                node.appendChild(plot);
+            }
         }
+
 
     });
 
