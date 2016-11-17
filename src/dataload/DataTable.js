@@ -241,6 +241,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 totTags += allTags[i].uniqueTags.length;
             }
 
+
             //WEIGHTS ORDINALS
             var codebookWeights = [];
             for (i = 0; i < selectedOrdinalColumnsIndices.length; i += 1) {

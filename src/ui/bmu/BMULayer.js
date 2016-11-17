@@ -41,8 +41,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
         return type(Object.prototype, Evented.prototype, {
 
             constructor: function BMULayer(labelNode, classNode, sizeNode, sizeEasingNode, legendOutputDiv, dataTable, bmus, initialColumn) {
-
-                console.log('make bmu lauer', arguments);
+                
                 Evented.call(this);
 
                 this._dataTable = dataTable;
@@ -186,7 +185,6 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                     size = areaToRadius(area);
                     this._bmus[i].radius = size;
 
-                    console.log('get value');
                     fillStyle = colorClassifier(this._dataTable.getValue(i, classValue));
                     if (!ICONCACHE[fillStyle]) {
                         ICONCACHE[fillStyle] = generateIcon(fillStyle, MAXRADIUS);
@@ -244,6 +242,7 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
             _getColorClassifier: function () {
 
                 var uniques;
+                var self = this;
                 var columnIndex = parseInt(this._classElement.value);
                 if (this._dataTable.isType(columnIndex, Table.CATEGORY) || this._dataTable.isType(columnIndex, Table.IGNORE)) {
                     uniques = this._dataTable.getUniqueValues(columnIndex);
@@ -253,14 +252,16 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                 } else if (this._dataTable.isType(columnIndex, Table.ORDINAL)) {
                     //ordinal type
                     var minMax = this._dataTable.getMinMax(columnIndex);
-                    var self = this;
+
                     return function (classValue) {
                         return (self._getOrdinalPosition(minMax, classValue) >= self._legend.getBreak()) ? classColors[1] : classColors[0];
                     };
                 } else if (this._dataTable.isType(columnIndex, Table.TAGLIST)) {
-                    return function (classValue) {
-                        console.log('must implement!!!', classValue);
-                        return false;
+                    return function (classValue) {//kind of sucks...
+                        //todo: this blows!!! should use DataTable API .hasTag()
+                        //this whole BMULauer/ Legend thing is quite wonkyly setup
+                        var tag = self._legend.getSelectedTag();
+                        return classValue.split(';').indexOf(tag) >= 0 ? classColors[1] : classColors[0];
                     };
                 }
 
@@ -321,10 +322,10 @@ function (type, Evented, EasingInput, Legend, classColors, util, Table) {
                         values: this._dataTable.getUniqueValues(clazz)
                     };
                 } else if (this._dataTable.isType(clazz, Table.TAGLIST)) {
-                    console.log('gettign legend for taglist!');
                     return {
                         type: "TAGLIST",
-                        classifier: this._getColorClassifier()
+                        classifier: this._getColorClassifier(),
+                        values: this._dataTable.getUniqueTags(clazz)
                     };
                 } else if (this._dataTable.isType(clazz, Table.IGNORE)) {
                     return {

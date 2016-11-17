@@ -307,7 +307,6 @@ define([
                         } else if (radioButtonsMap[key].category.checked) {
                             self._selectedCategoryColumns.push(key);
                         } else if (radioButtonsMap[key].taglist.checked) {
-                            console.log('taglist!');
                             self._selectedTaglistColumns.push(key);
                         }
                     }

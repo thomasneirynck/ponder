@@ -10,8 +10,6 @@ define(
             constructor: function Histogram(node, counts) {
                 this._node = node;
                 this._counts = counts;
-                console.log(this._counts);
-
                 this._maxCount = -Infinity;
                 for (var i in this._counts) {//we'll map everything to the maximum count
                     this._maxCount = Math.max(this._maxCount, this._counts[i]);
@@ -20,8 +18,6 @@ define(
             },
 
             setData: function (selectionValues) {
-
-                console.log('histo', selectionValues);
 
                 var countsForSelection = {};
                 for (var category in this._counts) {

@@ -70,12 +70,35 @@ define([
 
         },
 
+        getSelectedTag: function () {
+            return this._selectedTagValue;
+        },
+
         _updateTaglistLegend: function (legend) {
             var wrapperDiv = document.createElement("div");
-            wrapperDiv.style.position = "relative";
+            wrapperDiv.style.position = "absolute";
+            wrapperDiv.style.margin = "0 auto";
+            wrapperDiv.style.top = "50%";
+            wrapperDiv.style.left = "50%";
             wrapperDiv.style.width = "100%";
-            wrapperDiv.style.height = "100%";
-            wrapperDiv.innerHTML = "TODO TAGLIST!";
+            wrapperDiv.style.transform = "translate(-50%, -50%)";
+
+            var combo = document.createElement('select');
+            for (var i = 0; i < legend.values.length; i++) {
+                var option = document.createElement("option");
+                option.value = legend.values[i];
+                option.text = legend.values[i];
+                combo.appendChild(option);
+            }
+            wrapperDiv.appendChild(combo);
+            var self = this;
+            combo.addEventListener("change", function () {
+                self._selectedTagValue = combo.options[combo.selectedIndex].value;
+                self.emit("invalidate");
+
+            });
+            this._selectedTagValue = legend.values[0];
+
             this._legendDiv.innerHTML = "";
             this._legendDiv.appendChild(wrapperDiv);
         },
