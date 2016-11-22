@@ -55,10 +55,12 @@ define(
 
 
                     var filler = document.createElement("div");
-
                     filler.style.width = (100 * countsForSelection[categoryLabel] / this._counts[categoryLabel] ) + "%";
                     filler.style.height = "100%";
                     outline.appendChild(filler);
+                    if (countsForSelection[categoryLabel] === 0) {
+                        bardiv.style.display = 'none';//hide it
+                    }
 
 
                     bar.title = countsForSelection[categoryLabel] + " out of a total of " + " " + this._counts[categoryLabel];
