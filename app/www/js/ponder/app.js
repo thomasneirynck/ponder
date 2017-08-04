@@ -47,7 +47,7 @@ require([
     Papa.SCRIPT_PATH = /**{{PAPA_PARSE_SCRIPT_PATH}}*/require.toUrl("Papa") + ".js"/**{{PAPA_PARSE_SCRIPT_PATH}}*/;
 
 
-    var dataSelector = new DataSelector("selector", "tablePreview");
+  var dataSelector = new DataSelector("selector", "tablePreview");
     dataSelector.on("error", function () {
         alert("Cannot read table");
     });
@@ -71,24 +71,60 @@ require([
         document.getElementById("title-blurb").innerHTML = title.toUpperCase();
 
 
-        var somApp = appApi.createSOM({
-            table: table,
-            somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
-            nodes: {
-                toolbar: "mapToolContainer",
-                mapTableToggle: "toggle",
-                table: "tableContainer",
-                map: "map",
-                toggleToMap: "toggle-to-map",
-                toggleToTable: "toggle-to-table",
-                container: document.body,
-                center: "center",
-                waiting: "waiting"
-            },
-            bmu: {
-                initialColumn: util.getParameterByName("initial")
-            }
+      function getFromLocalStorage() {
+        return JSON.parse(localStorage.getItem("som"));
+      }
+
+
+      var jsonSomMap = getFromLocalStorage();
+      window._getFromLocalStorage = getFromLocalStorage;
+
+      var somApp;
+      if (jsonSomMap) {
+
+        console.log('READING FROM STORED!!!!!!!!!');
+
+        somApp = appApi.createSOMFromJson(jsonSomMap, {
+          table: table,
+          somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
+          nodes: {
+            toolbar: "mapToolContainer",
+            mapTableToggle: "toggle",
+            table: "tableContainer",
+            map: "map",
+            toggleToMap: "toggle-to-map",
+            toggleToTable: "toggle-to-table",
+            container: document.body,
+            center: "center",
+            waiting: "waiting"
+          },
+          bmu: {
+            initialColumn: util.getParameterByName("initial")
+          }
         });
+
+      } else {
+
+        somApp = appApi.createSOM({
+          table: table,
+          somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
+          nodes: {
+            toolbar: "mapToolContainer",
+            mapTableToggle: "toggle",
+            table: "tableContainer",
+            map: "map",
+            toggleToMap: "toggle-to-map",
+            toggleToTable: "toggle-to-table",
+            container: document.body,
+            center: "center",
+            waiting: "waiting"
+          },
+          bmu: {
+            initialColumn: util.getParameterByName("initial")
+          }
+        });
+
+      }
 
         //debug
         window._somApp = somApp;
@@ -129,6 +165,18 @@ require([
             }
             return "";
         }
+
+      window._getFromLocalStorage = function () {
+        return JSON.parse(localStorage.getItem("som"));
+      };
+
+
+      window._storeInLocalstorage = function () {
+        somApp.dumpMap().then(function (somMap) {
+          localStorage.setItem('som', JSON.stringify(somMap));
+        });
+      };
+
 
 
     });

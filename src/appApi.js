@@ -26,11 +26,14 @@ define([
   }
 
 
-  var SomApp = type(Evented.prototype, {
+  var AbstractSomMap = type(Evented.prototype, {
 
     constructor: function (params) {
 
       Evented.call(this);
+
+      this._somHandle = null;
+      this._map = null;
 
       var containerNode = getNode(params.nodes.container);
       var mapToolNode = getNode(params.nodes.toolbar);
@@ -72,19 +75,6 @@ define([
       mapToggleButton.addEventListener("click", selectMapOrTable);
       tableToggleButton.addEventListener("click", selectMapOrTable);
 
-
-      var self = this;
-      self._somHandle = null;
-
-      //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
-      //the correct data-API is ponder/Table
-      var dataTable = new DataTable(params.table);
-      var somTrainingData = dataTable.createSOMTrainingData();
-
-      self._map = null;
-      var uMatrixLayer;
-
-
       var waitingDiv = document.createElement("div");
       waitingDiv.setAttribute("data-ponder-type", "progress_indicator");
       var spinnerIcon = document.createElement("img");
@@ -96,14 +86,20 @@ define([
       waitingDiv.appendChild(waitingDivText);
       getNode(params.nodes.waiting).appendChild(waitingDiv);
 
-      SOMFactory.SCRIPT_PATH = params.somWorkerScriptPath;
 
-      SOMFactory
-      .makeSOMAsync(somTrainingData.dataArray, somTrainingData.codebookWeights)
-      .then(function (aSomHandle) {
-        self._somHandle = aSomHandle;
-        return self._somHandle.trainMap();
-      }, throwError)
+      //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
+      //the correct data-API is ponder/Table
+      var dataTable = new DataTable(params.table);
+      var somTrainingData = dataTable.createSOMTrainingData();
+
+
+      var uMatrixLayer;
+      var self = this;
+      SOMFactory.SCRIPT_PATH = params.somWorkerScriptPath;
+      this.getSomHandleWithTrainedMap({somTrainingData: somTrainingData})
+      .then(function (somHandle) {
+        self._somHandle = somHandle;
+      })
       .then(function () {
         return self._somHandle.uMatrixNormalized();
       }, throwError, function onProgress(payload) {
@@ -191,9 +187,47 @@ define([
       if (this._map) {
         this._map.resize();
       }
+    },
+
+
+    getSomHandleWithTrainedMap: function () {
+      throw new Error('child must imeplement');
     }
 
   });
+
+
+  var SomAppFromData = type(AbstractSomMap.prototype, {
+
+    constructor: function () {
+      AbstractSomMap.apply(this, arguments);
+    },
+
+    getSomHandleWithTrainedMap: function (options) {
+      var somHandle;
+      return SOMFactory
+      .makeSOMAsync(options.somTrainingData.dataArray, options.somTrainingData.codebookWeights)
+      .then(function (aSomHandle) {
+        somHandle = aSomHandle;
+        return aSomHandle.trainMap();
+      }, throwError)
+      .then(function () {
+        return somHandle;
+      });
+    }
+
+  });
+
+
+  var SomAppFromConfig = type(AbstractSomMap.prototype, {
+
+    constructor: function () {
+      AbstractSomMap.apply(this, arguments);
+      // SomApp.apply(this, arguments);
+    }
+
+  });
+
 
   function getNode(node) {
     return typeof node === 'string' ? document.getElementById(node) : node;
@@ -205,17 +239,12 @@ define([
    */
   return {
 
-
-    // restoreSOM: function(jsonDump){
-    //
-    //
-    //
-    //
-    //
-    // },
+    createSOMFromJson: function (jsonDump, params) {
+      return new SomAppFromConfig(jsonDump, params);
+    },
 
     createSOM: function (params) {
-      return new SomApp(params);
+      return new SomAppFromData(params);
     },
 
     Table: Table,
