@@ -21,17 +21,13 @@ define([
 
             var self = this;
             this._areaSelectLayerController.on("change", function (mapSelection) {
-
                 var selectedIndices = bmuLayer.selectBmusFromController(areaSelectLayerController);
-
                 if (selectedIndices.length) {
                     self.selectFromIndices(selectedIndices, mapSelection);
                 }else{
                     self._areaSelectLayerController.clear();
                     self.emit("clear");
                 }
-
-
             });
 
         },

@@ -221,9 +221,13 @@ define([
 
   var SomAppFromConfig = type(AbstractSomMap.prototype, {
 
-    constructor: function () {
-      AbstractSomMap.apply(this, arguments);
-      // SomApp.apply(this, arguments);
+    constructor: function (jsonDump, params) {
+      this._jsonDump = jsonDump;
+      AbstractSomMap.call(this, params);
+    },
+
+    getSomHandleWithTrainedMap: function (options) {
+      return SOMFactory.makeSOMFromJsonDump(options.somTrainingData.dataArray, this._jsonDump);
     }
 
   });

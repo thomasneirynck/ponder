@@ -111,7 +111,8 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
             var self = this;
             return this._doCommand({
                 type: "statistics",
-                indices: indices
+                indices: indices,
+                data: this._dataArray//todo: do not pass this into the worker each time
             }).then(function (result) {
                 return new Statistics(result.statistics, self._dataArray, indices);
             });

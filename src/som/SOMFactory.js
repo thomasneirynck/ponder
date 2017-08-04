@@ -7,23 +7,26 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
         SCRIPT_PATH: null,
 
 
-        makeSOMFromJsonDump: function (jsonDump) {
+        /**
+         * todo: implicatino here is that dataArray matches jsonDump
+         * this returns a trained map, irrespective of the dataArray
+         * @param dataArray
+         * @param jsonDump
+         * @return {*}
+         */
+        makeSOMFromJsonDump: function (dataArray, jsonDump) {
 
             if (somFactory.SCRIPT_PATH === null && (typeof window.require !== 'function' || typeof window.require.toUrl !== 'function')) {
                 throw new Error("Cannot load SOM worker dynamically if require and require.toUrl are not available");
             }
 
-
             var somWorker = getSOMWorker();
-
             var somReady = new Promise();
-
             somWorker.addEventListener("message", function workerLoaded(event) {
                 somWorker.removeEventListener("message", workerLoaded);
-
                 var somHandle = new SOMHandle(somWorker);
+                somHandle.setDataArray(dataArray);
                 somHandle.setWidthHeight(jsonDump.worldWidth, jsonDump.worldHeight);
-
                 somWorker.addEventListener("message", function init(event) {
                     somWorker.removeEventListener("message", init);
                     somReady.resolve(somHandle);
@@ -36,23 +39,22 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
 
             return somReady.thenable();
 
-
         },
 
-
-        makeSOMAsync: function (dataArray, codeBookWeights) {
-
+        /**
+         * this returns an untrained map
+         * @param dataArray
+         * @param codebookWeights
+         * @return {*}
+         */
+        makeSOMAsync: function (dataArray, codebookWeights) {
             var somWorker = getSOMWorker();
-
             var somReady = new Promise();
-
             somWorker.addEventListener("message", function workerLoaded(event) {
                 somWorker.removeEventListener("message", workerLoaded);
-
                 var somHandle = new SOMHandle(somWorker);
                 somHandle.setDataArray(dataArray);
                 somHandle.setWidthHeight(DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT);
-
                 somWorker.addEventListener("message", function init(event) {
                     somWorker.removeEventListener("message", init);
                     somReady.resolve(somHandle);
@@ -62,7 +64,7 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
                     trainingData: dataArray,
                     width: DEFAULT_MAP_WIDTH,
                     height: DEFAULT_MAP_HEIGHT,
-                    codeBookWeights: codeBookWeights
+                    codebookWeights: codebookWeights
                 });
             });
 
@@ -70,6 +72,7 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
         }
 
     };
+
 
     function getSOMWorker() {
 

@@ -20,7 +20,7 @@ require(["ponder/som/SOM"], function (SOM) {
                 som = new SOM({
                     width: event.data.width,
                     height: event.data.height,
-                    codeBookWeights: event.data.codeBookWeights
+                    codebookWeights: event.data.codebookWeights
                 });
                 postMessage({
                     type: "initSuccess"
@@ -30,7 +30,7 @@ require(["ponder/som/SOM"], function (SOM) {
                 som = new SOM({
                     width: event.data.json.worldWidth,
                     height: event.data.json.worldHeight,
-                    codebookWeights: event.data.json.codeBookWeights
+                    codebookWeights: event.data.json.codebookWeights
                 });
                 som.restoreSOMFromJson(event.data.json);
                 postMessage({
@@ -79,7 +79,7 @@ require(["ponder/som/SOM"], function (SOM) {
             case "statistics":
                 postMessage({
                     type: "statisticsSuccess",
-                    statistics: som.statistics(event.data.indices)
+                    statistics: som.statistics(event.data.indices, event.data.data)
                 });
         }
     }, false);
