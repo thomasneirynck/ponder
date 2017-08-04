@@ -72,19 +72,24 @@ require([
 
 
       function getFromLocalStorage() {
-        return JSON.parse(localStorage.getItem("som"));
+        return JSON.parse(localStorage.getItem("appDump"));
       }
 
 
-      var jsonSomMap = getFromLocalStorage();
+      var appDump = getFromLocalStorage();
       window._getFromLocalStorage = getFromLocalStorage;
+      window._storeInLocalstorage = function () {
+        somApp.dumpApp().then(function (somApp) {
+          localStorage.setItem('som', JSON.stringify(somApp));
+        });
+      };
 
       var somApp;
-      if (jsonSomMap) {
+      if (appDump) {
 
         console.log('READING FROM STORED!!!!!!!!!');
 
-        somApp = appApi.createSOMFromJson(jsonSomMap, {
+        somApp = appApi.createSOMFromJson(appDump, {
           table: table,
           somWorkerScriptPath: /**{{SOM_SCRIPT_PATH}}*/null/**{{SOM_SCRIPT_PATH}}*/,
           nodes: {
@@ -171,11 +176,7 @@ require([
             return "";
         }
 
-      window._storeInLocalstorage = function () {
-        somApp.dumpMap().then(function (somMap) {
-          localStorage.setItem('som', JSON.stringify(somMap));
-        });
-      };
+
 
 
 

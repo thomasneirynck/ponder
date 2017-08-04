@@ -3,19 +3,37 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
     return type(Table.prototype, {
 
-
-        constructor: function DataTableComposed(table) {
+        constructor: function DataTableComposed(table, overrides) {
             this._table = table;
 
             //caches
-            this._uniques = {};
+            this._uniqueValues = {};
             this._minMax = {};
+
+
             this._categoryCounts = {};
             this._tagCounts = {};
             this._uniqueTags = {};
-
-
         },
+
+        dumpStructureToJson: function () {
+            return JSON.parse(JSON.stringify({
+                uniqueValues: this._uniqueValues,
+                minMax: this._minMax,
+                categoryCounts: this._categoryCounts,
+                uniqueTags: this._uniqueTags,
+                tagCounts: this._tagCounts
+            }));
+        },
+
+        overrideStructureFromJson: function (json) {
+            this._uniqueValues = json.uniqueValues;
+            this._minMax = json.minMax;
+            this._categoryCounts = json.categoryCounts;
+            this._tagCounts = json.tagCounts;
+            this._uniqueTags = json.uniqueTags;
+        },
+
 
         getName: function () {
             return this._table.getName();
@@ -111,20 +129,20 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getUniqueValues: function (columnIndex) {
 
-            if (this._uniques[columnIndex]) {
-                return this._uniques[columnIndex];
+            if (this._uniqueValues[columnIndex]) {
+                return this._uniqueValues[columnIndex];
             }
 
-            this._uniques[columnIndex] = [];
+            this._uniqueValues[columnIndex] = [];
             for (var i = 0; i < this._table.rowCount(); i += 1) {
-                if (this._uniques[columnIndex].indexOf(this.getValue(i, columnIndex)) < 0) {
-                    this._uniques[columnIndex].push(this.getValue(i, columnIndex));
-                    if (this._uniques[columnIndex].length > 256) {
+                if (this._uniqueValues[columnIndex].indexOf(this.getValue(i, columnIndex)) < 0) {
+                    this._uniqueValues[columnIndex].push(this.getValue(i, columnIndex));
+                    if (this._uniqueValues[columnIndex].length > 256) {
                         break;
                     }
                 }
             }
-            return this._uniques[columnIndex];
+            return this._uniqueValues[columnIndex];
         },
 
         getUniqueTags: function (columnIndex) {

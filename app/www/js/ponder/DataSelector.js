@@ -52,7 +52,10 @@ define([
         },
 
         getTagCount: function (rowNumber, columnNumber) {
-            return this._data[rowNumber][columnNumber].split(';').length;
+            console.log('getTagCount', arguments);
+            var tc = this._data[rowNumber][columnNumber].split(';').length;
+            console.log('getTagCount', tc, arguments);
+            return tc;
         },
 
         getTagValue: function (rowNumber, columnNumber, tagIndex) {

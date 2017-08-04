@@ -89,9 +89,9 @@ define([
 
       //todo: remove the ponder/dataload/DataTable abstraction from ponder so this conversion step is not necessary
       //the correct data-API is ponder/Table
-      var dataTable = new DataTable(params.table);
+      var dataTable = this.getDataTable(params.table);
+      this._dataTable = dataTable;
       var somTrainingData = dataTable.createSOMTrainingData();
-
 
       var uMatrixLayer;
       var self = this;
@@ -121,10 +121,12 @@ define([
         waitingDivText.innerHTML = "Finding locations ...";
         getNode(params.nodes.center).appendChild(waitingDiv);
 
-
         return self._somHandle.bmus();
       }, throwError)
       .then(function (bmuResult) {
+
+
+        console.log('bmu result', bmuResult);
 
         mapTableToggleNode.style.display = oldDisplayToggleDisplay;
 
@@ -169,9 +171,13 @@ define([
 
     },
 
-    dumpMap: function(){
+    dumpApp: function(){
+      var self = this;
       return this._somHandle.dumpToJson().then(function(e){
-        return e.json;
+        return {
+          som: e.json,
+          tableStructure: self._dataTable.dumpStructureToJson()
+        };
       });
     },
 
@@ -193,6 +199,11 @@ define([
       }
     },
 
+    getDataTable: function (dataTable) {
+      throw new Error('child must imeplement');
+    },
+
+
 
     getSomHandleWithTrainedMap: function () {
       throw new Error('child must imeplement');
@@ -205,6 +216,10 @@ define([
 
     constructor: function () {
       AbstractSomMap.apply(this, arguments);
+    },
+
+    getDataTable: function (table) {
+      return new DataTable(table);
     },
 
     getSomHandleWithTrainedMap: function (options) {
@@ -225,10 +240,18 @@ define([
 
   var SomAppFromConfig = type(AbstractSomMap.prototype, {
 
-    constructor: function (jsonDump, params) {
+    constructor: function (jsonDump, tableStructure, params) {
       this._jsonDump = jsonDump;
+      this._tableStructure = tableStructure;
       AbstractSomMap.call(this, params);
     },
+
+    getDataTable: function (table) {
+      var table = new DataTable(table);
+      table.overrideStructureFromJson(this._tableStructure);
+      return table;
+    },
+
 
     getSomHandleWithTrainedMap: function (options) {
       return SOMFactory.makeSOMFromJsonDump(options.somTrainingData.dataArray, this._jsonDump);
@@ -247,8 +270,8 @@ define([
    */
   return {
 
-    createSOMFromJson: function (jsonDump, params) {
-      return new SomAppFromConfig(jsonDump, params);
+    createSOMFromJson: function (appDump, params) {
+      return new SomAppFromConfig(appDump.som, appDump.tableStructure, params);
     },
 
     createSOM: function (params) {
