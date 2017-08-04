@@ -17,7 +17,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         },
 
-
         getName: function () {
             return this._table.getName();
         },

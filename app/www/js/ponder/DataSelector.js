@@ -80,11 +80,16 @@ define([
         return (name === "class" || name === "type" || name === "id");
     }
 
+    function isTagList(name, sampleValue) {
+        return name === "tags" || (sampleValue.match(/;/) !== null);
+    }
+
     function suggestType(name, sampleValue, position) {
 
         var categories = util.getParameterByName("category");
         var ordinals = util.getParameterByName("ordinal");
         var excludes = util.getParameterByName("exclude");
+        var tagLists = util.getParameterByName("taglist");
 
         if (typeof categories === "string") {
             if (categories.split(",").indexOf(name) > -1) {
@@ -104,10 +109,17 @@ define([
             }
         }
 
+        if (typeof tagLists === "string") {
+            if (tagLists.split(",").indexOf(name) > -1) {
+                return "taglist";
+            }
+        }
+
 
         return (position === 0 || shouldSkip(name, sampleValue)) ? "exclude" :
             isOrdinal(name, sampleValue) ? "ordinal" :
-                isCategorical(name, sampleValue) ? "category" :
+            isTagList(name, sampleValue) ? "taglist" :
+            isCategorical(name, sampleValue) ? "category" :
                     "exclude";
     }
 
