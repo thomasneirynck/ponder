@@ -9,7 +9,7 @@
     
     > npm install -g grunt-cli
 
-### run setup script to install pull dependencies        
+### run setup script to install dependencies        
 
     > node setup.js
        
