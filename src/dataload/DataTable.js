@@ -3,17 +3,17 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
     return type(Table.prototype, {
 
-        constructor: function DataTableComposed(table, overrides) {
-            this._table = table;
+        constructor: function DataTableComposed(tableImplementingPonderTable) {
+            this._table = tableImplementingPonderTable;
 
             //caches
-            this._uniqueValues = {};
-            this._minMax = {};
+            this._uniqueValues = null;
+            this._minMax = null;
 
 
-            this._categoryCounts = {};
-            this._tagCounts = {};
-            this._uniqueTags = {};
+            this._categoryCounts = null;
+            this._tagCounts = null;
+            this._uniqueTags = null;
         },
 
         dumpStructureToJson: function () {
@@ -93,6 +93,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getMinMax: function (columnIndexForOdinal) {
 
+            if (!this._minMax) {
+                this._minMax = {};
+            }
+
             columnIndexForOdinal = parseInt(columnIndexForOdinal);
             if (this._minMax[columnIndexForOdinal]) {
                 return this._minMax[columnIndexForOdinal];
@@ -129,6 +133,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getUniqueValues: function (columnIndex) {
 
+            if (!this._uniqueValues) {
+                this._uniqueValues = {};
+            }
+
             if (this._uniqueValues[columnIndex]) {
                 return this._uniqueValues[columnIndex];
             }
@@ -146,6 +154,11 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         },
 
         getUniqueTags: function (columnIndex) {
+
+            if (!this._uniqueTags) {
+                this._uniqueTags = {};
+            }
+
             if (this._uniqueTags[columnIndex]) {
                 return this._uniqueTags[columnIndex];
             }
@@ -167,6 +180,10 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
 
         getCountsPerCategory: function (columnIndex) {
 
+            if (!this._categoryCounts) {
+                this._categoryCounts = {};
+            }
+
             if (this._categoryCounts[columnIndex]) {
                 return this._categoryCounts[columnIndex];
             }
@@ -187,6 +204,11 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
         },
 
         getCountsPerTag: function (columnIndex) {
+
+            if (!this._tagCounts) {
+                this._tagCounts = {};
+            }
+
             if (this._tagCounts[columnIndex]) {
                 return this._tagCounts[columnIndex];
             }
@@ -239,27 +261,12 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
 
             //ORDINAL PREP
-            var mins = [];
-            var maxs = [];
-
-            var r, c;
-            for (i = 0; i < selectedOrdinalColumnsIndices.length; i += 1) {
-                mins[i] = Infinity;
-                maxs[i] = -Infinity;
-            }
-
-
-            var value;
-            for (r = 0; r < this._table.rowCount(); r += 1) {
-                for (c = 0; c < selectedOrdinalColumnsIndices.length; c += 1) {
-                    value = util.toNumber(this._table.getValue(r, selectedOrdinalColumnsIndices[c]));
-                    if (isNaN(value)) {
-                        console.warn("ignoring missing value" + " row: " + r + ", col: " + c);
-                        continue;
-                    }
-                    mins[c] = Math.min(mins[c], value);
-                    maxs[c] = Math.max(maxs[c], value);
-                }
+            var mins = [], maxs = [];
+            var mima, c;
+            for (c = 0; c < selectedOrdinalColumnsIndices.length; c += 1) {
+                mima = this.getMinMax(selectedOrdinalColumnsIndices[c]);
+                mins[c] = mima[0];
+                maxs[c] = mima[1];
             }
 
             //CATEGORY PREP
@@ -306,6 +313,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
 
             //FILL THE DATA
+            //todo: take into account here unknown values or values outside of range (because it's possible that we overrode the table-structure!)
             var dataArray = new Array(this._table.rowCount() * (selectedOrdinalColumnsIndices.length + totCategories + totTags));
 
             var v, tagcount;
@@ -330,7 +338,6 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 }
 
                 //uniquetags
-
                 for (c = 0; c < allTags.length; c += 1) {
                     tagcount = this._table.getTagCount(r, allTags[c].columnIndex);
                     for (v = 0; v < allTags[c].uniqueTags.length; v += 1) {

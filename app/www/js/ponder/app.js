@@ -80,14 +80,14 @@ require([
       window._getFromLocalStorage = getFromLocalStorage;
       window._storeInLocalstorage = function () {
         somApp.dumpApp().then(function (somApp) {
-          localStorage.setItem('som', JSON.stringify(somApp));
+          localStorage.setItem('appDump', JSON.stringify(somApp));
         });
       };
 
       var somApp;
       if (appDump) {
 
-        console.log('READING FROM STORED!!!!!!!!!');
+        console.log('READING FROM STORED! (DEBUG ONLY)');
 
         somApp = appApi.createSOMFromJson(appDump, {
           table: table,

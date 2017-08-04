@@ -124,10 +124,6 @@ define([
         return self._somHandle.bmus();
       }, throwError)
       .then(function (bmuResult) {
-
-
-        console.log('bmu result', bmuResult);
-
         mapTableToggleNode.style.display = oldDisplayToggleDisplay;
 
         waitingDiv.parentNode.removeChild(waitingDiv);

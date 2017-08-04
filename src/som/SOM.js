@@ -383,7 +383,6 @@ define([
         },
 
         bmus: function (data) {
-            console.log('compute bmus!', data);
             var out = {};
             var results = [];
             for (var i = 0; i < data.length; i += this._codebookWeights.length) {
