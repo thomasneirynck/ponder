@@ -145,6 +145,10 @@ define([
           bmuLayer.highlight([object.index]);
         });
 
+        bmuSelector.on('selectionChanged', function (event) {
+          self.emit('bmuSelection:changed', event);
+        });
+
 
         var bmuSelectionHistory = new BMUSelectionHistory("selectionHistory", bmuSelector, self._map, areaSelectLayerController.isActive.bind(areaSelectLayerController), [uMatrixLayer, areaSelectLayerController], "stripSelected");
         bmuSelector.selectAll();

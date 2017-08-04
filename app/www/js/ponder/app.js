@@ -129,6 +129,11 @@ require([
         //debug
         window._somApp = somApp;
 
+
+      somApp.on('bmuSelection:changed', function (event) {
+        console.log('bmuSelection:changed', event);
+      });
+
         somApp.on("AppLoaded", function () {
 
             //start intro
@@ -165,11 +170,6 @@ require([
             }
             return "";
         }
-
-      window._getFromLocalStorage = function () {
-        return JSON.parse(localStorage.getItem("som"));
-      };
-
 
       window._storeInLocalstorage = function () {
         somApp.dumpMap().then(function (somMap) {

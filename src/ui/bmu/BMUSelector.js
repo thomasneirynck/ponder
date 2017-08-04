@@ -28,6 +28,17 @@ define([
                     self._areaSelectLayerController.clear();
                     self.emit("clear");
                 }
+
+
+                //emit event that a new  selection has been made.
+                var data = selectedIndices.map(function (index) {
+                    return self._bmuLayer.getDataTable().getFeatureData(index);
+                });
+                self.emit('selectionChanged', {
+                    indices: selectedIndices,
+                    data: data
+                });
+
             });
 
         },
