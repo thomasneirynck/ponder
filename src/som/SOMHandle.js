@@ -2,14 +2,31 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
 
     return type({
 
-        constructor: function SOMHandle(somWorker, dataArray, width, height) {
-            this._dataArray = dataArray;
+        constructor: function SOMHandle(somWorker) {
             this._somWorker = somWorker;
             this._queue = [];
             this._pendingCommand = null;
-            this.width = width;
-            this.height = height;
+            this._width = -1;
+            this._height = -1;
         },
+
+        setDataArray: function (dataArray) {
+            this._dataArray = dataArray;
+        },
+
+        setWidthHeight: function (width, height) {
+            this._width = width;
+            this._height = height;
+        },
+
+        getWidth: function () {
+            return this._width;
+        },
+
+        getHeight: function () {
+            return this._height;
+        },
+
 
         kill: function () {
             this._somWorker.terminate();
@@ -57,6 +74,12 @@ define(["type", "Promise", "./Statistics"], function (type, Promise, Statistics)
         _schedule: function () {
             setTimeout(this._process.bind(this), 0);
         },
+
+        dumpToJson: function () {
+            return this._doCommand({type: "dumpToJson"}, "dumpToJsonSuccess", undefined);
+        },
+
+
         trainMap: function () {
             return this._doCommand({
                     type: "trainMap",

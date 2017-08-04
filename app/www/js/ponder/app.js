@@ -90,6 +90,8 @@ require([
             }
         });
 
+        //debug
+        window._somApp = somApp;
 
         somApp.on("AppLoaded", function () {
 

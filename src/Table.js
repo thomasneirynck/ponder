@@ -25,7 +25,7 @@ define([], function () {
   };
 
   Table.prototype.hasTag = function(rowNumber, columnNumber, tagValue){
-    throw new Error("should return whether row has tag");
+    throw new Error("should return whether row has particular tag");
   };
 
   Table.prototype.getName = function(){

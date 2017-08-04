@@ -69,6 +69,26 @@ define([
             this._initialLearningRate = 0.5;
         },
 
+        restoreSOMFromJson: function (somConfig) {
+            this._worldWidth = somConfig.worldWidth;
+            this._worldHeight = somConfig.worldHeight;
+            this._codeBookWeights = somConfig.codeBookWeights;
+            this._neuralWeights = somConfig.neuralWeights;
+            this._mapRadius = somConfig.mapRadius;
+            this._initialLearningRate = somConfig.initialLearningRate;
+        },
+
+        dumpSomToJson: function () {
+            return {
+                worldWidth: this._worldWidth,
+                worldHeight: this._worldHeight,
+                codebookWeights: this._codeBookWeights.slice(),
+                neuralWeights: this._neuralWeights.slice(),
+                mapRadius: this._mapRadius,
+                initialLearningRate: this._initialLearningRate
+            };
+        },
+
         uMatrixNormalized: function () {
 
             var xy = {x: 0, y: 0};

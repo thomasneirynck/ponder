@@ -26,6 +26,24 @@ require(["ponder/som/SOM"], function (SOM) {
                     type: "initSuccess"
                 });
                 break;
+            case "initFromJson":
+                som = new SOM({
+                    width: event.data.json.worldWidth,
+                    height: event.data.json.worldHeight,
+                    codebookWeights: event.data.json.codeBookWeights
+                });
+                som.restoreSOMFromJson(event.data.json);
+                postMessage({
+                    type: "initFromJsonSuccess"
+                });
+                break;
+            case "dumpToJson":
+                var jsonDump = som.dumpSomToJson();
+                postMessage({
+                    type: "dumpToJsonSuccess",
+                    json: jsonDump
+                });
+                break;
             case "trainMap":
                 var handle = som.on("TrainMapProgress", function(percentage){
                     postMessage({

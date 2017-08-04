@@ -116,10 +116,10 @@ define([
         mapToolNode.style.display = oldDisplayMapToolDisplay;
         mapContainer.style.display = "block";
 
-        self._map = new Map("map", self._somHandle.width, self._somHandle.height);
+        self._map = new Map("map", self._somHandle.getWidth(), self._somHandle.getHeight());
 
         uMatrixLayer = new UMatrixTerrainLayer("ease", "easeReadout");
-        uMatrixLayer.setUMatrixData(successData.uMatrix, self._somHandle.width, self._somHandle.height);
+        uMatrixLayer.setUMatrixData(successData.uMatrix, self._somHandle.getWidth(), self._somHandle.getHeight());
         self._map.addLayer(uMatrixLayer);
 
         waitingDivText.innerHTML = "Finding locations ...";
@@ -169,6 +169,12 @@ define([
 
     },
 
+    dumpMap: function(){
+      return this._somHandle.dumpToJson().then(function(e){
+        return e.json;
+      });
+    },
+
     destroy: function () {
       if (this._somHandle) {
         this._somHandle.kill();
@@ -198,6 +204,16 @@ define([
    * .. starting this so we can
    */
   return {
+
+
+    // restoreSOM: function(jsonDump){
+    //
+    //
+    //
+    //
+    //
+    // },
+
     createSOM: function (params) {
       return new SomApp(params);
     },
