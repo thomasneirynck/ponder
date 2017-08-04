@@ -4,6 +4,7 @@ body {
     font-family: 'Gudea', sans-serif;
     color: #5b3b31;
     user-select: none;
+    margin: 0 auto;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Chrome/Safari/Opera */
     -moz-user-select: none; /* Firefox */
@@ -27,7 +28,7 @@ a:hover {
 
 .header {
     height: 60px;
-    text-align: center;
+    /*text-align: center;*/
 }
 
 .header h1 {
@@ -469,7 +470,8 @@ body {
     border-radius: 8px;
     padding-left: 3px;
     padding-right: 3px;
-    padding-bottom: 3px; }
+    padding-bottom: 3px;
+}
 
 #map > canvas {
     width: 100%;
@@ -493,13 +495,13 @@ body {
     /*flex-flow: column;*/
     /*align-content: space-around;*/
     overflow: auto;
-    padding-left: 50px;
-    padding-right: 50px;
+    /*padding-left: 50px;*/
+    /*padding-right: 50px;*/
 }
 
 #welcome > div:nth-child(1) {
     background-color: rgb(255, 247, 229);
-    border-radius: 24px;
+    /*border-radius: 24px;*/
 }
 
 #welcome > div {
