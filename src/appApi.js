@@ -243,9 +243,9 @@ define([
     },
 
     getDataTable: function (table) {
-      var table = new DataTable(table);
-      table.overrideStructureFromJson(this._tableStructure);
-      return table;
+      var dataTable = new DataTable(table);
+      dataTable.overrideStructureFromJson(this._tableStructure);
+      return dataTable;
     },
 
 
