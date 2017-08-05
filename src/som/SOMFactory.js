@@ -82,11 +82,8 @@ define(["Promise", "./SOMHandle"], function (Promise, SOMHandle) {
 
         var foobarScript = somFactory.SCRIPT_PATH === null ? window.require.toUrl("ponder") + "/som/worker/SOMWorker.js" : somFactory.SCRIPT_PATH;
 
-        //!!!! this function must be replaced with worker content by build process!!!!!!!!!
-        var somWorker = /*!keep_this*/(function foobarWorker() {
-            return new Worker(foobarScript);
-        }());
-        /*!keep_this*/
+        //!!!! this function must be replaced with worker content by build process MUST BE ON ONE LINE!!!!!!!!!
+        var somWorker = /*!keep_this*/(function foobarWorker() {return new Worker(foobarScript);}());/*!keep_this*/
 
         return somWorker;
     }
