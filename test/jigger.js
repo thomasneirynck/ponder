@@ -103,27 +103,32 @@ wren,0,1,1,0,1,0,0,0,1,1,0,0,2,1,0,0,2`;
 
 const lines = data.split("\n");
 const cols = lines.shift().split(",");
-const tokens = lines.map(line => line.split(","));
+const rows = lines.map(line => line.split(","));
 
 
-newlines = tokens.map(tks => {
+newlines = rows.map(tks => {
 
-  var ret = [tks[0]];
+  var ret = [tks[0]];//name
   var tags = [];
+  var legs = 0;
   for (var i = 1; i < tks.length -1; i += 1) {
-    if (tks[i] !== "0" ) {
+    if (cols[i] === 'legs') {
+      legs = tks[i];
+    } else if (tks[i] !== "0") {
       tags.push(cols[i])
     }
   }
 
-  ret.push(tags.join(";"));
-  ret.push(tks[tks.length-1]);
+  ret.push(tags.join(";"));//tags
+  ret.push(legs);//legs
+  ret.push(tks[tks.length - 1]);//type
+
 
   return ret;
 });
 
 
-head = ["name,tags,type"];
+head = ["name,tags,legs,type"];
 
 dat = head.concat(newlines).join("\n");
 
