@@ -111,9 +111,12 @@ newlines = rows.map(tks => {
   var ret = [tks[0]];//name
   var tags = [];
   var legs = 0;
+  let fins = 0;
   for (var i = 1; i < tks.length -1; i += 1) {
     if (cols[i] === 'legs') {
       legs = tks[i];
+    } else if (cols[i] === 'fins') {
+      fins = tks[i];
     } else if (tks[i] !== "0") {
       tags.push(cols[i])
     }
@@ -121,6 +124,7 @@ newlines = rows.map(tks => {
 
   ret.push(tags.join(";"));//tags
   ret.push(legs);//legs
+  ret.push(fins);//fins
   ret.push(tks[tks.length - 1]);//type
 
 
@@ -128,7 +132,7 @@ newlines = rows.map(tks => {
 });
 
 
-head = ["name,tags,legs,type"];
+head = ["name,tags,legs,fins,type"];
 
 dat = head.concat(newlines).join("\n");
 
