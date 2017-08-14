@@ -25,7 +25,7 @@ elephant,1,0,0,1,0,0,0,1,1,1,0,0,4,1,0,1,1
 flamingo,0,1,1,0,1,0,0,0,1,1,0,0,2,1,0,1,2
 flea,0,0,1,0,0,0,0,0,0,1,0,0,6,0,0,0,6
 frog,0,0,1,0,0,1,1,1,1,1,0,0,4,0,0,0,5
-frog,0,0,1,0,0,1,1,1,1,1,1,0,4,0,0,0,5
+poison frog,0,0,1,0,0,1,1,1,1,1,1,0,4,0,0,0,5
 fruitbat,1,0,0,1,1,0,0,1,1,1,0,0,2,1,0,0,1
 giraffe,1,0,0,1,0,0,0,1,1,1,0,0,4,1,0,1,1
 girl,1,0,0,1,0,0,1,1,1,1,0,0,2,0,1,1,1
@@ -125,7 +125,36 @@ newlines = rows.map(tks => {
   ret.push(tags.join(";"));//tags
   ret.push(legs);//legs
   ret.push(fins);//fins
-  ret.push(tks[tks.length - 1]);//type
+
+
+  let type;
+  switch (tks[tks.length - 1]){
+    case "1":
+      type = 'mammal';
+      break;
+    case "2":
+      type = 'bird';
+      break;
+    case "3":
+      type = 'reptile';
+      break;
+    case "4":
+      type = 'fish';
+      break;
+    case "5":
+      type = 'amphibian';
+      break;
+    case "6":
+      type = 'insect';
+      break;
+    case "7":
+      type = 'invertebrate (other)';
+      break;
+    default:
+      type = 'unknown';
+  }
+
+  ret.push(type);//type
 
 
   return ret;
