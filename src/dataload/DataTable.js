@@ -288,6 +288,7 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                     columnIndex: selectedTaglistColumnIndices[i],
                     uniqueTags: this.getUniqueTags(selectedTaglistColumnIndices[i])
                 };
+                console.log(allTags[i].uniqueTags);
                 totTags += allTags[i].uniqueTags.length;
             }
 
@@ -306,9 +307,14 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             }
 
             //WEIGHTS TAGLIST
+            //todo!!!! this is wrong. This shoudl create a two fields for a single tag, w ith weght 0.5.
+            //todo!!!!
+            //this way, you get the same result as if each tag was its own category field!!!!!!!
             for (c = 0; c < allTags.length; c += 1) {
                 for (i = 0; i < allTags[c].uniqueTags.length; i += 1) {
-                    codebookWeights.push(1 / allTags[c].uniqueTags.length);
+                    // codebookWeights.push(1 / allTags[c].uniqueTags.length);
+                    codebookWeights.push(1 / 2);
+                    // codebookWeights.push(1 / 2);
                 }
             }
 
@@ -316,8 +322,8 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
             //todo: take into account here unknown values or values outside of range (because it's possible that we overrode the table-structure!)
             var dataArray = new Array(this._table.rowCount() * (selectedOrdinalColumnsIndices.length + totCategories + totTags));
 
-            var v, tagcount;
-            for (i = 0, r = 0; r < this._table.rowCount(); r += 1) {
+            var v, tagcount, r, value;
+            for (i = 0, r = 0; r < this._table.rowCount(); r += 1) {//
 
                 //scale ordinals to [0,1] domain
                 for (c = 0; c < selectedOrdinalColumnsIndices.length; c += 1, i += 1) {
@@ -341,7 +347,16 @@ define(["type", "../util", "../Table"], function (type, util, Table) {
                 for (c = 0; c < allTags.length; c += 1) {
                     tagcount = this._table.getTagCount(r, allTags[c].columnIndex);
                     for (v = 0; v < allTags[c].uniqueTags.length; v += 1) {
-                        dataArray[i] = this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v]) ? 1 /tagcount : 0;
+                        // dataArray[i] = this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v]) ? 1 /tagcount : 0;
+                        // i += 1;
+                        if (this._table.hasTag(r, allTags[c].columnIndex, allTags[c].uniqueTags[v])) {
+                            dataArray[i] = 1;
+                            // dataArray[i + 1] = 0;
+                        } else {
+                            dataArray[i] = 0;
+                            // dataArray[i + 1] = 1;
+                        }
+                        // i += 2;
                         i += 1;
                     }
                 }
